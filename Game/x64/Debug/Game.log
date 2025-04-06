@@ -1,2 +1,4 @@
 ﻿  Game.cpp
-  Game.vcxproj -> C:\Users\Professional\Desktop\Game\x64\Debug\Game.exe
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(40,33): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(40,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  Game.vcxproj -> C:\Users\Professional\Desktop\WordMaker\x64\Debug\Game.exe

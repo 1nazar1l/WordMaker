@@ -34,9 +34,9 @@ void ValidWord::loadWords() {
     }
     cout << "Loaded words: " << wordsCount << endl;  // Отладочный вывод
     inputFile.close();
-    for (int i = 0; i < wordsCount; i++) {
-        cout << words[i] << endl;
-    }
+    //for (int i = 0; i < wordsCount; i++) {
+    //    cout << words[i] << endl;
+    //}
 }
 
 bool ValidWord::isValid(const string& wordToCheck) {
