@@ -1,4 +1,6 @@
 ﻿  Game.cpp
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(40,33): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(40,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\StartRound.h(155,54): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
+  (компиляция исходного файла "Game.cpp")
+  
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(60,11): warning C4101: event: неиспользованная локальная переменная
   Game.vcxproj -> C:\Users\Professional\Desktop\WordMaker\x64\Debug\Game.exe

@@ -144,6 +144,8 @@
   <ItemGroup>
     <ClInclude Include="MainHeader.h" />
     <ClInclude Include="RandomWord.h" />
+    <ClInclude Include="StartMenu.h" />
+    <ClInclude Include="StartRound.h" />
     <ClInclude Include="ValidWord.h" />
   </ItemGroup>
   <ItemGroup>
