@@ -33,7 +33,7 @@ public:
     string getRandomWord();
 
 private:
-    string words[100];
+    string words[1000];
     int wordCount;
     string filename; 
 };
@@ -49,7 +49,7 @@ void RandomWord::loadWords() {
         return;
     }
 
-    while (wordCount < 100 && inputFile >> words[wordCount]) {
+    while (wordCount < 1000 && inputFile >> words[wordCount]) {
         wordCount++;
     }
 

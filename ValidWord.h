@@ -13,7 +13,7 @@ public:
     bool isValid(const string& wordToCheck);  // Возвращает bool и принимает слово для проверки
 
 private:
-    string words[1000];
+    string words[10000];
     int wordsCount;
     string filename;
 };
@@ -29,7 +29,7 @@ void ValidWord::loadWords() {
         return;
     }
 
-    while (wordsCount < 1000 && inputFile >> words[wordsCount]) {
+    while (wordsCount < 10000 && inputFile >> words[wordsCount]) {
         wordsCount++;
     }
     cout << "Loaded words: " << wordsCount << endl;  // Отладочный вывод
