@@ -21,48 +21,17 @@ unordered_map<char, int> createLetterMap(const string& word) {
     return letters;
 }
 
-void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText) {
+void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused) {
+    if (isPaused) return; // Не обновляем таймер на паузе
+
     Time elapsed = gameClock.getElapsedTime();
     if (elapsed.asSeconds() >= 1.0f && timeRemaining > 0) {
         timeRemaining--;
         gameClock.restart();
-
-        // Обновляем текст таймера
         stringstream ss;
-        //Split string
         ss << "Time: " << timeRemaining;
         timerText.setString(ss.str());
     }
-}
-
-void handleMenuEvents(string& gameStage, Text& startGameText, Event& event, Vector2i& mousePos) {
-    if (event.type == Event::MouseButtonPressed) {
-        if (event.mouseButton.button == Mouse::Left) {
-            if (startGameText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                gameStage = "GAME"; // Переход в режим игры
-                cout << "game1\n";
-            }
-        }
-    }
-}
-
-void updateMenu(RenderWindow& window, Text& startGameText) {
-    window.clear(Color::Black);
-    window.draw(startGameText);
-    window.display();
-}
-
-void startMenu(RenderWindow& window, string& gameStage, Text& startGameText) {
-    Event event;
-    while (window.pollEvent(event)) {
-        closeEvents(event, window);
-
-        Vector2i mousePos = Mouse::getPosition(window);
-
-        handleMenuEvents(gameStage, startGameText, event, mousePos);
-    }
-
-    updateMenu(window, startGameText);
 }
 
 string getRandomWord(string randomWordsFile) {
@@ -73,6 +42,7 @@ string getRandomWord(string randomWordsFile) {
 
 int main() {
     bool breakPage = false;
+    bool isPaused = false; // Добавляем флаг паузы
     string gameStage = "MENU";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
@@ -84,7 +54,13 @@ int main() {
 
     // Menu text
     Text startGameText;
-    addInfoToWindow(startGameText, font, "Start Game", 40, Color::White, 0, 0, -10, -10);
+    Text settingsText;
+    addInfoToWindow(startGameText, font, "Start Game", 40, Color::White, 50, 50, 100);
+    addInfoToWindow(settingsText, font, "Settings", 40, Color::White, 50, 60, 100);
+
+    //Settings text
+    Text endSettingsText;
+    addInfoToWindow(endSettingsText, font, "return to menu", 40, Color::White, 0, 0, -10, -10);
 
     // Game text
     ValidWord validator("validWords.txt");
@@ -99,6 +75,7 @@ int main() {
     Text guessedText;
     Text endGameText;
     Text timerText;
+    Text pauseText;
     unsigned int counter = 0;
     string playerInput;
     unordered_map<char, int> availableLetters;
@@ -117,7 +94,51 @@ int main() {
             timeRemaining = 31;
             timerText.setString("Time: 30");
             inputText.setString("Your input: ");
-            startMenu(window, gameStage, startGameText);
+
+
+            Event event;
+            while (window.pollEvent(event)) {
+                closeEvents(event, window);
+
+                Vector2i mousePos = Mouse::getPosition(window);
+
+                if (event.type == Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == Mouse::Left) {
+                        if (startGameText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            gameStage = "GAME"; // Переход в режим игры
+                            cout << "game1\n";
+                        }
+                        else if (settingsText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            gameStage = "SETTINGS";
+                        }
+                    }
+                }
+            }
+
+            window.clear(Color::Black);
+            window.draw(startGameText);
+            window.draw(settingsText);
+            window.display();
+        }
+        else if (gameStage == "SETTINGS") {
+            Event event;
+            while (window.pollEvent(event)) {
+                closeEvents(event, window);
+
+                Vector2i mousePos = Mouse::getPosition(window);
+
+                if (event.type == Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == Mouse::Left) {
+                        if (endSettingsText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            gameStage = "MENU";
+                        }
+                    }
+                }
+            }
+
+            window.clear(Color::Black);
+            window.draw(endSettingsText);
+            window.display();
         }
         else if (gameStage == "GAME") {
             // Генерация нового слова при переходе в игровой режим
@@ -150,14 +171,20 @@ int main() {
             addInfoToWindow(guessedText, font, "", 20, Color::Cyan, 60, 40);
             addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 0, 0, -10, -10);
             addInfoToWindow(timerText, font, "Time: 30", 40, Color::White, 10, 10);
+            addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 90, 90);
 
             gameClock.restart(); // Сброс таймера
 
             // Основной игровой цикл
             while (gameStage == "GAME" && window.isOpen()) {
                 Event event;
-                updateTimer(gameClock, timeRemaining, timerText);
-
+                updateTimer(gameClock, timeRemaining, timerText, isPaused);
+                if (isPaused) {
+                    inputText.setFillColor(Color(150, 150, 150)); // Серый цвет при паузе
+                }
+                else {
+                    inputText.setFillColor(Color::White); // Белый цвет при активной игре
+                }
                 while (window.pollEvent(event)) {
                     closeEvents(event, window);
                     Vector2i mousePos = Mouse::getPosition(window);
@@ -169,11 +196,22 @@ int main() {
                                 cout << "game2\n";
                                 break; // Выходим из внутреннего цикла
                             }
+                            if (pauseText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                                isPaused = !isPaused; // Переключаем состояние паузы
+                                if (isPaused) {
+                                    pauseText.setString("Resume"); // Меняем текст кнопки
+                                }
+                                else {
+                                    pauseText.setString("Pause");
+                                    gameClock.restart(); // Перезапускаем таймер при снятии паузы
+                                }
+                            }
                         }
+
                     }
 
                     // Обработка ввода
-                    if (event.type == Event::TextEntered) {
+                    if (event.type == Event::TextEntered && !isPaused) {  // Добавляем условие !isPaused
                         // Обработка backspace
                         if (event.text.unicode == '\b') {
                             if (!playerInput.empty()) {
@@ -195,7 +233,7 @@ int main() {
                     }
 
                     // Обработка подтверждения слова по Enter
-                    if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter && !playerInput.empty()) {
+                    if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter && !playerInput.empty() && !isPaused) {
                         if (validator.isValid(playerInput)) {
                             bool alreadyGuessed = false;
                             for (int i = 0; i < guessedCount; ++i) {
@@ -225,8 +263,10 @@ int main() {
                     }
                 }
 
-                if (gameStage != "GAME") break; // Выходим, если перешли в меню
-
+                if (gameStage != "GAME") {
+                    isPaused = false;
+                    break; // Выходим, если перешли в меню
+                }
                 // Отрисовка
                 window.clear(Color::Black);
                 window.draw(counterText);
@@ -235,7 +275,10 @@ int main() {
                 window.draw(lettersText);
                 window.draw(guessedText);
                 window.draw(timerText);
-                window.draw(endGameText);
+                window.draw(pauseText);
+                if (!isPaused) {
+                    window.draw(endGameText);
+                }
                 window.display();
 
                 // Проверка времени
