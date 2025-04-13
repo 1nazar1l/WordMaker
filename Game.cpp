@@ -1,6 +1,7 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 #include "MainHeader.h"
 #include "RandomWord.h"
@@ -28,6 +29,7 @@ void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText) {
 
         // Обновляем текст таймера
         stringstream ss;
+        //Split string
         ss << "Time: " << timeRemaining;
         timerText.setString(ss.str());
     }
@@ -76,7 +78,7 @@ int main() {
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
     Font font;
-    if (!font.loadFromFile("arial.ttf")) {
+    if (!font.loadFromFile("fonts/font5.ttf")) {
         return EXIT_FAILURE;
     }
 

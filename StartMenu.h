@@ -2,7 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include "StartRound.h"
 
 using namespace std;
 using namespace sf;

@@ -1,6 +1,7 @@
 ﻿  Game.cpp
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(210,62): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
   Создание кода
   Previous IPDB and IOBJ mismatch, fall back to full compilation.
-  All 211 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 544 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Создание кода завершено
-  Game.vcxproj -> C:\Users\Professional\Desktop\Game\x64\Release\Game.exe
+  Game.vcxproj -> C:\Users\Professional\Desktop\WordMaker\x64\Release\Game.exe

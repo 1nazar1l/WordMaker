@@ -145,11 +145,12 @@
     <ClInclude Include="MainHeader.h" />
     <ClInclude Include="RandomWord.h" />
     <ClInclude Include="StartMenu.h" />
-    <ClInclude Include="StartRound.h" />
     <ClInclude Include="ValidWord.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="randomWords.txt" />
+    <Text Include="easyRandomWords.txt" />
+    <Text Include="hardRandomWords.txt" />
+    <Text Include="normalRandomWords.txt" />
     <Text Include="validWords.txt" />
     <Text Include="ww.txt" />
   </ItemGroup>
