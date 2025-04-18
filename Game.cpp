@@ -6,6 +6,8 @@
 #include "MainHeader.h"
 #include "RandomWord.h"
 #include "ValidWord.h"
+#include "CursorManager.h"
+
 
 #include <unordered_map>
 #include <algorithm>
@@ -19,6 +21,15 @@ unordered_map<char, int> createLetterMap(const string& word) {
         letters[tolower(c)]++;
     }
     return letters;
+}
+
+void createButtonHitBox(RectangleShape& rectangle, int width, int height, int xPos, int yPos) {
+    rectangle.setSize(Vector2f(width, height));
+    rectangle.setFillColor(Color(0, 0, 0, 0));
+    rectangle.setOutlineColor(Color::White);
+    //rectangle.setOutlineThickness(2.f);
+    rectangle.setPosition(xPos, yPos);
+
 }
 
 void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused) {
@@ -54,10 +65,56 @@ int main() {
     }
 
     // Menu text
+
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("backgrounds/menu1.png")) {
+        std::cerr << "Failed to load background image!" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    // Создание спрайта
+    sf::Sprite backgroundSprite;
+    backgroundSprite.setTexture(backgroundTexture);
+
+    // Масштабирование под размер окна
+    sf::Vector2u windowSize = window.getSize();
+    float scaleX = static_cast<float>(windowSize.x) / backgroundTexture.getSize().x;
+    float scaleY = static_cast<float>(windowSize.y) / backgroundTexture.getSize().y;
+    backgroundSprite.setPosition(1, -1);
+    backgroundSprite.setScale(scaleX, scaleY);
+
+    RectangleShape startButtonHitBox;
+    RectangleShape settingsButtonHitBox;
+    RectangleShape leaderBoardButtonHitBox;
+    RectangleShape exitButtonHitBox;
+
     Text startGameText;
     Text settingsText;
-    addInfoToWindow(startGameText, font, "Start Game", 40, Color::White, 50, 50, 130);
-    addInfoToWindow(settingsText, font, "Settings", 40, Color::White, 50, 60, 100);
+    Text leaderboardText;
+    Text exitText;
+
+    addInfoToWindow(startGameText, font, "Start Game", 36, Color(226, 207, 234), 0, 0);
+    addInfoToWindow(settingsText, font, "Settings", 36, Color(226, 207, 234), 0, 0);
+    addInfoToWindow(leaderboardText, font, "LeaderBoard", 30, Color(226, 207, 234), 0, 0);
+    addInfoToWindow(exitText, font, "Exit", 36, Color(226, 207, 234), 0, 0);
+
+    startGameText.setPosition(535, 113);
+    settingsText.setPosition(570, 279);
+    leaderboardText.setPosition(535, 450);
+    exitText.setPosition(630, 611);
+
+    createButtonHitBox(startButtonHitBox, 343, 120, 511, 75);
+    createButtonHitBox(settingsButtonHitBox, 343, 120, 511, 241);
+    createButtonHitBox(leaderBoardButtonHitBox, 343, 120, 511, 407);
+    createButtonHitBox(exitButtonHitBox, 343, 120, 511, 573);
+
+    CursorManager cursorManager;
+    if (!cursorManager.loadTextures("cursors/defaultcursor.png", "cursors/hovercursor.png")) {
+        std::cerr << "Failed to load cursor textures!" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    bool anyButtonHovered = false;
 
     // Game text
     
@@ -89,6 +146,8 @@ int main() {
 
     while (window.isOpen()) {
         if (gameStage == "MENU") {
+            window.setMouseCursorVisible(false);
+
             // Сброс таймера при возврате в меню
             timeRemaining = 31;
             timerText.setString("Time: 30");
@@ -103,23 +162,66 @@ int main() {
 
                 if (event.type == Event::MouseButtonPressed) {
                     if (event.mouseButton.button == Mouse::Left) {
-                        if (startGameText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        if (startButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                             gameStage = "GAME"; 
                             cout << "game1\n";
                         }
-                        else if (settingsText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        else if (settingsButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                             gameStage = "SETTINGS";
                         }
                     }
                 }
+                if (startButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    startGameText.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+                }
+                else if (settingsButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    settingsText.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+
+                }
+                else if (leaderBoardButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    leaderboardText.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+
+                }
+                else if (exitButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    exitText.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+                }
+
+                else {
+                    startGameText.setFillColor(Color(226, 207, 234));
+                    settingsText.setFillColor(Color(226, 207, 234));
+                    leaderboardText.setFillColor(Color(226, 207, 234));
+                    exitText.setFillColor(Color(226, 207, 234));
+                    anyButtonHovered = false;
+                }
             }
-            Color backgroundColor(123, 205, 186);
-            window.clear(backgroundColor);
+
+            window.draw(backgroundSprite);
+
+            window.draw(startButtonHitBox);
+            window.draw(settingsButtonHitBox);
+            window.draw(leaderBoardButtonHitBox);
+            window.draw(exitButtonHitBox);
+
             window.draw(startGameText);
             window.draw(settingsText);
+            window.draw(leaderboardText);
+            window.draw(exitText);
+
+            Vector2i mousePos = Mouse::getPosition(window);
+            cursorManager.update(mousePos, anyButtonHovered);
+            cursorManager.draw(window);
+
             window.display();
         }
         else if (gameStage == "SETTINGS") {
+            window.setMouseCursorVisible(true);
+
+            window.clear();
+            window.display();
         }
         else if (gameStage == "GAME") {
             // Генерация нового слова при переходе в игровой режим
