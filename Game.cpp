@@ -43,26 +43,24 @@ string getRandomWord(string randomWordsFile) {
 int main() {
     bool breakPage = false;
     bool isPaused = false; // Добавляем флаг паузы
+
     string gameStage = "MENU";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
     Font font;
-    if (!font.loadFromFile("fonts/font5.ttf")) {
+    if (!font.loadFromFile("fonts/font1.ttf")) {
         return EXIT_FAILURE;
     }
 
     // Menu text
     Text startGameText;
     Text settingsText;
-    addInfoToWindow(startGameText, font, "Start Game", 40, Color::White, 50, 50, 100);
+    addInfoToWindow(startGameText, font, "Start Game", 40, Color::White, 50, 50, 130);
     addInfoToWindow(settingsText, font, "Settings", 40, Color::White, 50, 60, 100);
 
-    //Settings text
-    Text endSettingsText;
-    addInfoToWindow(endSettingsText, font, "return to menu", 40, Color::White, 0, 0, -10, -10);
-
     // Game text
+    
     ValidWord validator("validWords.txt");
     validator.loadWords();
 
@@ -83,6 +81,7 @@ int main() {
     string lettersInfo;
     string guessedWords[100];
     int guessedCount = 0;
+    
 
     // Timer variables
     Clock gameClock;
@@ -105,7 +104,7 @@ int main() {
                 if (event.type == Event::MouseButtonPressed) {
                     if (event.mouseButton.button == Mouse::Left) {
                         if (startGameText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            gameStage = "GAME"; // Переход в режим игры
+                            gameStage = "GAME"; 
                             cout << "game1\n";
                         }
                         else if (settingsText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
@@ -114,31 +113,13 @@ int main() {
                     }
                 }
             }
-
-            window.clear(Color::Black);
+            Color backgroundColor(123, 205, 186);
+            window.clear(backgroundColor);
             window.draw(startGameText);
             window.draw(settingsText);
             window.display();
         }
         else if (gameStage == "SETTINGS") {
-            Event event;
-            while (window.pollEvent(event)) {
-                closeEvents(event, window);
-
-                Vector2i mousePos = Mouse::getPosition(window);
-
-                if (event.type == Event::MouseButtonPressed) {
-                    if (event.mouseButton.button == Mouse::Left) {
-                        if (endSettingsText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            gameStage = "MENU";
-                        }
-                    }
-                }
-            }
-
-            window.clear(Color::Black);
-            window.draw(endSettingsText);
-            window.display();
         }
         else if (gameStage == "GAME") {
             // Генерация нового слова при переходе в игровой режим
@@ -199,10 +180,10 @@ int main() {
                             if (pauseText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                                 isPaused = !isPaused; // Переключаем состояние паузы
                                 if (isPaused) {
-                                    pauseText.setString("Resume"); // Меняем текст кнопки
+                                    addInfoToWindow(pauseText, font, "Resume", 40, Color::White, 90, 90, 20);
                                 }
                                 else {
-                                    pauseText.setString("Pause");
+                                    addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 90, 90);
                                     gameClock.restart(); // Перезапускаем таймер при снятии паузы
                                 }
                             }
@@ -277,6 +258,11 @@ int main() {
                 window.draw(timerText);
                 window.draw(pauseText);
                 if (!isPaused) {
+                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 0, 0, -10, -10);
+                    window.draw(endGameText);
+                }
+                else {
+                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 0, 0, 100, 100);
                     window.draw(endGameText);
                 }
                 window.display();

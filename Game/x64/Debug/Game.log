@@ -1,3 +1,3 @@
 ﻿  Game.cpp
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(248,62): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(229,62): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
   Game.vcxproj -> C:\Users\Professional\Desktop\WordMaker\x64\Debug\Game.exe

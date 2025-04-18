@@ -1,66 +1,41 @@
 #pragma once
-
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <ctime>
 #include <cstdlib>
-#include <ctime>   
-#include <chrono>
-#include <thread>
-
-using namespace std;
-
-int getRandomNumber() {
-    srand(static_cast<unsigned>(time(0)));
-    int m1 = rand();
-    this_thread::sleep_for(chrono::seconds(1));
-    int m2 = rand();
-    m1 = m2;
-    return m1;
-}
-
-int getRandomIndex(int wordCount) {
-    if (wordCount == 0) {
-        return 0;
-    }
-    return getRandomNumber() % wordCount;
-}
 
 class RandomWord {
 public:
-    RandomWord(const string& filename);
-    void loadWords();
-    string getRandomWord();
+    RandomWord(const std::string& filename) : filename(filename) {
+        std::srand(static_cast<unsigned>(std::time(nullptr)));
+    }
+
+    void loadWords() {
+        std::ifstream inputFile(filename);
+        wordCount = 0;
+
+        if (!inputFile) {
+            std::cerr << "Failed to open file: " << filename << std::endl;
+            return;
+        }
+
+        while (wordCount < MAX_WORDS && inputFile >> words[wordCount]) {
+            wordCount++;
+        }
+    }
+
+    std::string getRandomWord() {
+        if (wordCount == 0) {
+            std::cerr << "No words loaded!" << std::endl;
+            return "";
+        }
+        return words[std::rand() % wordCount];
+    }
 
 private:
-    string words[1000];
-    int wordCount;
-    string filename; 
+    static const int MAX_WORDS = 1000;
+    std::string words[MAX_WORDS];
+    int wordCount = 0;
+    std::string filename;
 };
-
-RandomWord::RandomWord(const string& filename) : filename(filename), wordCount(0) {}
-
-void RandomWord::loadWords() {
-    ifstream inputFile(filename);
-    wordCount = 0;
-
-    if (!inputFile) {
-        cerr << "Не удалось открыть файл: " << filename << endl;
-        return;
-    }
-
-    while (wordCount < 1000 && inputFile >> words[wordCount]) {
-        wordCount++;
-    }
-
-    inputFile.close();
-}
-
-string RandomWord::getRandomWord() {
-    if (wordCount == 0) {
-        return "";
-    }
-
-    int index = getRandomIndex(wordCount);
-    return words[index];
-}
