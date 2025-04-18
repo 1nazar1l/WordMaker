@@ -40,7 +40,7 @@ void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isP
         timeRemaining--;
         gameClock.restart();
         stringstream ss;
-        ss << "Time: " << timeRemaining;
+        ss << "Timer:  " << timeRemaining;
         timerText.setString(ss.str());
     }
 }
@@ -51,9 +51,25 @@ string getRandomWord(string randomWordsFile) {
     return randomWord.getRandomWord();
 }
 
+void updateBackground(RenderWindow& window, Texture& bgTexture, Sprite& bgSprite, string& filename) {
+    if (!bgTexture.loadFromFile(filename)) {
+        std::cerr << "Failed to load background image!" << std::endl;
+    }
+
+    // Создание спрайта
+    bgSprite.setTexture(bgTexture);
+
+    // Масштабирование под размер окна
+    sf::Vector2u windowSize = window.getSize();
+    float scaleX = static_cast<float>(windowSize.x) / bgTexture.getSize().x;
+    float scaleY = static_cast<float>(windowSize.y) / bgTexture.getSize().y;
+    bgSprite.setPosition(1, -1);
+    bgSprite.setScale(scaleX, scaleY);
+}
+
 int main() {
-    bool breakPage = false;
     bool isPaused = false; // Добавляем флаг паузы
+    bool anyButtonHovered = false;
 
     string gameStage = "MENU";
     VideoMode desktop = VideoMode::getDesktopMode();
@@ -65,23 +81,10 @@ int main() {
     }
 
     // Menu text
+    Texture menuTexture;
+    Sprite menuSprite;
+    string menuFilename = "backgrounds/menu1.png";
 
-    sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("backgrounds/menu1.png")) {
-        std::cerr << "Failed to load background image!" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    // Создание спрайта
-    sf::Sprite backgroundSprite;
-    backgroundSprite.setTexture(backgroundTexture);
-
-    // Масштабирование под размер окна
-    sf::Vector2u windowSize = window.getSize();
-    float scaleX = static_cast<float>(windowSize.x) / backgroundTexture.getSize().x;
-    float scaleY = static_cast<float>(windowSize.y) / backgroundTexture.getSize().y;
-    backgroundSprite.setPosition(1, -1);
-    backgroundSprite.setScale(scaleX, scaleY);
 
     RectangleShape startButtonHitBox;
     RectangleShape settingsButtonHitBox;
@@ -114,10 +117,14 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    bool anyButtonHovered = false;
+    updateBackground(window, menuTexture, menuSprite, menuFilename);
+
 
     // Game text
-    
+    Texture gameTexture;
+    Sprite gameSprite;
+    string gameFilename = "backgrounds/game1.png";
+
     ValidWord validator("validWords.txt");
     validator.loadWords();
 
@@ -127,7 +134,6 @@ int main() {
     Text targetText;
     Text inputText;
     Text lettersText;
-    Text guessedText;
     Text endGameText;
     Text timerText;
     Text pauseText;
@@ -135,21 +141,21 @@ int main() {
     string playerInput;
     unordered_map<char, int> availableLetters;
     unordered_map<char, int> currentLetters;
-    string lettersInfo;
     string guessedWords[100];
     int guessedCount = 0;
     
+    updateBackground(window, gameTexture, gameSprite, gameFilename);
+
 
     // Timer variables
     Clock gameClock;
-    int timeRemaining = 30;
+    int timeRemaining = 120;
 
     while (window.isOpen()) {
         if (gameStage == "MENU") {
             window.setMouseCursorVisible(false);
-
             // Сброс таймера при возврате в меню
-            timeRemaining = 31;
+            timeRemaining = 121;
             timerText.setString("Time: 30");
             inputText.setString("Your input: ");
 
@@ -199,7 +205,7 @@ int main() {
                 }
             }
 
-            window.draw(backgroundSprite);
+            window.draw(menuSprite);
 
             window.draw(startButtonHitBox);
             window.draw(settingsButtonHitBox);
@@ -218,12 +224,19 @@ int main() {
             window.display();
         }
         else if (gameStage == "SETTINGS") {
+            Event event;
+
+            while (window.pollEvent(event)) {
+                closeEvents(event, window);
+            }
             window.setMouseCursorVisible(true);
 
             window.clear();
             window.display();
         }
         else if (gameStage == "GAME") {
+            anyButtonHovered = false;
+
             // Генерация нового слова при переходе в игровой режим
             targetWord = getRandomWord("easyRandomWords.txt");
             if (targetWord.empty()) {
@@ -241,20 +254,12 @@ int main() {
             availableLetters = createLetterMap(targetWord);
             currentLetters = availableLetters;
 
-            // Обновление текстовых элементов
-            lettersInfo = "Available letters: ";
-            for (auto& pair : availableLetters) {
-                lettersInfo += string(1, pair.first) + "(" + to_string(pair.second) + ") ";
-            }
-
-            addInfoToWindow(counterText, font, "Count: " + to_string(counter), 24, Color::White, 20, 20);
-            addInfoToWindow(targetText, font, "Word: " + targetWord, 30, Color::Green, 20, 60);
-            addInfoToWindow(inputText, font, "Your input: ", 40, Color::White, 20, 40);
-            addInfoToWindow(lettersText, font, lettersInfo, 20, Color::Yellow, 20, 50);
-            addInfoToWindow(guessedText, font, "", 20, Color::Cyan, 60, 40);
-            addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 0, 0, -10, -10);
-            addInfoToWindow(timerText, font, "Time: 30", 40, Color::White, 10, 10);
-            addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 90, 90);
+            addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 4, 5.7);
+            addInfoToWindow(counterText, font, "Score:  " + to_string(counter), 40, Color::White, 50, 5.7);
+            addInfoToWindow(timerText, font, "Timer:  ", 40, Color::White, 76, 5.7);
+            addInfoToWindow(targetText, font, "Random word is: " + targetWord, 36, Color::White, 20, 26);
+            addInfoToWindow(inputText, font, "Your input:   ", 40, Color::White, 20, 55);
+            addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 75, 90);
 
             gameClock.restart(); // Сброс таймера
 
@@ -282,10 +287,10 @@ int main() {
                             if (pauseText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                                 isPaused = !isPaused; // Переключаем состояние паузы
                                 if (isPaused) {
-                                    addInfoToWindow(pauseText, font, "Resume", 40, Color::White, 90, 90, 20);
+                                    pauseText.setString("Resume");
                                 }
                                 else {
-                                    addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 90, 90);
+                                    pauseText.setString("Pause");
                                     gameClock.restart(); // Перезапускаем таймер при снятии паузы
                                 }
                             }
@@ -312,7 +317,7 @@ int main() {
                             }
                         }
                         // Всегда обновляем текст, даже если просто backspace нажали
-                        inputText.setString("Your input: " + playerInput);
+                        inputText.setString("Your input:   " + playerInput);
                     }
 
                     // Обработка подтверждения слова по Enter
@@ -329,13 +334,7 @@ int main() {
                             if (!alreadyGuessed && guessedCount < 100) {
                                 guessedWords[guessedCount++] = playerInput;
                                 counter += playerInput.length();
-
-                                string guessedStr = "Guessed words:\n";
-                                for (int i = 0; i < guessedCount; ++i) {
-                                    guessedStr += guessedWords[i] + "\n";
-                                }
-                                guessedText.setString(guessedStr);
-                                counterText.setString("Count: " + to_string(counter));
+                                counterText.setString("Score:  " + to_string(counter));
                             }
                         }
 
@@ -351,22 +350,25 @@ int main() {
                     break; // Выходим, если перешли в меню
                 }
                 // Отрисовка
-                window.clear(Color::Black);
+                window.draw(gameSprite);
+
                 window.draw(counterText);
                 window.draw(targetText);
                 window.draw(inputText);
-                window.draw(lettersText);
-                window.draw(guessedText);
                 window.draw(timerText);
                 window.draw(pauseText);
                 if (!isPaused) {
-                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 0, 0, -10, -10);
+                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 75, 90);
                     window.draw(endGameText);
                 }
                 else {
-                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 0, 0, 100, 100);
+                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 110, 110);
                     window.draw(endGameText);
                 }
+                Vector2i mousePos = Mouse::getPosition(window);
+                cursorManager.update(mousePos, anyButtonHovered);
+                cursorManager.draw(window);
+
                 window.display();
 
                 // Проверка времени
