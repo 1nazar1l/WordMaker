@@ -71,7 +71,7 @@ int main() {
     bool isPaused = false; // Добавляем флаг паузы
     bool anyButtonHovered = false;
 
-    string gameStage = "MENU";
+    string gameStage = "ENDGAME";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -149,14 +149,42 @@ int main() {
 
     // Timer variables
     Clock gameClock;
-    int timeRemaining = 120;
+    int timeRemaining = 5;
+
+    //Endgame
+    Texture endgameTexture;
+    Sprite endgameSprite;
+    string endgameFilename = "backgrounds/endgame1.png";
+
+    Text restartText;
+    Text exitTextEnd;
+    Text scoreText;
+    Text isrecordText;
+
+    addInfoToWindow(restartText, font, "Restart", 50, Color(226, 207, 234), 39.3, 62.5);
+    addInfoToWindow(exitTextEnd, font, "Exit", 50, Color(226, 207, 234), 45, 82.5);
+
+    addInfoToWindow(scoreText, font, "Your score: ", 30, Color(226, 207, 234), 35, 10);
+    addInfoToWindow(isrecordText, font, "New record!!!", 20, Color(226, 207, 234), 35, 15);
+
+    RectangleShape restartButtonHitBox;
+    RectangleShape exitToMenuButtonHitBox;
+
+    createButtonHitBox(restartButtonHitBox, 496, 120, 435, 451);
+    createButtonHitBox(exitToMenuButtonHitBox, 496, 120, 435, 602);
+
+    updateBackground(window, endgameTexture, endgameSprite, endgameFilename);
+
+
+
+
 
     while (window.isOpen()) {
         if (gameStage == "MENU") {
             window.setMouseCursorVisible(false);
             // Сброс таймера при возврате в меню
-            timeRemaining = 121;
-            timerText.setString("Time: 30");
+            timeRemaining = 5;
+            timerText.setString("Timer:  ");
             inputText.setString("Your input: ");
 
 
@@ -174,6 +202,9 @@ int main() {
                         }
                         else if (settingsButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                             gameStage = "SETTINGS";
+                        }
+                        else if (exitButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            window.close();
                         }
                     }
                 }
@@ -204,7 +235,7 @@ int main() {
                     anyButtonHovered = false;
                 }
             }
-
+            window.clear();
             window.draw(menuSprite);
 
             window.draw(startButtonHitBox);
@@ -373,9 +404,67 @@ int main() {
 
                 // Проверка времени
                 if (timeRemaining <= 0) {
-                    gameStage = "MENU";
+                    gameStage = "ENDGAME";
                 }
             }
+        }
+        else if (gameStage == "ENDGAME") {
+            Event event;
+            window.setMouseCursorVisible(false);
+
+            while (window.pollEvent(event)) {
+                closeEvents(event, window);
+
+                Vector2i mousePos = Mouse::getPosition(window);
+                if (restartButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    restartText.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+                }
+                else if (exitToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    exitTextEnd.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+                }
+                else {
+                    restartText.setFillColor(Color(226, 207, 234));
+                    exitTextEnd.setFillColor(Color(226, 207, 234));
+                    anyButtonHovered = false;
+                }
+
+                if (event.type == Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == Mouse::Left) {
+                        if (restartButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            timeRemaining = 5;
+                            timerText.setString("Timer:  ");
+                            inputText.setString("Your input: ");
+                            window.setMouseCursorVisible(true);
+                            restartText.setFillColor(Color(226, 207, 234));
+                            gameStage = "GAME";
+                        }
+                        else if (exitToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            exitTextEnd.setFillColor(Color(226, 207, 234));
+                            gameStage = "MENU";
+                        }
+                    }
+                }
+            }
+            scoreText.setString("Your score: " + to_string(counter));
+            
+            window.clear();
+            window.draw(endgameSprite);
+
+            window.draw(restartText);
+            window.draw(exitTextEnd);
+            window.draw(scoreText);
+            window.draw(isrecordText);
+
+            window.draw(restartButtonHitBox);
+            window.draw(exitToMenuButtonHitBox);
+
+            Vector2i mousePos = Mouse::getPosition(window);
+            cursorManager.update(mousePos, anyButtonHovered);
+            cursorManager.draw(window);
+
+            window.display();
         }
     }
 
