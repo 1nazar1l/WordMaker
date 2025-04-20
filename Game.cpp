@@ -90,6 +90,11 @@ bool mouseIn(RenderWindow& window, RectangleShape& btn) {
     return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
 }
 
+bool mouseIn(RenderWindow& window, Text& btn) {
+    Vector2i mousePos = Mouse::getPosition(window);
+    return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+}
+
 void drawCursor(RenderWindow& window, CursorManager& cursor, bool& isHover) {
     Vector2i mousePos = Mouse::getPosition(window);
     cursor.update(mousePos, isHover);
@@ -97,6 +102,10 @@ void drawCursor(RenderWindow& window, CursorManager& cursor, bool& isHover) {
 }
 
 bool click(Event& event, RenderWindow& window, RectangleShape& btn) {
+    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
+}
+
+bool click(Event& event, RenderWindow& window, Text& btn) {
     return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
 }
 
@@ -115,7 +124,13 @@ int main() {
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
     Font font;
+    CursorManager cursorManager;
+
     if (!font.loadFromFile("fonts/font1.ttf")) {
+        return EXIT_FAILURE;
+    }
+
+    if (!cursorManager.loadTextures("cursors/defaultcursor.png", "cursors/hovercursor.png")) {
         return EXIT_FAILURE;
     }
 
@@ -162,31 +177,38 @@ int main() {
     createButtonHitBox(menuBtn.leaderBoard, 343, 120, 511, 407);
     createButtonHitBox(menuBtn.exit, 343, 120, 511, 573);
 
-    CursorManager cursorManager;
-    if (!cursorManager.loadTextures("cursors/defaultcursor.png", "cursors/hovercursor.png")) {
-        cerr << "Failed to load cursor textures!" << endl;
-        return EXIT_FAILURE;
-    }
-
-
-
     // Game text
-    Texture gameTexture;
-    Sprite gameSprite;
+    struct GameTexts {
+        Text counter;
+        Text target;
+        Text input;
+        Text letters;
+        Text endGame;
+        Text timer;
+        Text pause;
+    };
+
+    struct GameBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct GameButtons {
+        RectangleShape pause;
+        RectangleShape exitToMenu;
+    };
+
+    GameTexts gameT;
+    GameBg gameBg;
+    GameButtons gameBtn;
+
     string gameFilename = "backgrounds/game" + to_string(theme) + ".png";
+    updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
 
     ValidWord validator("validWords.txt");
     validator.loadWords();
 
-    // Перенесем объявление переменных сюда
     string targetWord;
-    Text counterText;
-    Text targetText;
-    Text inputText;
-    Text lettersText;
-    Text endGameText;
-    Text timerText;
-    Text pauseText;
     unsigned int counter = 0;
     string playerInput;
     unordered_map<char, int> availableLetters;
@@ -194,10 +216,8 @@ int main() {
     string guessedWords[100];
     int guessedCount = 0;
     
-    updateBackground(window, gameTexture, gameSprite, gameFilename);
 
-    RectangleShape pauseButtonHitBox;
-    createButtonHitBox(pauseButtonHitBox, 262, 100, 40, 20);
+    createButtonHitBox(gameBtn.pause, 262, 100, 40, 20);
 
 
     // Timer variables
@@ -307,49 +327,40 @@ int main() {
             window.setMouseCursorVisible(false);
             // Сброс таймера при возврате в меню
             timeRemaining = roundTime + 1;
-            timerText.setString("Timer:  ");
-            inputText.setString("Your input: ");
+            gameT.timer.setString("Timer:  ");
+            gameT.input.setString("Your input: ");
 
 
             Event event;
             while (window.pollEvent(event)) {
                 closeEvents(event, window);
 
-                Vector2i mousePos = Mouse::getPosition(window);
-
-                if (event.type == Event::MouseButtonPressed) {
-                    if (event.mouseButton.button == Mouse::Left) {
-                        if (menuBtn.start.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            gameStage = "GAME"; 
-                            cout << "game1\n";
-                        }
-                        else if (menuBtn.settings.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            gameStage = "SETTINGS";
-                        }
-                        else if (menuBtn.exit.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            window.close();
-                        }
-                    }
+                if (click(event, window, menuBtn.start)) {
+                    gameStage = "GAME";
                 }
-                if (menuBtn.start.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                else if (click(event, window, menuBtn.settings)) {
+                    gameStage = "SETTINGS";
+                }
+                else if (click(event, window, menuBtn.exit)) {
+                    window.close();
+                }
+
+                if (mouseIn(window, menuBtn.start)) {
                     menuT.startGame.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
-                else if (menuBtn.settings.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                else if (mouseIn(window, menuBtn.settings)) {
                     menuT.settings.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
-
                 }
-                else if (menuBtn.leaderBoard.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                else if (mouseIn(window, menuBtn.leaderBoard)) {
                     menuT.leaderboard.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
-
                 }
-                else if (menuBtn.exit.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                else if (mouseIn(window, menuBtn.exit)) {
                     menuT.exit.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
-
                 else {
                     menuT.startGame.setFillColor(Color(226, 207, 234));
                     menuT.settings.setFillColor(Color(226, 207, 234));
@@ -358,6 +369,7 @@ int main() {
                     anyButtonHovered = false;
                 }
             }
+
             window.clear();
             window.draw(menuBg.sprite);
 
@@ -371,9 +383,7 @@ int main() {
             window.draw(menuT.leaderboard);
             window.draw(menuT.exit);
 
-            Vector2i mousePos = Mouse::getPosition(window);
-            cursorManager.update(mousePos, anyButtonHovered);
-            cursorManager.draw(window);
+            drawCursor(window, cursorManager, anyButtonHovered);
 
             window.display();
         }
@@ -486,55 +496,48 @@ int main() {
             availableLetters = createLetterMap(targetWord);
             currentLetters = availableLetters;
 
-            addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 6, 5.7);
-            addInfoToWindow(counterText, font, "Score:  " + to_string(counter), 40, Color::White, 50, 5.7);
-            addInfoToWindow(timerText, font, "Timer:  ", 40, Color::White, 76, 5.7);
-            addInfoToWindow(targetText, font, "Random word is: " + targetWord, 36, Color::White, 20, 26);
-            addInfoToWindow(inputText, font, "Your input:   ", 40, Color::White, 20, 55);
-            addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 75, 90);
+            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 6, 5.7);
+            addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 50, 5.7);
+            addInfoToWindow(gameT.timer, font, "Timer:  ", 40, Color::White, 76, 5.7);
+            addInfoToWindow(gameT.target, font, "Random word is: " + targetWord, 36, Color::White, 20, 26);
+            addInfoToWindow(gameT.input, font, "Your input:   ", 40, Color::White, 20, 55);
+            addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 75, 90);
 
             gameClock.restart(); // Сброс таймера
 
             // Основной игровой цикл
             while (gameStage == "GAME" && window.isOpen()) {
                 Event event;
-                updateTimer(gameClock, timeRemaining, timerText, isPaused);
+                updateTimer(gameClock, timeRemaining, gameT.timer, isPaused);
                 if (isPaused) {
-                    inputText.setFillColor(Color(150, 150, 150)); // Серый цвет при паузе
+                    gameT.input.setFillColor(Color(150, 150, 150)); // Серый цвет при паузе
                 }
                 else {
-                    inputText.setFillColor(Color::White); // Белый цвет при активной игре
+                    gameT.input.setFillColor(Color::White); // Белый цвет при активной игре
                 }
                 while (window.pollEvent(event)) {
                     closeEvents(event, window);
                     Vector2i mousePos = Mouse::getPosition(window);
-
-                    if (event.type == Event::MouseButtonPressed) {
-                        if (event.mouseButton.button == Mouse::Left) {
-                            if (endGameText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                                gameStage = "MENU";
-                                cout << "game2\n";
-                                break; // Выходим из внутреннего цикла
-                            }
-                            if (pauseButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                                isPaused = !isPaused; // Переключаем состояние паузы
-                                if (isPaused) {
-                                    addInfoToWindow(pauseText, font, "Resume", 40, Color::White, 4.5, 5.7);
-                                }
-                                else {
-                                    addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 6, 5.7);
-                                    gameClock.restart(); // Перезапускаем таймер при снятии паузы
-                                }
-                            }
+                    if (click(event, window, gameT.endGame)) {
+                        gameStage = "MENU";
+                    }
+                    else if (click(event, window, gameBtn.pause)) {
+                        isPaused = !isPaused;
+                        if (isPaused) {
+                            addInfoToWindow(gameT.pause, font, "Resume", 40, Color::White, 4.5, 5.7);
+                        }
+                        else {
+                            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 6, 5.7);
+                            gameClock.restart();
                         }
                     }
-
-                    if (pauseButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                        pauseText.setFillColor(Color(160, 108, 213));
+                    
+                    if (mouseIn(window, gameBtn.pause)) {
+                        gameT.pause.setFillColor(Color(160, 108, 213));
                         anyButtonHovered = true;
                     }
                     else {
-                        pauseText.setFillColor(Color::White);
+                        gameT.pause.setFillColor(Color::White);
                         anyButtonHovered = false;
                     }
                     
@@ -558,7 +561,7 @@ int main() {
                             }
                         }
                         // Всегда обновляем текст, даже если просто backspace нажали
-                        inputText.setString("Your input:   " + playerInput);
+                        gameT.input.setString("Your input:   " + playerInput);
                     }
 
                     // Обработка подтверждения слова по Enter
@@ -575,46 +578,44 @@ int main() {
                             if (!alreadyGuessed && guessedCount < 100) {
                                 guessedWords[guessedCount++] = playerInput;
                                 counter += playerInput.length();
-                                counterText.setString("Score:  " + to_string(counter));
+                                gameT.counter.setString("Score:  " + to_string(counter));
                             }
                         }
 
                         // Сброс после подтверждения слова
                         currentLetters = availableLetters;
                         playerInput.clear();
-                        inputText.setString("Your input: ");
+                        gameT.input.setString("Your input: ");
                     }
                 }
 
                 if (gameStage != "GAME") {
                     isPaused = false;
-                    break; // Выходим, если перешли в меню
                 }
                 // Отрисовка
-                window.draw(gameSprite);
+                window.draw(gameBg.sprite);
 
-                window.draw(counterText);
-                window.draw(targetText);
-                window.draw(inputText);
-                window.draw(timerText);
-                window.draw(pauseText);
+                window.draw(gameT.counter);
+                window.draw(gameT.target);
+                window.draw(gameT.input);
+                window.draw(gameT.timer);
+                window.draw(gameT.pause);
                 if (!isPaused) {
-                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 75, 90);
-                    window.draw(endGameText);
+                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 75, 90);
+                    window.draw(gameT.endGame);
                 }
                 else {
-                    addInfoToWindow(endGameText, font, "End Game", 40, Color::White, 110, 110);
-                    window.draw(endGameText);
+                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 110, 110);
+                    window.draw(gameT.endGame);
                 }
                 Vector2i mousePos = Mouse::getPosition(window);
                 cursorManager.update(mousePos, anyButtonHovered);
                 cursorManager.draw(window);
 
-                window.draw(pauseButtonHitBox);
+                window.draw(gameBtn.pause);
 
                 window.display();
 
-                // Проверка времени
                 if (timeRemaining <= 0) {
                     gameStage = "ENDGAME";
                 }
@@ -646,8 +647,8 @@ int main() {
                     if (event.mouseButton.button == Mouse::Left) {
                         if (restartButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                             timeRemaining = roundTime;
-                            timerText.setString("Timer:  ");
-                            inputText.setString("Your input: ");
+                            gameT.timer.setString("Timer:  ");
+                            gameT.input.setString("Your input: ");
                             window.setMouseCursorVisible(true);
                             restartText.setFillColor(Color(226, 207, 234));
                             gameStage = "GAME";
