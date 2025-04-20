@@ -119,7 +119,7 @@ int main() {
     bool isPaused = false; // Добавляем флаг паузы
     bool anyButtonHovered = false;
 
-    string gameStage = "MENU";
+    string gameStage = "ENDGAME";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -195,7 +195,6 @@ int main() {
 
     struct GameButtons {
         RectangleShape pause;
-        RectangleShape exitToMenu;
     };
 
     GameTexts gameT;
@@ -208,45 +207,55 @@ int main() {
     ValidWord validator("validWords.txt");
     validator.loadWords();
 
-    string targetWord;
-    unsigned int counter = 0;
-    string playerInput;
+    Clock gameClock;
     unordered_map<char, int> availableLetters;
     unordered_map<char, int> currentLetters;
+    string targetWord;
+    string playerInput;
     string guessedWords[100];
+    unsigned int counter = 0;
     int guessedCount = 0;
-    
+    int timeRemaining = roundTime;
 
     createButtonHitBox(gameBtn.pause, 262, 100, 40, 20);
 
-
-    // Timer variables
-    Clock gameClock;
-    int timeRemaining = roundTime;
-
     //Endgame
-    Texture endgameTexture;
-    Sprite endgameSprite;
+    struct EndgameTexts {
+        Text restart;
+        Text exit;
+        Text score;
+        Text isrecord;
+
+    };
+
+    struct EndgameBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct EndgameButtons {
+        RectangleShape restart;
+        RectangleShape exit;
+    };
+
+    EndgameTexts endgameT;
+    EndgameBg endgameBg;
+    EndgameButtons endgameBtn;
+
+
     string endgameFilename = "backgrounds/endgame" + to_string(theme) + ".png";
+    updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
 
-    Text restartText;
-    Text exitTextEnd;
-    Text scoreText;
-    Text isrecordText;
 
-    addInfoToWindow(restartText, font, "Restart", 50, Color(226, 207, 234), 39.3, 62.5);
-    addInfoToWindow(exitTextEnd, font, "Exit", 50, Color(226, 207, 234), 45, 82.5);
+    addInfoToWindow(endgameT.restart, font, "Restart", 50, Color(226, 207, 234), 39.3, 62.5);
+    addInfoToWindow(endgameT.exit, font, "Exit", 50, Color(226, 207, 234), 45, 82.5);
 
-    addInfoToWindow(scoreText, font, "Your score: ", 30, Color(226, 207, 234), 35, 10);
-    addInfoToWindow(isrecordText, font, "New record!!!", 20, Color(226, 207, 234), 35, 15);
+    addInfoToWindow(endgameT.score, font, "Your score: ", 30, Color(226, 207, 234), 35, 10);
+    addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, Color(226, 207, 234), 35, 15);
 
-    RectangleShape restartButtonHitBox;
-    RectangleShape exitToMenuButtonHitBox;
+    createButtonHitBox(endgameBtn.restart, 496, 120, 435, 451);
+    createButtonHitBox(endgameBtn.exit, 496, 120, 435, 602);
 
-    createButtonHitBox(restartButtonHitBox, 496, 120, 435, 451);
-    createButtonHitBox(exitToMenuButtonHitBox, 496, 120, 435, 602);
-
-    updateBackground(window, endgameTexture, endgameSprite, endgameFilename);
 
     //Settings
     struct SettingsTexts {
@@ -592,7 +601,7 @@ int main() {
                 if (gameStage != "GAME") {
                     isPaused = false;
                 }
-                // Отрисовка
+
                 window.draw(gameBg.sprite);
 
                 window.draw(gameT.counter);
@@ -600,6 +609,7 @@ int main() {
                 window.draw(gameT.input);
                 window.draw(gameT.timer);
                 window.draw(gameT.pause);
+
                 if (!isPaused) {
                     addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 75, 90);
                     window.draw(gameT.endGame);
@@ -608,11 +618,10 @@ int main() {
                     addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 110, 110);
                     window.draw(gameT.endGame);
                 }
-                Vector2i mousePos = Mouse::getPosition(window);
-                cursorManager.update(mousePos, anyButtonHovered);
-                cursorManager.draw(window);
 
                 window.draw(gameBtn.pause);
+
+                drawCursor(window, cursorManager, anyButtonHovered);
 
                 window.display();
 
@@ -629,53 +638,47 @@ int main() {
                 closeEvents(event, window);
 
                 Vector2i mousePos = Mouse::getPosition(window);
-                if (restartButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    restartText.setFillColor(Color(160, 108, 213));
+                if (mouseIn(window, endgameBtn.restart)) {
+                    endgameT.restart.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
-                else if (exitToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    exitTextEnd.setFillColor(Color(160, 108, 213));
+                else if (mouseIn(window, endgameBtn.exit)) {
+                    endgameT.exit.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
                 else {
-                    restartText.setFillColor(Color(226, 207, 234));
-                    exitTextEnd.setFillColor(Color(226, 207, 234));
+                    endgameT.restart.setFillColor(Color(226, 207, 234));
+                    endgameT.exit.setFillColor(Color(226, 207, 234));
                     anyButtonHovered = false;
                 }
 
-                if (event.type == Event::MouseButtonPressed) {
-                    if (event.mouseButton.button == Mouse::Left) {
-                        if (restartButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            timeRemaining = roundTime;
-                            gameT.timer.setString("Timer:  ");
-                            gameT.input.setString("Your input: ");
-                            window.setMouseCursorVisible(true);
-                            restartText.setFillColor(Color(226, 207, 234));
-                            gameStage = "GAME";
-                        }
-                        else if (exitToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            exitTextEnd.setFillColor(Color(226, 207, 234));
-                            gameStage = "MENU";
-                        }
-                    }
+                if (click(event, window, endgameBtn.restart)) {
+                    timeRemaining = roundTime;
+                    gameT.timer.setString("Timer:  ");
+                    gameT.input.setString("Your input: ");
+                    window.setMouseCursorVisible(true);
+                    endgameT.restart.setFillColor(Color(226, 207, 234));
+                    gameStage = "GAME";
+                }
+                else if (click(event, window, endgameBtn.exit)) {
+                    endgameT.exit.setFillColor(Color(226, 207, 234));
+                    gameStage = "MENU";
                 }
             }
-            scoreText.setString("Your score: " + to_string(counter));
+            endgameT.score.setString("Your score: " + to_string(counter));
             
             window.clear();
-            window.draw(endgameSprite);
+            window.draw(endgameBg.sprite);
 
-            window.draw(restartText);
-            window.draw(exitTextEnd);
-            window.draw(scoreText);
-            window.draw(isrecordText);
+            window.draw(endgameT.restart);
+            window.draw(endgameT.exit);
+            window.draw(endgameT.score);
+            window.draw(endgameT.isrecord);
 
-            window.draw(restartButtonHitBox);
-            window.draw(exitToMenuButtonHitBox);
+            window.draw(endgameBtn.restart);
+            window.draw(endgameBtn.exit);
 
-            Vector2i mousePos = Mouse::getPosition(window);
-            cursorManager.update(mousePos, anyButtonHovered);
-            cursorManager.draw(window);
+            drawCursor(window, cursorManager, anyButtonHovered);
 
             window.display();
         }
