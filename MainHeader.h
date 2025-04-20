@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cstdlib>
+#include "CursorManager.h"
 
 using namespace std;
 using namespace sf;
@@ -32,4 +33,49 @@ void closeEvents(Event& event, RenderWindow& window) {
     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
         window.close();
     }
+}
+
+void createButtonHitBox(RectangleShape& rectangle, int width, int height, int xPos, int yPos) {
+    rectangle.setSize(Vector2f(width, height));
+    rectangle.setFillColor(Color(0, 0, 0, 0));
+    rectangle.setOutlineColor(Color::White);
+    //rectangle.setOutlineThickness(2.f);
+    rectangle.setPosition(xPos, yPos);
+}
+
+void updateBackground(RenderWindow& window, Texture& bgTexture, Sprite& bgSprite, string& filename) {
+    if (!bgTexture.loadFromFile(filename)) {
+        std::cerr << "Failed to load background image!" << std::endl;
+    }
+    bgSprite.setTexture(bgTexture);
+
+    sf::Vector2u windowSize = window.getSize();
+    float scaleX = static_cast<float>(windowSize.x) / bgTexture.getSize().x;
+    float scaleY = static_cast<float>(windowSize.y) / bgTexture.getSize().y;
+    bgSprite.setPosition(1, -1);
+    bgSprite.setScale(scaleX, scaleY);
+}
+
+void drawCursor(RenderWindow& window, CursorManager& cursor, bool& isHover) {
+    Vector2i mousePos = Mouse::getPosition(window);
+    cursor.update(mousePos, isHover);
+    cursor.draw(window);
+}
+
+bool mouseIn(RenderWindow& window, RectangleShape& btn) {
+    Vector2i mousePos = Mouse::getPosition(window);
+    return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+}
+
+bool mouseIn(RenderWindow& window, Text& btn) {
+    Vector2i mousePos = Mouse::getPosition(window);
+    return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+}
+
+bool click(Event& event, RenderWindow& window, RectangleShape& btn) {
+    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
+}
+
+bool click(Event& event, RenderWindow& window, Text& btn) {
+    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
 }

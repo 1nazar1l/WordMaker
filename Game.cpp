@@ -25,15 +25,6 @@ unordered_map<char, int> createLetterMap(const string& word) {
     return letters;
 }
 
-void createButtonHitBox(RectangleShape& rectangle, int width, int height, int xPos, int yPos) {
-    rectangle.setSize(Vector2f(width, height));
-    rectangle.setFillColor(Color(0, 0, 0, 0));
-    rectangle.setOutlineColor(Color::White);
-    //rectangle.setOutlineThickness(2.f);
-    rectangle.setPosition(xPos, yPos);
-
-}
-
 void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused) {
     if (isPaused) return; // Не обновляем таймер на паузе
 
@@ -53,22 +44,6 @@ string getRandomWord(string randomWordsFile) {
     return randomWord.getRandomWord();
 }
 
-void updateBackground(RenderWindow& window, Texture& bgTexture, Sprite& bgSprite, string& filename) {
-    if (!bgTexture.loadFromFile(filename)) {
-        std::cerr << "Failed to load background image!" << std::endl;
-    }
-
-    // Создание спрайта
-    bgSprite.setTexture(bgTexture);
-
-    // Масштабирование под размер окна
-    sf::Vector2u windowSize = window.getSize();
-    float scaleX = static_cast<float>(windowSize.x) / bgTexture.getSize().x;
-    float scaleY = static_cast<float>(windowSize.y) / bgTexture.getSize().y;
-    bgSprite.setPosition(1, -1);
-    bgSprite.setScale(scaleX, scaleY);
-}
-
 int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
     if (minusOrPlus == "-") {
         index -= 1;
@@ -85,30 +60,6 @@ int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
     return index;
 }
 
-bool mouseIn(RenderWindow& window, RectangleShape& btn) {
-    Vector2i mousePos = Mouse::getPosition(window);
-    return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-}
-
-bool mouseIn(RenderWindow& window, Text& btn) {
-    Vector2i mousePos = Mouse::getPosition(window);
-    return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-}
-
-void drawCursor(RenderWindow& window, CursorManager& cursor, bool& isHover) {
-    Vector2i mousePos = Mouse::getPosition(window);
-    cursor.update(mousePos, isHover);
-    cursor.draw(window);
-}
-
-bool click(Event& event, RenderWindow& window, RectangleShape& btn) {
-    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
-}
-
-bool click(Event& event, RenderWindow& window, Text& btn) {
-    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
-}
-
 int main() {
     ifstream in("settings/settings.json");
     json settings = json::parse(in);
@@ -116,10 +67,10 @@ int main() {
     string difficulty = settings["difficulty"];
     int roundTime = settings["round_time"];
 
-    bool isPaused = false; // Добавляем флаг паузы
+    bool isPaused = false;
     bool anyButtonHovered = false;
 
-    string gameStage = "ENDGAME";
+    string gameStage = "MENU";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
