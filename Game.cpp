@@ -110,7 +110,7 @@ int main() {
     bool isPaused = false; // Добавляем флаг паузы
     bool anyButtonHovered = false;
 
-    string gameStage = "SETTINGS";
+    string gameStage = "MENU";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -120,35 +120,47 @@ int main() {
     }
 
     // Menu text
-    Texture menuTexture;
-    Sprite menuSprite;
+    struct MenuTexts {
+        Text startGame;
+        Text settings;
+        Text leaderboard;
+        Text exit;
+    };
+
+    struct MenuBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct MenuButtons {
+        RectangleShape start;
+        RectangleShape settings;
+        RectangleShape leaderBoard;
+        RectangleShape exit;
+    };
+
+    MenuTexts menuT;
+    MenuBg menuBg;
+    MenuButtons menuBtn;
+
     string menuFilename = "backgrounds/menu" + to_string(theme) + ".png";
+    updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
 
 
-    RectangleShape startButtonHitBox;
-    RectangleShape settingsButtonHitBox;
-    RectangleShape leaderBoardButtonHitBox;
-    RectangleShape exitButtonHitBox;
+    addInfoToWindow(menuT.startGame, font, "Start Game", 36, Color(226, 207, 234), 0, 0);
+    addInfoToWindow(menuT.settings, font, "Settings", 36, Color(226, 207, 234), 0, 0);
+    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, Color(226, 207, 234), 0, 0);
+    addInfoToWindow(menuT.exit, font, "Exit", 36, Color(226, 207, 234), 0, 0);
 
-    Text startGameText;
-    Text settingsText;
-    Text leaderboardText;
-    Text exitText;
+    menuT.startGame.setPosition(535, 113);
+    menuT.settings.setPosition(570, 279);
+    menuT.leaderboard.setPosition(535, 450);
+    menuT.exit.setPosition(630, 611);
 
-    addInfoToWindow(startGameText, font, "Start Game", 36, Color(226, 207, 234), 0, 0);
-    addInfoToWindow(settingsText, font, "Settings", 36, Color(226, 207, 234), 0, 0);
-    addInfoToWindow(leaderboardText, font, "LeaderBoard", 30, Color(226, 207, 234), 0, 0);
-    addInfoToWindow(exitText, font, "Exit", 36, Color(226, 207, 234), 0, 0);
-
-    startGameText.setPosition(535, 113);
-    settingsText.setPosition(570, 279);
-    leaderboardText.setPosition(535, 450);
-    exitText.setPosition(630, 611);
-
-    createButtonHitBox(startButtonHitBox, 343, 120, 511, 75);
-    createButtonHitBox(settingsButtonHitBox, 343, 120, 511, 241);
-    createButtonHitBox(leaderBoardButtonHitBox, 343, 120, 511, 407);
-    createButtonHitBox(exitButtonHitBox, 343, 120, 511, 573);
+    createButtonHitBox(menuBtn.start, 343, 120, 511, 75);
+    createButtonHitBox(menuBtn.settings, 343, 120, 511, 241);
+    createButtonHitBox(menuBtn.leaderBoard, 343, 120, 511, 407);
+    createButtonHitBox(menuBtn.exit, 343, 120, 511, 573);
 
     CursorManager cursorManager;
     if (!cursorManager.loadTextures("cursors/defaultcursor.png", "cursors/hovercursor.png")) {
@@ -156,7 +168,6 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    updateBackground(window, menuTexture, menuSprite, menuFilename);
 
 
     // Game text
@@ -253,7 +264,6 @@ int main() {
     addInfoToWindow(settingsT.themeParam, font, "Theme", 30, Color(160, 108, 213), 35, 35.3);
     addInfoToWindow(settingsT.save, font, "Save", 50, Color(226, 207, 234), 44, 85);
 
-
     const int timesCount = 4;
     const int difCount = 3;
     const int musicCount = 4;
@@ -309,57 +319,57 @@ int main() {
 
                 if (event.type == Event::MouseButtonPressed) {
                     if (event.mouseButton.button == Mouse::Left) {
-                        if (startButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        if (menuBtn.start.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                             gameStage = "GAME"; 
                             cout << "game1\n";
                         }
-                        else if (settingsButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        else if (menuBtn.settings.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                             gameStage = "SETTINGS";
                         }
-                        else if (exitButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        else if (menuBtn.exit.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                             window.close();
                         }
                     }
                 }
-                if (startButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    startGameText.setFillColor(Color(160, 108, 213));
+                if (menuBtn.start.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    menuT.startGame.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
-                else if (settingsButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    settingsText.setFillColor(Color(160, 108, 213));
-                    anyButtonHovered = true;
-
-                }
-                else if (leaderBoardButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    leaderboardText.setFillColor(Color(160, 108, 213));
+                else if (menuBtn.settings.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    menuT.settings.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
 
                 }
-                else if (exitButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    exitText.setFillColor(Color(160, 108, 213));
+                else if (menuBtn.leaderBoard.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    menuT.leaderboard.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+
+                }
+                else if (menuBtn.exit.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    menuT.exit.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
 
                 else {
-                    startGameText.setFillColor(Color(226, 207, 234));
-                    settingsText.setFillColor(Color(226, 207, 234));
-                    leaderboardText.setFillColor(Color(226, 207, 234));
-                    exitText.setFillColor(Color(226, 207, 234));
+                    menuT.startGame.setFillColor(Color(226, 207, 234));
+                    menuT.settings.setFillColor(Color(226, 207, 234));
+                    menuT.leaderboard.setFillColor(Color(226, 207, 234));
+                    menuT.exit.setFillColor(Color(226, 207, 234));
                     anyButtonHovered = false;
                 }
             }
             window.clear();
-            window.draw(menuSprite);
+            window.draw(menuBg.sprite);
 
-            window.draw(startButtonHitBox);
-            window.draw(settingsButtonHitBox);
-            window.draw(leaderBoardButtonHitBox);
-            window.draw(exitButtonHitBox);
+            window.draw(menuBtn.start);
+            window.draw(menuBtn.settings);
+            window.draw(menuBtn.leaderBoard);
+            window.draw(menuBtn.exit);
 
-            window.draw(startGameText);
-            window.draw(settingsText);
-            window.draw(leaderboardText);
-            window.draw(exitText);
+            window.draw(menuT.startGame);
+            window.draw(menuT.settings);
+            window.draw(menuT.leaderboard);
+            window.draw(menuT.exit);
 
             Vector2i mousePos = Mouse::getPosition(window);
             cursorManager.update(mousePos, anyButtonHovered);
