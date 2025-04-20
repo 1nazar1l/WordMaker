@@ -8,10 +8,12 @@
 #include "ValidWord.h"
 #include "CursorManager.h"
 
-
 #include <unordered_map>
 #include <algorithm>
 
+#include "json.hpp"
+
+using json = nlohmann::json;
 using namespace std;
 using namespace sf;
 
@@ -68,10 +70,16 @@ void updateBackground(RenderWindow& window, Texture& bgTexture, Sprite& bgSprite
 }
 
 int main() {
+    ifstream in("settings/settings.json");
+    json settings = json::parse(in);
+    int theme = settings["theme"];
+    string difficulty = settings["difficulty"];
+    int roundTime = settings["round_time"];
+
     bool isPaused = false; // Добавляем флаг паузы
     bool anyButtonHovered = false;
 
-    string gameStage = "ENDGAME";
+    string gameStage = "GAME";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -83,7 +91,7 @@ int main() {
     // Menu text
     Texture menuTexture;
     Sprite menuSprite;
-    string menuFilename = "backgrounds/menu1.png";
+    string menuFilename = "backgrounds/menu" + to_string(theme) + ".png";
 
 
     RectangleShape startButtonHitBox;
@@ -123,7 +131,7 @@ int main() {
     // Game text
     Texture gameTexture;
     Sprite gameSprite;
-    string gameFilename = "backgrounds/game1.png";
+    string gameFilename = "backgrounds/game" + to_string(theme) + ".png";
 
     ValidWord validator("validWords.txt");
     validator.loadWords();
@@ -146,15 +154,18 @@ int main() {
     
     updateBackground(window, gameTexture, gameSprite, gameFilename);
 
+    RectangleShape pauseButtonHitBox;
+    createButtonHitBox(pauseButtonHitBox, 262, 100, 40, 20);
+
 
     // Timer variables
     Clock gameClock;
-    int timeRemaining = 5;
+    int timeRemaining = roundTime;
 
     //Endgame
     Texture endgameTexture;
     Sprite endgameSprite;
-    string endgameFilename = "backgrounds/endgame1.png";
+    string endgameFilename = "backgrounds/endgame" + to_string(theme) + ".png";
 
     Text restartText;
     Text exitTextEnd;
@@ -183,7 +194,7 @@ int main() {
         if (gameStage == "MENU") {
             window.setMouseCursorVisible(false);
             // Сброс таймера при возврате в меню
-            timeRemaining = 5;
+            timeRemaining = roundTime + 1;
             timerText.setString("Timer:  ");
             inputText.setString("Your input: ");
 
@@ -267,7 +278,7 @@ int main() {
         }
         else if (gameStage == "GAME") {
             anyButtonHovered = false;
-
+            window.setMouseCursorVisible(false);
             // Генерация нового слова при переходе в игровой режим
             targetWord = getRandomWord("easyRandomWords.txt");
             if (targetWord.empty()) {
@@ -285,7 +296,7 @@ int main() {
             availableLetters = createLetterMap(targetWord);
             currentLetters = availableLetters;
 
-            addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 4, 5.7);
+            addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 6, 5.7);
             addInfoToWindow(counterText, font, "Score:  " + to_string(counter), 40, Color::White, 50, 5.7);
             addInfoToWindow(timerText, font, "Timer:  ", 40, Color::White, 76, 5.7);
             addInfoToWindow(targetText, font, "Random word is: " + targetWord, 36, Color::White, 20, 26);
@@ -315,19 +326,28 @@ int main() {
                                 cout << "game2\n";
                                 break; // Выходим из внутреннего цикла
                             }
-                            if (pauseText.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            if (pauseButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                                 isPaused = !isPaused; // Переключаем состояние паузы
                                 if (isPaused) {
-                                    pauseText.setString("Resume");
+                                    addInfoToWindow(pauseText, font, "Resume", 40, Color::White, 4.5, 5.7);
                                 }
                                 else {
-                                    pauseText.setString("Pause");
+                                    addInfoToWindow(pauseText, font, "Pause", 40, Color::White, 6, 5.7);
                                     gameClock.restart(); // Перезапускаем таймер при снятии паузы
                                 }
                             }
                         }
-
                     }
+
+                    if (pauseButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        pauseText.setFillColor(Color(160, 108, 213));
+                        anyButtonHovered = true;
+                    }
+                    else {
+                        pauseText.setFillColor(Color::White);
+                        anyButtonHovered = false;
+                    }
+                    
 
                     // Обработка ввода
                     if (event.type == Event::TextEntered && !isPaused) {  // Добавляем условие !isPaused
@@ -400,6 +420,8 @@ int main() {
                 cursorManager.update(mousePos, anyButtonHovered);
                 cursorManager.draw(window);
 
+                window.draw(pauseButtonHitBox);
+
                 window.display();
 
                 // Проверка времени
@@ -433,7 +455,7 @@ int main() {
                 if (event.type == Event::MouseButtonPressed) {
                     if (event.mouseButton.button == Mouse::Left) {
                         if (restartButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            timeRemaining = 5;
+                            timeRemaining = roundTime;
                             timerText.setString("Timer:  ");
                             inputText.setString("Your input: ");
                             window.setMouseCursorVisible(true);

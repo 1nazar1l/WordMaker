@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CursorManager.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="MainHeader.h" />
     <ClInclude Include="RandomWord.h" />
     <ClInclude Include="StartMenu.h" />
