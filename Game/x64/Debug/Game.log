@@ -11,19 +11,19 @@ C:\Users\Professional\Desktop\WordMaker\Game.cpp(29,32): warning C4244:         
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(29,32): warning C4244:         ]
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(33,33): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(33,27): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(198,77): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(222,82): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(224,92): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(226,82): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(228,82): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(269,65): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(269,52): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(270,66): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(270,53): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(468,76): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(469,103): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(470,80): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(501,103): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(504,100): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(556,62): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(206,77): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(250,88): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(251,98): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(252,88): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(253,88): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(290,77): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(290,64): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(291,78): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(291,65): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(479,76): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(480,103): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(481,80): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(512,103): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(515,100): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(567,62): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
   Game.vcxproj -> C:\Users\Professional\Desktop\WordMaker\x64\Debug\Game.exe

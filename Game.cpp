@@ -69,13 +69,6 @@ void updateBackground(RenderWindow& window, Texture& bgTexture, Sprite& bgSprite
     bgSprite.setScale(scaleX, scaleY);
 }
 
-
-
-
-
-
-
-
 int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
     if (minusOrPlus == "-") {
         index -= 1;
@@ -90,6 +83,21 @@ int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
         }
     }
     return index;
+}
+
+bool mouseIn(RenderWindow& window, RectangleShape& btn) {
+    Vector2i mousePos = Mouse::getPosition(window);
+    return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+}
+
+void drawCursor(RenderWindow& window, CursorManager& cursor, bool& isHover) {
+    Vector2i mousePos = Mouse::getPosition(window);
+    cursor.update(mousePos, isHover);
+    cursor.draw(window);
+}
+
+bool click(Event& event, RenderWindow& window, RectangleShape& btn) {
+    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
 }
 
 int main() {
@@ -144,7 +152,7 @@ int main() {
 
     CursorManager cursorManager;
     if (!cursorManager.loadTextures("cursors/defaultcursor.png", "cursors/hovercursor.png")) {
-        std::cerr << "Failed to load cursor textures!" << std::endl;
+        cerr << "Failed to load cursor textures!" << endl;
         return EXIT_FAILURE;
     }
 
@@ -210,64 +218,77 @@ int main() {
     updateBackground(window, endgameTexture, endgameSprite, endgameFilename);
 
     //Settings
+    struct SettingsTexts {
+        Text exitToMenu;
+        Text save;
+        Text timerParam;
+        Text difficultyParam;
+        Text musicParam;
+        Text themeParam;
+    };
 
-    Texture settingsTexture;
-    Sprite settingsSprite;
+    struct SettingsBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct SettingsButtons {
+        RectangleShape exitToMenu;
+        RectangleShape save;
+        RectangleShape leftStrokes[5];
+        RectangleShape rightStrokes[5];
+    };
+
+    SettingsTexts settingsT;
+    SettingsBg settingsBg;
+    SettingsButtons settingsBtn;
+
     string settingsFilename = "backgrounds/settings" + to_string(theme) + ".png";
-    updateBackground(window, settingsTexture, settingsSprite, settingsFilename);
+    updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
 
-    Text exitToMenuText;
-    addInfoToWindow(exitToMenuText, font, "Exit", 50, Color(226, 207, 234), 5, 6);
-    Text timerParamText;
-    addInfoToWindow(timerParamText, font, "Timer", 30, Color(160, 108, 213), 35, 6.8);
-    Text difficultyParamText;
-    addInfoToWindow(difficultyParamText, font, "Difficulty", 28, Color(160, 108, 213), 35, 16.3);
-    Text musicParamText;
-    addInfoToWindow(musicParamText, font, "Music", 30, Color(160, 108, 213), 35, 25.8);
-    Text themeParamText;
-    addInfoToWindow(themeParamText, font, "Theme", 30, Color(160, 108, 213), 35, 35.3);
+    addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, Color(226, 207, 234), 5, 6);
+    addInfoToWindow(settingsT.timerParam, font, "Timer", 30, Color(160, 108, 213), 35, 6.8);
+    addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, Color(160, 108, 213), 35, 16.3);
+    addInfoToWindow(settingsT.musicParam, font, "Music", 30, Color(160, 108, 213), 35, 25.8);
+    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, Color(160, 108, 213), 35, 35.3);
+    addInfoToWindow(settingsT.save, font, "Save", 50, Color(226, 207, 234), 44, 85);
+
 
     const int timesCount = 4;
-    int timesToRound[timesCount]{ 30, 60, 90, 120 };
-    int timeIndex = 0;
-    Text timerOption;
-    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, Color(226, 207, 234), 57, 7);
     const int difCount = 3;
-    string difToRound[3]{ "easy", "normal", "hard" };
-    int difIndex = 0;
-    Text difOption;
-    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-    addInfoToWindow(difOption, font, difToRound[difIndex], 25, Color(226, 207, 234), 55.5, 16.5);
     const int musicCount = 4;
-    int musicToRound[4]{ 1, 2, 3, 4 };
-    int musicIndex = 0;
-    Text musicOption;
-    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-    addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, Color(226, 207, 234), 58, 26);
     const int themeCount = 4;
+
+    int timesToRound[timesCount]{ 30, 60, 90, 120 };
+    string difToRound[3]{ "easy", "normal", "hard" };
+    int musicToRound[4]{ 1, 2, 3, 4 };
     int themeToRound[4]{ 1, 2, 3, 4 };
+
+    int timeIndex = 0;
+    int difIndex = 0;
+    int musicIndex = 0;
     int themeIndex = 0;
+
+    Text timerOption;
+    Text difOption;
+    Text musicOption;
     Text themeOption;
-    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+
+    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, Color(226, 207, 234), 57, 7);
+    addInfoToWindow(difOption, font, difToRound[difIndex], 25, Color(226, 207, 234), 55.5, 16.5);
+    addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, Color(226, 207, 234), 58, 26);
     addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, Color(226, 207, 234), 58, 35.5);
 
-    Text saveText;
-    addInfoToWindow(saveText, font, "Save", 50, Color(226, 207, 234), 44, 85);
+    createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 40, 24);
+    createButtonHitBox(settingsBtn.save, 443, 100, 462, 633);
 
-    RectangleShape exToMenuButtonHitBox;
-    createButtonHitBox(exToMenuButtonHitBox, 200, 100, 40, 24);
-    RectangleShape saveButtonHitBox;
-    createButtonHitBox(saveButtonHitBox, 443, 100, 462, 633);
-
-    RectangleShape leftStrokes[5];
-    RectangleShape rightStrokes[5];
     float leftMargin1 = 698;
     float leftMargin2 = 875;
     float topMargin = 52;
+
     for (int i = 0;i < 5;i++) {
-        createButtonHitBox(leftStrokes[i], 18, 33, leftMargin1, topMargin);
-        createButtonHitBox(rightStrokes[i], 18, 33, leftMargin2, topMargin);
+        createButtonHitBox(settingsBtn.leftStrokes[i], 18, 33, leftMargin1, topMargin);
+        createButtonHitBox(settingsBtn.rightStrokes[i], 18, 33, leftMargin2, topMargin);
         topMargin += 73;
     }
 
@@ -352,34 +373,32 @@ int main() {
 
             while (window.pollEvent(event)) {
                 closeEvents(event, window);
-                Vector2i mousePos = Mouse::getPosition(window);
-                if (exToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    exitToMenuText.setFillColor(Color(160, 108, 213));
+
+                if (mouseIn(window, settingsBtn.exitToMenu)) {
+                    settingsT.exitToMenu.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
-                else if (saveButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                    saveText.setFillColor(Color(160, 108, 213));
+                else if (mouseIn(window, settingsBtn.save)) {
+                    settingsT.save.setFillColor(Color(160, 108, 213));
                     anyButtonHovered = true;
                 }
                 else {
-                    saveText.setFillColor(Color(226, 207, 234));
-                    exitToMenuText.setFillColor(Color(226, 207, 234));
+                    settingsT.save.setFillColor(Color(226, 207, 234));
+                    settingsT.exitToMenu.setFillColor(Color(226, 207, 234));
                     anyButtonHovered = false;
-                }
-                for (int i = 0;i < 5;i++) {
-                    if (leftStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                        anyButtonHovered = true;
-                        break;
-                    }
-                    else if (rightStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                        anyButtonHovered = true;
-                        break;
+
+                    for (int i = 0;i < 5;i++) {
+                        if (mouseIn(window, settingsBtn.leftStrokes[i]) || mouseIn(window, settingsBtn.rightStrokes[i])) {
+                            anyButtonHovered = true;
+                            break;
+                        }
                     }
                 }
+
                 for (int i = 0;i < 5;i++) {
                     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-                        bool isLeft = leftStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-                        bool isRight = rightStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                        bool isLeft = mouseIn(window, settingsBtn.leftStrokes[i]);
+                        bool isRight = mouseIn(window, settingsBtn.rightStrokes[i]);
                         string plusOrMinus = isLeft ? "-": "+";
                         if (isLeft || isRight) {
                             switch (i) {
@@ -400,48 +419,40 @@ int main() {
                                 addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, Color(226, 207, 234), 58, 35.5);
                                 break;
                             }
-
                         }
-
                     }
                 }
 
-                if (event.type == Event::MouseButtonPressed) {
-                    if (event.mouseButton.button == Mouse::Left) {
-                        if (exToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            gameStage = "MENU";
-                        }
-                        else if (saveButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            cout << "save";
-                        }
-                    }
+                if (click(event, window, settingsBtn.exitToMenu)) {
+                    gameStage = "MENU";
+                }
+                else if (click(event, window, settingsBtn.save)) {
+                    cout << "save";
                 }
             }
             window.clear();
-            window.draw(settingsSprite);
+            window.draw(settingsBg.sprite);
 
-            window.draw(exToMenuButtonHitBox);
-            window.draw(saveButtonHitBox);
-            window.draw(exitToMenuText);
-            window.draw(timerParamText);
-            window.draw(difficultyParamText);
-            window.draw(musicParamText);
-            window.draw(themeParamText);
+            window.draw(settingsBtn.exitToMenu);
+            window.draw(settingsBtn.save);
+
+            window.draw(settingsT.exitToMenu);
+            window.draw(settingsT.timerParam);
+            window.draw(settingsT.difficultyParam);
+            window.draw(settingsT.musicParam);
+            window.draw(settingsT.themeParam);
+            window.draw(settingsT.save);
 
             window.draw(timerOption);
             window.draw(difOption);
             window.draw(musicOption);
             window.draw(themeOption);
 
-            window.draw(saveText);
-
-            Vector2i mousePos = Mouse::getPosition(window);
-            cursorManager.update(mousePos, anyButtonHovered);
-            cursorManager.draw(window);
+            drawCursor(window, cursorManager, anyButtonHovered);
 
             for (int i = 0;i < 5;i++) {
-                window.draw(leftStrokes[i]);
-                window.draw(rightStrokes[i]);
+                window.draw(settingsBtn.leftStrokes[i]);
+                window.draw(settingsBtn.rightStrokes[i]);
             }
             window.display();
         }
