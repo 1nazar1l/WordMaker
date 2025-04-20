@@ -69,6 +69,29 @@ void updateBackground(RenderWindow& window, Texture& bgTexture, Sprite& bgSprite
     bgSprite.setScale(scaleX, scaleY);
 }
 
+
+
+
+
+
+
+
+int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
+    if (minusOrPlus == "-") {
+        index -= 1;
+        if (index < 0) {
+            index = maxIndex - 1;
+        }
+    }
+    else if (minusOrPlus == "+") {
+        index += 1;
+        if (index >= maxIndex) {
+            index = 0;
+        }
+    }
+    return index;
+}
+
 int main() {
     ifstream in("settings/settings.json");
     json settings = json::parse(in);
@@ -79,7 +102,7 @@ int main() {
     bool isPaused = false; // Добавляем флаг паузы
     bool anyButtonHovered = false;
 
-    string gameStage = "GAME";
+    string gameStage = "SETTINGS";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -186,9 +209,67 @@ int main() {
 
     updateBackground(window, endgameTexture, endgameSprite, endgameFilename);
 
+    //Settings
 
+    Texture settingsTexture;
+    Sprite settingsSprite;
+    string settingsFilename = "backgrounds/settings" + to_string(theme) + ".png";
+    updateBackground(window, settingsTexture, settingsSprite, settingsFilename);
 
+    Text exitToMenuText;
+    addInfoToWindow(exitToMenuText, font, "Exit", 50, Color(226, 207, 234), 5, 6);
+    Text timerParamText;
+    addInfoToWindow(timerParamText, font, "Timer", 30, Color(160, 108, 213), 35, 6.8);
+    Text difficultyParamText;
+    addInfoToWindow(difficultyParamText, font, "Difficulty", 28, Color(160, 108, 213), 35, 16.3);
+    Text musicParamText;
+    addInfoToWindow(musicParamText, font, "Music", 30, Color(160, 108, 213), 35, 25.8);
+    Text themeParamText;
+    addInfoToWindow(themeParamText, font, "Theme", 30, Color(160, 108, 213), 35, 35.3);
 
+    const int timesCount = 4;
+    int timesToRound[timesCount]{ 30, 60, 90, 120 };
+    int timeIndex = 0;
+    Text timerOption;
+    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, Color(226, 207, 234), 57, 7);
+    const int difCount = 3;
+    string difToRound[3]{ "easy", "normal", "hard" };
+    int difIndex = 0;
+    Text difOption;
+    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+    addInfoToWindow(difOption, font, difToRound[difIndex], 25, Color(226, 207, 234), 55.5, 16.5);
+    const int musicCount = 4;
+    int musicToRound[4]{ 1, 2, 3, 4 };
+    int musicIndex = 0;
+    Text musicOption;
+    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+    addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, Color(226, 207, 234), 58, 26);
+    const int themeCount = 4;
+    int themeToRound[4]{ 1, 2, 3, 4 };
+    int themeIndex = 0;
+    Text themeOption;
+    //hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, Color(226, 207, 234), 58, 35.5);
+
+    Text saveText;
+    addInfoToWindow(saveText, font, "Save", 50, Color(226, 207, 234), 44, 85);
+
+    RectangleShape exToMenuButtonHitBox;
+    createButtonHitBox(exToMenuButtonHitBox, 200, 100, 40, 24);
+    RectangleShape saveButtonHitBox;
+    createButtonHitBox(saveButtonHitBox, 443, 100, 462, 633);
+
+    RectangleShape leftStrokes[5];
+    RectangleShape rightStrokes[5];
+    float leftMargin1 = 698;
+    float leftMargin2 = 875;
+    float topMargin = 52;
+    for (int i = 0;i < 5;i++) {
+        createButtonHitBox(leftStrokes[i], 18, 33, leftMargin1, topMargin);
+        createButtonHitBox(rightStrokes[i], 18, 33, leftMargin2, topMargin);
+        topMargin += 73;
+    }
 
     while (window.isOpen()) {
         if (gameStage == "MENU") {
@@ -266,14 +347,102 @@ int main() {
             window.display();
         }
         else if (gameStage == "SETTINGS") {
+            window.setMouseCursorVisible(false);
             Event event;
 
             while (window.pollEvent(event)) {
                 closeEvents(event, window);
-            }
-            window.setMouseCursorVisible(true);
+                Vector2i mousePos = Mouse::getPosition(window);
+                if (exToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    exitToMenuText.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+                }
+                else if (saveButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    saveText.setFillColor(Color(160, 108, 213));
+                    anyButtonHovered = true;
+                }
+                else {
+                    saveText.setFillColor(Color(226, 207, 234));
+                    exitToMenuText.setFillColor(Color(226, 207, 234));
+                    anyButtonHovered = false;
+                }
+                for (int i = 0;i < 5;i++) {
+                    if (leftStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        anyButtonHovered = true;
+                        break;
+                    }
+                    else if (rightStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        anyButtonHovered = true;
+                        break;
+                    }
+                }
+                for (int i = 0;i < 5;i++) {
+                    if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                        bool isLeft = leftStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                        bool isRight = rightStrokes[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                        string plusOrMinus = isLeft ? "-": "+";
+                        if (isLeft || isRight) {
+                            switch (i) {
+                            case 0:
+                                timeIndex = updateIndex(timeIndex, timesCount, plusOrMinus);
+                                addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, Color(226, 207, 234), 57, 7);
+                                break;
+                            case 1:
+                                difIndex = updateIndex(difIndex, difCount, plusOrMinus);
+                                addInfoToWindow(difOption, font, difToRound[difIndex], 25, Color(226, 207, 234), 55.5, 16.5);
+                                break;
+                            case 2:
+                                musicIndex = updateIndex(musicIndex, musicCount, plusOrMinus);
+                                addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, Color(226, 207, 234), 58, 26);
+                                break;
+                            case 3:
+                                themeIndex = updateIndex(themeIndex, themeCount, plusOrMinus);
+                                addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, Color(226, 207, 234), 58, 35.5);
+                                break;
+                            }
 
+                        }
+
+                    }
+                }
+
+                if (event.type == Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == Mouse::Left) {
+                        if (exToMenuButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            gameStage = "MENU";
+                        }
+                        else if (saveButtonHitBox.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            cout << "save";
+                        }
+                    }
+                }
+            }
             window.clear();
+            window.draw(settingsSprite);
+
+            window.draw(exToMenuButtonHitBox);
+            window.draw(saveButtonHitBox);
+            window.draw(exitToMenuText);
+            window.draw(timerParamText);
+            window.draw(difficultyParamText);
+            window.draw(musicParamText);
+            window.draw(themeParamText);
+
+            window.draw(timerOption);
+            window.draw(difOption);
+            window.draw(musicOption);
+            window.draw(themeOption);
+
+            window.draw(saveText);
+
+            Vector2i mousePos = Mouse::getPosition(window);
+            cursorManager.update(mousePos, anyButtonHovered);
+            cursorManager.draw(window);
+
+            for (int i = 0;i < 5;i++) {
+                window.draw(leftStrokes[i]);
+                window.draw(rightStrokes[i]);
+            }
             window.display();
         }
         else if (gameStage == "GAME") {
