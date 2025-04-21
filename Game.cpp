@@ -60,12 +60,41 @@ int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
     return index;
 }
 
+int getCurrentIndex(const int& length, int massiv[], int selectedParametr) {
+    for (int i = 0; i < length - 1;i++) {
+        if (massiv[i] == selectedParametr) {
+            return i;
+            break;
+        }
+    }
+}
+
+int getCurrentIndex(const int& length, string massiv[], string selectedParametr) {
+    for (int i = 0; i < length - 1;i++) {
+        if (massiv[i] == selectedParametr) {
+            return i;
+            break;
+        }
+    }
+}
+
 int main() {
-    ifstream in("settings/settings.json");
-    json settings = json::parse(in);
-    int theme = settings["theme"];
+    ifstream setJson("jsons/settings.json");
+    json settings = json::parse(setJson);
+
+    int themeNumber = settings["theme"];
+    ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
+    json theme = json::parse(themeJson);
+
     string difficulty = settings["difficulty"];
     int roundTime = settings["round_time"];
+    auto colorFirst = theme["color1"];
+    Color color1 = Color(colorFirst[0], colorFirst[1], colorFirst[2]);
+
+    auto colorSecond = theme["color2"];
+    Color color2 = Color(colorSecond[0], colorSecond[1], colorSecond[2]);
+
+
 
     bool isPaused = false;
     bool anyButtonHovered = false;
@@ -109,14 +138,14 @@ int main() {
     MenuBg menuBg;
     MenuButtons menuBtn;
 
-    string menuFilename = "backgrounds/menu" + to_string(theme) + ".png";
+    string menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
     updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
 
 
-    addInfoToWindow(menuT.startGame, font, "Start Game", 36, Color(226, 207, 234), 0, 0);
-    addInfoToWindow(menuT.settings, font, "Settings", 36, Color(226, 207, 234), 0, 0);
-    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, Color(226, 207, 234), 0, 0);
-    addInfoToWindow(menuT.exit, font, "Exit", 36, Color(226, 207, 234), 0, 0);
+    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 0, 0);
+    addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 0, 0);
+    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 0, 0);
+    addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 0, 0);
 
     menuT.startGame.setPosition(535, 113);
     menuT.settings.setPosition(570, 279);
@@ -152,7 +181,7 @@ int main() {
     GameBg gameBg;
     GameButtons gameBtn;
 
-    string gameFilename = "backgrounds/game" + to_string(theme) + ".png";
+    string gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
     updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
 
     ValidWord validator("validWords.txt");
@@ -194,15 +223,15 @@ int main() {
     EndgameButtons endgameBtn;
 
 
-    string endgameFilename = "backgrounds/endgame" + to_string(theme) + ".png";
+    string endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
     updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
 
 
-    addInfoToWindow(endgameT.restart, font, "Restart", 50, Color(226, 207, 234), 39.3, 62.5);
-    addInfoToWindow(endgameT.exit, font, "Exit", 50, Color(226, 207, 234), 45, 82.5);
+    addInfoToWindow(endgameT.restart, font, "Restart", 50, color1, 39.3, 62.5);
+    addInfoToWindow(endgameT.exit, font, "Exit", 50, color1, 45, 82.5);
 
-    addInfoToWindow(endgameT.score, font, "Your score: ", 30, Color(226, 207, 234), 35, 10);
-    addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, Color(226, 207, 234), 35, 15);
+    addInfoToWindow(endgameT.score, font, "Your score: ", 30, color1, 35, 10);
+    addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 35, 15);
 
     createButtonHitBox(endgameBtn.restart, 496, 120, 435, 451);
     createButtonHitBox(endgameBtn.exit, 496, 120, 435, 602);
@@ -234,15 +263,15 @@ int main() {
     SettingsBg settingsBg;
     SettingsButtons settingsBtn;
 
-    string settingsFilename = "backgrounds/settings" + to_string(theme) + ".png";
+    string settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
     updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
 
-    addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, Color(226, 207, 234), 5, 6);
-    addInfoToWindow(settingsT.timerParam, font, "Timer", 30, Color(160, 108, 213), 35, 6.8);
-    addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, Color(160, 108, 213), 35, 16.3);
-    addInfoToWindow(settingsT.musicParam, font, "Music", 30, Color(160, 108, 213), 35, 25.8);
-    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, Color(160, 108, 213), 35, 35.3);
-    addInfoToWindow(settingsT.save, font, "Save", 50, Color(226, 207, 234), 44, 85);
+    addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, color1, 5, 6);
+    addInfoToWindow(settingsT.timerParam, font, "Timer", 30, color2, 35, 6.8);
+    addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, color2, 35, 16.3);
+    addInfoToWindow(settingsT.musicParam, font, "Music", 30, color2, 35, 25.8);
+    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 35, 35.3);
+    addInfoToWindow(settingsT.save, font, "Save", 50, color1, 44, 85);
 
     const int timesCount = 4;
     const int difCount = 3;
@@ -250,12 +279,12 @@ int main() {
     const int themeCount = 4;
 
     int timesToRound[timesCount]{ 30, 60, 90, 120 };
-    string difToRound[3]{ "easy", "normal", "hard" };
-    int musicToRound[4]{ 1, 2, 3, 4 };
-    int themeToRound[4]{ 1, 2, 3, 4 };
+    string difToRound[difCount]{ "easy", "normal", "hard" };
+    int musicToRound[musicCount]{ 1, 2, 3, 4 };
+    int themeToRound[themeCount]{ 1, 2, 3, 4 };
 
-    int timeIndex = 0;
-    int difIndex = 0;
+    int timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
+    int difIndex = getCurrentIndex(difCount, difToRound, difficulty);
     int musicIndex = 0;
     int themeIndex = 0;
 
@@ -264,10 +293,10 @@ int main() {
     Text musicOption;
     Text themeOption;
 
-    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, Color(226, 207, 234), 57, 7);
-    addInfoToWindow(difOption, font, difToRound[difIndex], 25, Color(226, 207, 234), 55.5, 16.5);
-    addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, Color(226, 207, 234), 58, 26);
-    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, Color(226, 207, 234), 58, 35.5);
+    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 57, 7);
+    addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
+    addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, color1, 58, 26);
+    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 35.5);
 
     createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 40, 24);
     createButtonHitBox(settingsBtn.save, 443, 100, 462, 633);
@@ -284,6 +313,8 @@ int main() {
 
     while (window.isOpen()) {
         if (gameStage == "MENU") {
+            roundTime = settings["round_time"];
+            difficulty = settings["difficulty"];
             window.setMouseCursorVisible(false);
             // Сброс таймера при возврате в меню
             timeRemaining = roundTime + 1;
@@ -306,26 +337,26 @@ int main() {
                 }
 
                 if (mouseIn(window, menuBtn.start)) {
-                    menuT.startGame.setFillColor(Color(160, 108, 213));
+                    menuT.startGame.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else if (mouseIn(window, menuBtn.settings)) {
-                    menuT.settings.setFillColor(Color(160, 108, 213));
+                    menuT.settings.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else if (mouseIn(window, menuBtn.leaderBoard)) {
-                    menuT.leaderboard.setFillColor(Color(160, 108, 213));
+                    menuT.leaderboard.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else if (mouseIn(window, menuBtn.exit)) {
-                    menuT.exit.setFillColor(Color(160, 108, 213));
+                    menuT.exit.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else {
-                    menuT.startGame.setFillColor(Color(226, 207, 234));
-                    menuT.settings.setFillColor(Color(226, 207, 234));
-                    menuT.leaderboard.setFillColor(Color(226, 207, 234));
-                    menuT.exit.setFillColor(Color(226, 207, 234));
+                    menuT.startGame.setFillColor(color1);
+                    menuT.settings.setFillColor(color1);
+                    menuT.leaderboard.setFillColor(color1);
+                    menuT.exit.setFillColor(color1);
                     anyButtonHovered = false;
                 }
             }
@@ -355,16 +386,16 @@ int main() {
                 closeEvents(event, window);
 
                 if (mouseIn(window, settingsBtn.exitToMenu)) {
-                    settingsT.exitToMenu.setFillColor(Color(160, 108, 213));
+                    settingsT.exitToMenu.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else if (mouseIn(window, settingsBtn.save)) {
-                    settingsT.save.setFillColor(Color(160, 108, 213));
+                    settingsT.save.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else {
-                    settingsT.save.setFillColor(Color(226, 207, 234));
-                    settingsT.exitToMenu.setFillColor(Color(226, 207, 234));
+                    settingsT.save.setFillColor(color1);
+                    settingsT.exitToMenu.setFillColor(color1);
                     anyButtonHovered = false;
 
                     for (int i = 0;i < 5;i++) {
@@ -384,19 +415,19 @@ int main() {
                             switch (i) {
                             case 0:
                                 timeIndex = updateIndex(timeIndex, timesCount, plusOrMinus);
-                                addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, Color(226, 207, 234), 57, 7);
+                                addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 57, 7);
                                 break;
                             case 1:
                                 difIndex = updateIndex(difIndex, difCount, plusOrMinus);
-                                addInfoToWindow(difOption, font, difToRound[difIndex], 25, Color(226, 207, 234), 55.5, 16.5);
+                                addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
                                 break;
                             case 2:
                                 musicIndex = updateIndex(musicIndex, musicCount, plusOrMinus);
-                                addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, Color(226, 207, 234), 58, 26);
+                                addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, color1, 58, 26);
                                 break;
                             case 3:
                                 themeIndex = updateIndex(themeIndex, themeCount, plusOrMinus);
-                                addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, Color(226, 207, 234), 58, 35.5);
+                                addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 35.5);
                                 break;
                             }
                         }
@@ -407,6 +438,13 @@ int main() {
                     gameStage = "MENU";
                 }
                 else if (click(event, window, settingsBtn.save)) {
+                    // Сохранение
+                    settings["round_time"] = timesToRound[timeIndex];
+                    settings["difficulty"] = difToRound[difIndex];
+                    roundTime = settings["round_time"];
+                    difficulty = settings["difficulty"];
+                    std::ofstream out("settings/settings.json");
+                    out << settings.dump(4);
                     cout << "save";
                 }
             }
@@ -440,7 +478,7 @@ int main() {
             anyButtonHovered = false;
             window.setMouseCursorVisible(false);
             // Генерация нового слова при переходе в игровой режим
-            targetWord = getRandomWord("easyRandomWords.txt");
+            targetWord = getRandomWord(difficulty + "RandomWords.txt");
             if (targetWord.empty()) {
                 cerr << "No words available!" << endl;
                 return EXIT_FAILURE;
@@ -493,7 +531,7 @@ int main() {
                     }
                     
                     if (mouseIn(window, gameBtn.pause)) {
-                        gameT.pause.setFillColor(Color(160, 108, 213));
+                        gameT.pause.setFillColor(color2);
                         anyButtonHovered = true;
                     }
                     else {
@@ -590,16 +628,16 @@ int main() {
 
                 Vector2i mousePos = Mouse::getPosition(window);
                 if (mouseIn(window, endgameBtn.restart)) {
-                    endgameT.restart.setFillColor(Color(160, 108, 213));
+                    endgameT.restart.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else if (mouseIn(window, endgameBtn.exit)) {
-                    endgameT.exit.setFillColor(Color(160, 108, 213));
+                    endgameT.exit.setFillColor(color2);
                     anyButtonHovered = true;
                 }
                 else {
-                    endgameT.restart.setFillColor(Color(226, 207, 234));
-                    endgameT.exit.setFillColor(Color(226, 207, 234));
+                    endgameT.restart.setFillColor(color1);
+                    endgameT.exit.setFillColor(color1);
                     anyButtonHovered = false;
                 }
 
@@ -608,11 +646,11 @@ int main() {
                     gameT.timer.setString("Timer:  ");
                     gameT.input.setString("Your input: ");
                     window.setMouseCursorVisible(true);
-                    endgameT.restart.setFillColor(Color(226, 207, 234));
+                    endgameT.restart.setFillColor(color1);
                     gameStage = "GAME";
                 }
                 else if (click(event, window, endgameBtn.exit)) {
-                    endgameT.exit.setFillColor(Color(226, 207, 234));
+                    endgameT.exit.setFillColor(color1);
                     gameStage = "MENU";
                 }
             }
