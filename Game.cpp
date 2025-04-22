@@ -62,7 +62,6 @@ int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
 
 int getCurrentIndex(const int& length, int massiv[], int selectedParametr) {
     for (int i = 0; i < length;i++) {
-        cout << massiv[i] << endl;
         if (massiv[i] == selectedParametr) {
             return i;
             break;
@@ -285,12 +284,9 @@ int main() {
     int themeToRound[themeCount]{1,2,3,4};
 
     int timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
-    cout << timeIndex;
     int difIndex = getCurrentIndexStr(difCount, difToRound, difficulty);
-    //cout << difficulty << endl;
-    //cout << difIndex;
     int musicIndex = 0;
-    int themeIndex = 0;
+    int themeIndex = getCurrentIndex(themeCount, themeToRound, themeNumber);
 
     Text timerOption;
     Text difOption;
@@ -319,8 +315,19 @@ int main() {
         if (gameStage == "MENU") {
             roundTime = settings["round_time"];
             difficulty = settings["difficulty"];
+            themeNumber = settings["theme_number"];
             window.setMouseCursorVisible(false);
-            // Сброс таймера при возврате в меню
+
+            menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
+            gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
+            endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
+            settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
+
+            updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
+            updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
+            updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
+            updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
+
             timeRemaining = roundTime + 1;
             gameT.timer.setString("Timer:  ");
             gameT.input.setString("Your input: ");
@@ -445,8 +452,10 @@ int main() {
                     // Сохранение
                     settings["round_time"] = timesToRound[timeIndex];
                     settings["difficulty"] = difToRound[difIndex];
+                    settings["theme_number"] = themeToRound[themeIndex];
                     roundTime = settings["round_time"];
                     difficulty = settings["difficulty"];
+                    themeNumber = settings["theme_number"];
                     std::ofstream out("jsons/settings.json");
                     out << settings.dump(4);
                     cout << "save";
