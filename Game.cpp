@@ -79,20 +79,21 @@ int getCurrentIndexStr(const int& length, string massiv[], string selectedParame
 }
 
 int main() {
+    Color color1, color2;
     ifstream setJson("jsons/settings.json");
     json settings = json::parse(setJson);
 
     int themeNumber = settings["theme_number"];
-    ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
-    json theme = json::parse(themeJson);
-
     string difficulty = settings["difficulty"];
     int roundTime = settings["round_time"];
-    auto colorFirst = theme["color1"];
-    Color color1 = Color(colorFirst[0], colorFirst[1], colorFirst[2]);
 
+    ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
+    json theme = json::parse(themeJson);
+    auto colorFirst = theme["color1"];
     auto colorSecond = theme["color2"];
-    Color color2 = Color(colorSecond[0], colorSecond[1], colorSecond[2]);
+
+    color1 = Color(colorFirst[0], colorFirst[1], colorFirst[2]);
+    color2 = Color(colorSecond[0], colorSecond[1], colorSecond[2]);
 
 
 
@@ -318,16 +319,6 @@ int main() {
             themeNumber = settings["theme_number"];
             window.setMouseCursorVisible(false);
 
-            menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
-            gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
-            endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
-            settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
-
-            updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
-            updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
-            updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
-            updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
-
             timeRemaining = roundTime + 1;
             gameT.timer.setString("Timer:  ");
             gameT.input.setString("Your input: ");
@@ -459,7 +450,32 @@ int main() {
                     std::ofstream out("jsons/settings.json");
                     out << settings.dump(4);
                     cout << "save";
+
+                    menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
+                    gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
+                    endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
+                    settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
+
+                    updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
+                    updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
+                    updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
+                    updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
+                    
+                    ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
+                    json theme = json::parse(themeJson);
+                    colorFirst = theme["color1"];
+                    colorSecond = theme["color2"];
+
+                    color1 = Color(colorFirst[0], colorFirst[1], colorFirst[2]);
+                    color2 = Color(colorSecond[0], colorSecond[1], colorSecond[2]);
+
+
+                    settingsT.timerParam.setFillColor(color2);
+                    settingsT.difficultyParam.setFillColor(color2);
+                    settingsT.musicParam.setFillColor(color2);
+                    settingsT.themeParam.setFillColor(color2);
                 }
+
             }
             window.clear();
             window.draw(settingsBg.sprite);
