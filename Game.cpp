@@ -443,7 +443,7 @@ int main() {
                     settings["difficulty"] = difToRound[difIndex];
                     roundTime = settings["round_time"];
                     difficulty = settings["difficulty"];
-                    std::ofstream out("settings/settings.json");
+                    std::ofstream out("jsons/settings.json");
                     out << settings.dump(4);
                     cout << "save";
                 }
