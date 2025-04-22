@@ -61,7 +61,8 @@ int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
 }
 
 int getCurrentIndex(const int& length, int massiv[], int selectedParametr) {
-    for (int i = 0; i < length - 1;i++) {
+    for (int i = 0; i < length;i++) {
+        cout << massiv[i] << endl;
         if (massiv[i] == selectedParametr) {
             return i;
             break;
@@ -69,8 +70,8 @@ int getCurrentIndex(const int& length, int massiv[], int selectedParametr) {
     }
 }
 
-int getCurrentIndex(const int& length, string massiv[], string selectedParametr) {
-    for (int i = 0; i < length - 1;i++) {
+int getCurrentIndexStr(const int& length, string massiv[], string selectedParametr) {
+    for (int i = 0; i < length;i++) {
         if (massiv[i] == selectedParametr) {
             return i;
             break;
@@ -99,7 +100,7 @@ int main() {
     bool isPaused = false;
     bool anyButtonHovered = false;
 
-    string gameStage = "ENDGAME";
+    string gameStage = "MENU";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -278,13 +279,16 @@ int main() {
     const int musicCount = 4;
     const int themeCount = 4;
 
-    int timesToRound[timesCount]{ 30, 60, 90, 120 };
-    string difToRound[difCount]{ "easy", "normal", "hard" };
-    int musicToRound[musicCount]{ 1, 2, 3, 4 };
-    int themeToRound[themeCount]{ 1, 2, 3, 4 };
+    int timesToRound[timesCount]{30,60,90,120};
+    string difToRound[difCount]{"easy","normal","hard"};
+    int musicToRound[musicCount]{1,2,3,4};
+    int themeToRound[themeCount]{1,2,3,4};
 
     int timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
-    int difIndex = getCurrentIndex(difCount, difToRound, difficulty);
+    cout << timeIndex;
+    int difIndex = getCurrentIndexStr(difCount, difToRound, difficulty);
+    //cout << difficulty << endl;
+    //cout << difIndex;
     int musicIndex = 0;
     int themeIndex = 0;
 
