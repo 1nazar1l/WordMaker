@@ -82,7 +82,7 @@ int main() {
     ifstream setJson("jsons/settings.json");
     json settings = json::parse(setJson);
 
-    int themeNumber = settings["theme"];
+    int themeNumber = settings["theme_number"];
     ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
     json theme = json::parse(themeJson);
 
@@ -99,7 +99,7 @@ int main() {
     bool isPaused = false;
     bool anyButtonHovered = false;
 
-    string gameStage = "MENU";
+    string gameStage = "ENDGAME";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
