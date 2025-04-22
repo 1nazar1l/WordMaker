@@ -90,6 +90,8 @@ int main() {
     int themeNumber = settings["theme_number"];
     string difficulty = settings["difficulty"];
     int roundTime = settings["round_time"];
+    int music1Number = settings["music1"];
+    int music2Number = settings["music2"];
 
     ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
     json theme = json::parse(themeJson);
@@ -246,7 +248,8 @@ int main() {
         Text save;
         Text timerParam;
         Text difficultyParam;
-        Text musicParam;
+        Text music1Param;
+        Text music2Param;
         Text themeParam;
     };
 
@@ -272,34 +275,40 @@ int main() {
     addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, color1, 5, 6);
     addInfoToWindow(settingsT.timerParam, font, "Timer", 30, color2, 35, 6.8);
     addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, color2, 35, 16.3);
-    addInfoToWindow(settingsT.musicParam, font, "Music", 30, color2, 35, 25.8);
-    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 35, 35.3);
+    addInfoToWindow(settingsT.music1Param, font, "Main song", 30, color2, 35, 25.8);
+    addInfoToWindow(settingsT.music2Param, font, "Game song", 30, color2, 35, 35.3);
+    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 35, 44.8);
     addInfoToWindow(settingsT.save, font, "Save", 50, color1, 44, 85);
 
     const int timesCount = 4;
     const int difCount = 3;
-    const int musicCount = 4;
+    const int music1Count = 4;
+    const int music2Count = 4;
     const int themeCount = 4;
 
     int timesToRound[timesCount]{30,60,90,120};
     string difToRound[difCount]{"easy","normal","hard"};
-    int musicToRound[musicCount]{1,2,3,4};
-    int themeToRound[themeCount]{1,2,3,4};
+    int music1ToRound[music1Count]{ 1,2,3,4 };
+    int music2ToRound[music2Count]{ 1,2,3,4 };
+    int themeToRound[themeCount]{ 1,2,3,4 };
 
     int timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
     int difIndex = getCurrentIndexStr(difCount, difToRound, difficulty);
-    int musicIndex = 0;
     int themeIndex = getCurrentIndex(themeCount, themeToRound, themeNumber);
+    int music1Index = getCurrentIndex(music1Count, music1ToRound, music1Number);
+    int music2Index = getCurrentIndex(music2Count, music2ToRound, music2Number);
 
     Text timerOption;
     Text difOption;
-    Text musicOption;
+    Text music1Option;
+    Text music2Option;
     Text themeOption;
 
     addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 57, 7);
     addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
-    addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, color1, 58, 26);
-    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 35.5);
+    addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 58, 26);
+    addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
+    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
 
     createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 40, 24);
     createButtonHitBox(settingsBtn.save, 443, 100, 462, 633);
@@ -314,7 +323,7 @@ int main() {
         topMargin += 73;
     }
 
-    musicManager.play("songs/main1.ogg");
+    musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
 
 
     while (window.isOpen()) {
@@ -329,7 +338,7 @@ int main() {
             gameT.timer.setString("Timer:  ");
             gameT.input.setString("Your input: ");
 
-            musicManager.play("songs/main1.ogg");
+            musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
 
             Event event;
             while (window.pollEvent(event)) {
@@ -432,12 +441,16 @@ int main() {
                                 addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
                                 break;
                             case 2:
-                                musicIndex = updateIndex(musicIndex, musicCount, plusOrMinus);
-                                addInfoToWindow(musicOption, font, to_string(musicToRound[musicIndex]), 25, color1, 58, 26);
+                                music1Index = updateIndex(music1Index, music1Count, plusOrMinus);
+                                addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 58, 26);
                                 break;
                             case 3:
+                                music2Index = updateIndex(music2Index, music2Count, plusOrMinus);
+                                addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
+                                break;
+                            case 4:
                                 themeIndex = updateIndex(themeIndex, themeCount, plusOrMinus);
-                                addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 35.5);
+                                addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
                                 break;
                             }
                         }
@@ -452,9 +465,13 @@ int main() {
                     settings["round_time"] = timesToRound[timeIndex];
                     settings["difficulty"] = difToRound[difIndex];
                     settings["theme_number"] = themeToRound[themeIndex];
+                    settings["music1"] = music1ToRound[music1Index];
+                    settings["music2"] = music2ToRound[music2Index];
                     roundTime = settings["round_time"];
                     difficulty = settings["difficulty"];
                     themeNumber = settings["theme_number"];
+                    music1Number = settings["music1"];
+                    music2Number = settings["music2"];
                     std::ofstream out("jsons/settings.json");
                     out << settings.dump(4);
                     cout << "save";
@@ -480,8 +497,12 @@ int main() {
 
                     settingsT.timerParam.setFillColor(color2);
                     settingsT.difficultyParam.setFillColor(color2);
-                    settingsT.musicParam.setFillColor(color2);
+                    settingsT.music1Param.setFillColor(color2);
+                    settingsT.music2Param.setFillColor(color2);
                     settingsT.themeParam.setFillColor(color2);
+
+                    musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+
                 }
 
             }
@@ -494,13 +515,15 @@ int main() {
             window.draw(settingsT.exitToMenu);
             window.draw(settingsT.timerParam);
             window.draw(settingsT.difficultyParam);
-            window.draw(settingsT.musicParam);
+            window.draw(settingsT.music1Param);
+            window.draw(settingsT.music2Param);
             window.draw(settingsT.themeParam);
             window.draw(settingsT.save);
 
             window.draw(timerOption);
             window.draw(difOption);
-            window.draw(musicOption);
+            window.draw(music1Option);
+            window.draw(music2Option);
             window.draw(themeOption);
 
             drawCursor(window, cursorManager, anyButtonHovered);
@@ -540,7 +563,7 @@ int main() {
 
             gameClock.restart(); // Сброс таймера
 
-            musicManager.play("songs/game1.ogg");
+            musicManager.play("songs/game" + to_string(music2ToRound[music2Index]) + ".ogg");
 
             // Основной игровой цикл
             while (gameStage == "GAME" && window.isOpen()) {
@@ -686,6 +709,8 @@ int main() {
                     gameT.input.setString("Your input: ");
                     window.setMouseCursorVisible(true);
                     endgameT.restart.setFillColor(color1);
+
+                    musicManager.stop();
                     gameStage = "GAME";
                 }
                 else if (click(event, window, endgameBtn.exit)) {

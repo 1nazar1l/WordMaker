@@ -1,5 +1,7 @@
 {
     "difficulty": "easy",
+    "music1": 1,
+    "music2": 1,
     "round_time": 30,
-    "theme_number": 1
+    "theme_number": 2
 }
