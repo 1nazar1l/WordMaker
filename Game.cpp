@@ -2,11 +2,13 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <SFML/Audio.hpp>
 
 #include "MainHeader.h"
 #include "RandomWord.h"
 #include "ValidWord.h"
 #include "CursorManager.h"
+#include "Music.h"
 
 #include <unordered_map>
 #include <algorithm>
@@ -79,6 +81,8 @@ int getCurrentIndexStr(const int& length, string massiv[], string selectedParame
 }
 
 int main() {
+    MusicManager musicManager;
+
     Color color1, color2;
     ifstream setJson("jsons/settings.json");
     json settings = json::parse(setJson);
@@ -94,8 +98,6 @@ int main() {
 
     color1 = Color(colorFirst[0], colorFirst[1], colorFirst[2]);
     color2 = Color(colorSecond[0], colorSecond[1], colorSecond[2]);
-
-
 
     bool isPaused = false;
     bool anyButtonHovered = false;
@@ -312,7 +314,11 @@ int main() {
         topMargin += 73;
     }
 
+    musicManager.play("songs/main1.ogg");
+
+
     while (window.isOpen()) {
+
         if (gameStage == "MENU") {
             roundTime = settings["round_time"];
             difficulty = settings["difficulty"];
@@ -323,6 +329,7 @@ int main() {
             gameT.timer.setString("Timer:  ");
             gameT.input.setString("Your input: ");
 
+            musicManager.play("songs/main1.ogg");
 
             Event event;
             while (window.pollEvent(event)) {
@@ -379,6 +386,7 @@ int main() {
             drawCursor(window, cursorManager, anyButtonHovered);
 
             window.display();
+
         }
         else if (gameStage == "SETTINGS") {
             window.setMouseCursorVisible(false);
@@ -531,6 +539,8 @@ int main() {
             addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 75, 90);
 
             gameClock.restart(); // Сброс таймера
+
+            musicManager.play("songs/game1.ogg");
 
             // Основной игровой цикл
             while (gameStage == "GAME" && window.isOpen()) {
