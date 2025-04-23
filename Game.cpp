@@ -147,20 +147,15 @@ int main() {
     updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
 
 
-    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 0, 0);
-    addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 0, 0);
-    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 0, 0);
-    addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 0, 0);
+    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 39.2, 14.7);
+    addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 41.8, 36.4);
+    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 39.2, 58.7);
+    addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 46.2, 79.7);
 
-    menuT.startGame.setPosition(535, 113);
-    menuT.settings.setPosition(570, 279);
-    menuT.leaderboard.setPosition(535, 450);
-    menuT.exit.setPosition(630, 611);
-
-    createButtonHitBox(menuBtn.start, 343, 120, 511, 75);
-    createButtonHitBox(menuBtn.settings, 343, 120, 511, 241);
-    createButtonHitBox(menuBtn.leaderBoard, 343, 120, 511, 407);
-    createButtonHitBox(menuBtn.exit, 343, 120, 511, 573);
+    createButtonHitBox(menuBtn.start, 343, 120, 37.46, 9.78);
+    createButtonHitBox(menuBtn.settings, 343, 120, 37.46, 31.42);
+    createButtonHitBox(menuBtn.leaderBoard, 343, 120, 37.46, 53.06);
+    createButtonHitBox(menuBtn.exit, 343, 120, 37.46, 74.71);
 
     // Game text
     struct GameTexts {
@@ -202,7 +197,7 @@ int main() {
     int guessedCount = 0;
     int timeRemaining = roundTime;
 
-    createButtonHitBox(gameBtn.pause, 262, 100, 40, 20);
+    createButtonHitBox(gameBtn.pause, 262, 100, 2.93, 2.61);
 
     //Endgame
     struct EndgameTexts {
@@ -238,8 +233,8 @@ int main() {
     addInfoToWindow(endgameT.score, font, "Your score: ", 30, color1, 35, 10);
     addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 35, 15);
 
-    createButtonHitBox(endgameBtn.restart, 496, 120, 435, 451);
-    createButtonHitBox(endgameBtn.exit, 496, 120, 435, 602);
+    createButtonHitBox(endgameBtn.restart, 496, 120, 31.89, 58.8);
+    createButtonHitBox(endgameBtn.exit, 496, 120, 31.89, 78.49);
 
 
     //Settings
@@ -310,17 +305,18 @@ int main() {
     addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
     addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
 
-    createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 40, 24);
-    createButtonHitBox(settingsBtn.save, 443, 100, 462, 633);
+    createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 2.93, 3.13);
+    createButtonHitBox(settingsBtn.save, 443, 100, 33.87, 82.53);
 
-    float leftMargin1 = 698;
-    float leftMargin2 = 875;
-    float topMargin = 52;
+    float leftMargin1 = 51.17;
+    float leftMargin2 = 64.15;
+    float topMargin = 6.78;
+    float marginStep = 9.52;
 
-    for (int i = 0;i < 5;i++) {
+    for (int i = 0; i < 5; i++) {
         createButtonHitBox(settingsBtn.leftStrokes[i], 18, 33, leftMargin1, topMargin);
         createButtonHitBox(settingsBtn.rightStrokes[i], 18, 33, leftMargin2, topMargin);
-        topMargin += 73;
+        topMargin += marginStep;
     }
 
     musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
@@ -474,7 +470,6 @@ int main() {
                     music2Number = settings["music2"];
                     std::ofstream out("jsons/settings.json");
                     out << settings.dump(4);
-                    cout << "save";
 
                     menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
                     gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
@@ -596,8 +591,13 @@ int main() {
                         gameT.pause.setFillColor(color2);
                         anyButtonHovered = true;
                     }
+                    else if (mouseIn(window, gameT.endGame)) {
+                        gameT.endGame.setFillColor(color2);
+                        anyButtonHovered = true;
+                    }
                     else {
                         gameT.pause.setFillColor(Color::White);
+                        gameT.endGame.setFillColor(Color::White);
                         anyButtonHovered = false;
                     }
                     
@@ -688,7 +688,6 @@ int main() {
             while (window.pollEvent(event)) {
                 closeEvents(event, window);
 
-                Vector2i mousePos = Mouse::getPosition(window);
                 if (mouseIn(window, endgameBtn.restart)) {
                     endgameT.restart.setFillColor(color2);
                     anyButtonHovered = true;

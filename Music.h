@@ -15,7 +15,7 @@ private:
     bool isPlaying = false;
 
 public:
-    void play(const std::string& filename, bool loop = true, float volume = 50.f) {
+    void play(const std::string& filename, bool loop = true, float volume = 100.f) {
         if (currentTrack != filename) {
             music.stop();
             if (music.openFromFile(filename)) {

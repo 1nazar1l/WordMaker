@@ -35,12 +35,12 @@ void closeEvents(Event& event, RenderWindow& window) {
     }
 }
 
-void createButtonHitBox(RectangleShape& rectangle, int width, int height, int xPos, int yPos) {
+void createButtonHitBox(RectangleShape& rectangle, int width, int height, float xPercentage, float yPercentage) {
     rectangle.setSize(Vector2f(width, height));
     rectangle.setFillColor(Color(0, 0, 0, 0));
     rectangle.setOutlineColor(Color::White);
-    //rectangle.setOutlineThickness(2.f);
-    rectangle.setPosition(xPos, yPos);
+    rectangle.setOutlineThickness(2.f);
+    rectangle.setPosition(percentageX(xPercentage), percentageY(yPercentage));
 }
 
 void updateBackground(RenderWindow& window, Texture& bgTexture, Sprite& bgSprite, string& filename) {
