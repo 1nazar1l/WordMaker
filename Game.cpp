@@ -81,6 +81,7 @@ int getCurrentIndexStr(const int& length, string massiv[], string selectedParame
 }
 
 int main() {
+    setlocale(LC_ALL, "");
     MusicManager musicManager;
 
     Color color1, color2;
@@ -104,7 +105,7 @@ int main() {
     bool isPaused = false;
     bool anyButtonHovered = false;
 
-    string gameStage = "MENU";
+    string gameStage = "AUTH_REG";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -318,13 +319,215 @@ int main() {
         createButtonHitBox(settingsBtn.rightStrokes[i], 18, 33, leftMargin2, topMargin);
         topMargin += marginStep;
     }
+    if (gameStage != "AUTH_REG") {
+        musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+    }
 
-    musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+    //AUTH
 
+    Font font1;
+
+    if (!font1.loadFromFile("reg_auth/OpenSans.ttf")) {
+        return EXIT_FAILURE;
+    }
+
+    struct AuthTexts {
+        Text login;
+        Text password;
+    };
+
+    struct AuthBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct AuthButtons {
+        RectangleShape login;
+        RectangleShape password;
+        RectangleShape ready;
+        RectangleShape toReg;
+
+    };
+
+    AuthTexts authT;
+    AuthBg authBg;
+    AuthButtons authBtn;
+
+    string loginInput;
+    string passwordInput;
+
+    addInfoToWindow(authT.login, font1, "", 30, Color::Black, 33.4, 30.8);
+    addInfoToWindow(authT.password, font1, "", 30, Color::Black, 33.4, 46.8);
+
+    string auth_regFilename = "reg_auth/auth.png";
+    updateBackground(window, authBg.texture, authBg.sprite, auth_regFilename);
+
+
+    createButtonHitBox(authBtn.login, 481, 64, 32.4f, 29.73);
+    createButtonHitBox(authBtn.password, 481, 64, 32.4f, 45.89);
+    createButtonHitBox(authBtn.ready, 481, 64, 32.40f, 57.70);
+    createButtonHitBox(authBtn.toReg, 173, 50, 43.70f, 85);
+
+    bool loginInputActive = false;
+    bool passwordInputActive = false;
+    bool isAuthWindow = true;
 
     while (window.isOpen()) {
+        if (gameStage == "AUTH_REG") {
+            Event event;
 
-        if (gameStage == "MENU") {
+            while (window.pollEvent(event)) {
+                closeEvents(event, window);
+
+                if (click(event, window, authBtn.login)) {
+                    loginInputActive = true;
+                }
+                else if (click(event, window, authBtn.password)) {
+                    passwordInputActive = true;
+                }
+
+                if (click(event, window, authBtn.toReg) && isAuthWindow) {
+                    isAuthWindow = false;
+                    loginInput = "";
+                    passwordInput = "";
+                    authT.password.setString("");
+                    authT.login.setString("");
+
+
+                }
+                else if (click(event, window, authBtn.toReg) && !isAuthWindow) {
+                    isAuthWindow = true;
+                    loginInput = "";
+                    passwordInput = "";
+                    authT.password.setString("");
+                    authT.login.setString("");
+                }
+
+                if (event.type == Event::TextEntered && loginInputActive) {
+                    if (event.text.unicode == '\b') {
+                        if (!loginInput.empty()) {
+                            loginInput.pop_back();
+                        }
+                    }
+                    else if (loginInput.length() < 20) {
+                        if (event.text.unicode >= '0' && event.text.unicode <= '9') {
+                            loginInput += static_cast<char>(event.text.unicode);
+                        }
+                        else if ((event.text.unicode >= 'A' && event.text.unicode <= 'Z') ||
+                            (event.text.unicode >= 'a' && event.text.unicode <= 'z')) {
+                            loginInput += static_cast<char>(event.text.unicode);
+                        }
+                    }
+
+                    authT.login.setString(loginInput);
+                }
+                else if (event.type == Event::TextEntered && passwordInputActive) {
+                    if (event.text.unicode == '\b') {
+                        if (!passwordInput.empty()) {
+                            passwordInput.pop_back();
+                        }
+                    }
+                    else if (passwordInput.length() < 20) {
+                        if (event.text.unicode >= '0' && event.text.unicode <= '9') {
+                            passwordInput += static_cast<char>(event.text.unicode);
+                        }
+                        else if ((event.text.unicode >= 'A' && event.text.unicode <= 'Z') ||
+                            (event.text.unicode >= 'a' && event.text.unicode <= 'z')) {
+                            passwordInput += static_cast<char>(event.text.unicode);
+                        }
+                    }
+
+                    authT.password.setString(passwordInput);
+
+                }
+
+                if (notclick(event, window, authBtn.login)) {
+                    loginInputActive = false;
+                }
+
+                if (notclick(event, window, authBtn.password)) {
+                    passwordInputActive = false;
+                }
+
+                if (click(event, window, authBtn.ready)) {
+                    ifstream inputFile("users.json");
+                    json users = json::parse(inputFile);
+                    inputFile.close();
+
+                    if (!users.contains("users")) {
+                        users["users"] = json::array();
+                    }
+
+                    if (isAuthWindow) {
+                        // Логика авторизации (остаётся без изменений)
+                        bool authSuccess = false;
+                        for (const auto& user : users["users"]) {
+                            if (user["login"] == loginInput && user["password"] == passwordInput) {
+                                authSuccess = true;
+                                break;
+                            }
+                        }
+
+                        if (authSuccess) {
+                            cout << "Вы вошли в аккаунт" << endl;
+                        }
+                        else {
+                            cout << "Логин или пароль не подходит" << endl;
+                        }
+                    }
+                    else {
+                        // Логика регистрации с добавлением best_score
+                        bool userExists = false;
+                        for (const auto& user : users["users"]) {
+                            if (user["login"] == loginInput) {
+                                userExists = true;
+                                break;
+                            }
+                        }
+
+                        if (userExists) {
+                            cout << "Такой пользователь уже есть" << endl;
+                        }
+                        else {
+                            users["users"].push_back({
+                                {"login", loginInput},
+                                {"password", passwordInput},
+                                {"best_score", 0}  // Добавляем поле с начальным значением 0
+                                });
+
+                            ofstream outputFile("users.json");
+                            outputFile << users.dump(4);
+                            outputFile.close();
+
+                            cout << "Аккаунт создан. Начальный рекорд: 0" << endl;
+                        }
+                    }
+                }
+            }
+
+            if (isAuthWindow) {
+                auth_regFilename = "reg_auth/auth.png";
+            }
+            else {
+                auth_regFilename = "reg_auth/reg.png";
+            }
+            updateBackground(window, authBg.texture, authBg.sprite, auth_regFilename);
+
+            window.clear();
+            window.draw(authBg.sprite);
+
+            window.draw(authBtn.login);
+            window.draw(authBtn.password);
+            window.draw(authBtn.ready);
+            window.draw(authBtn.toReg);
+
+            window.draw(authT.login);
+            window.draw(authT.password);
+
+
+            window.display();
+        }
+        else if (gameStage == "MENU") {
             roundTime = settings["round_time"];
             difficulty = settings["difficulty"];
             themeNumber = settings["theme_number"];

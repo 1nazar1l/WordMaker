@@ -38,7 +38,7 @@ void closeEvents(Event& event, RenderWindow& window) {
 void createButtonHitBox(RectangleShape& rectangle, int width, int height, float xPercentage, float yPercentage) {
     rectangle.setSize(Vector2f(width, height));
     rectangle.setFillColor(Color(0, 0, 0, 0));
-    rectangle.setOutlineColor(Color::White);
+    rectangle.setOutlineColor(Color::Black);
     rectangle.setOutlineThickness(2.f);
     rectangle.setPosition(percentageX(xPercentage), percentageY(yPercentage));
 }
@@ -78,4 +78,12 @@ bool click(Event& event, RenderWindow& window, RectangleShape& btn) {
 
 bool click(Event& event, RenderWindow& window, Text& btn) {
     return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
+}
+
+bool notclick(Event& event, RenderWindow& window, Text& btn) {
+    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && !mouseIn(window, btn);
+}
+
+bool notclick(Event& event, RenderWindow& window, RectangleShape& btn) {
+    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && !mouseIn(window, btn);
 }
