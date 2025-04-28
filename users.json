@@ -2,13 +2,13 @@
     "users": [
         {
             "best_score": 0,
-            "difficulty": "easy",
+            "difficulty": "normal",
             "login": "",
-            "music1": 1,
-            "music2": 1,
+            "music1": 2,
+            "music2": 2,
             "password": "",
-            "round_time": 30,
-            "theme_number": 1
+            "round_time": 60,
+            "theme_number": 2
         },
         {
             "best_score": 0,
@@ -19,6 +19,16 @@
             "password": "11",
             "round_time": 30,
             "theme_number": 1
+        },
+        {
+            "best_score": 0,
+            "difficulty": "hard",
+            "login": "12",
+            "music1": 2,
+            "music2": 2,
+            "password": "12",
+            "round_time": 120,
+            "theme_number": 2
         }
     ]
 }

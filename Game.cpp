@@ -495,7 +495,53 @@ int main() {
 
                         if (authSuccess) {
                             cout << "Вы вошли в аккаунт" << endl;
-                            
+                            ifstream inputFile("jsons/settings.json");
+                            json playerSettings = json::parse(inputFile);
+                            inputFile.close();
+                            roundTime = playerSettings["round_time"];
+                            difficulty = playerSettings["difficulty"];
+                            themeNumber = playerSettings["theme_number"];
+                            music1Number = playerSettings["music1"];
+                            music2Number = playerSettings["music2"];
+
+                            menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
+                            gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
+                            endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
+                            settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
+
+                            updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
+                            updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
+                            updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
+                            updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
+
+                            ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
+                            json theme = json::parse(themeJson);
+                            colorFirst = theme["color1"];
+                            colorSecond = theme["color2"];
+
+                            color1 = Color(colorFirst[0], colorFirst[1], colorFirst[2]);
+                            color2 = Color(colorSecond[0], colorSecond[1], colorSecond[2]);
+
+
+                            settingsT.timerParam.setFillColor(color2);
+                            settingsT.difficultyParam.setFillColor(color2);
+                            settingsT.music1Param.setFillColor(color2);
+                            settingsT.music2Param.setFillColor(color2);
+                            settingsT.themeParam.setFillColor(color2);
+
+                            timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
+                            difIndex = getCurrentIndexStr(difCount, difToRound, difficulty);
+                            themeIndex = getCurrentIndex(themeCount, themeToRound, themeNumber);
+                            music1Index = getCurrentIndex(music1Count, music1ToRound, music1Number);
+                            music2Index = getCurrentIndex(music2Count, music2ToRound, music2Number);
+
+                            addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 57, 7);
+                            addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
+                            addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 58, 26);
+                            addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
+                            addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
+
+                            musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
                             gameStage = "MENU";
                         }
                         else {
