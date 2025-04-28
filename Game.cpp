@@ -372,8 +372,13 @@ int main() {
     bool passwordInputActive = false;
     bool isAuthWindow = true;
 
+    string userLogin;
+    string userPassword;
+
     while (window.isOpen()) {
         if (gameStage == "AUTH_REG") {
+            musicManager.stop();
+            window.setMouseCursorVisible(true);
             Event event;
 
             while (window.pollEvent(event)) {
@@ -479,6 +484,8 @@ int main() {
                                     {"theme_number", user["theme_number"]}
 
                                 };
+                                userLogin = user["login"];
+                                userPassword = user["password"];
                                 ofstream outputFile("jsons/settings.json");
                                 outputFile << playerSettings.dump(4);
                                 outputFile.close();
@@ -563,20 +570,10 @@ int main() {
             gameT.input.setString("Your input: ");
 
             musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
-
+            //while (gameStage == "MENU" && window.isOpen()) {}
             Event event;
             while (window.pollEvent(event)) {
                 closeEvents(event, window);
-
-                if (click(event, window, menuBtn.start)) {
-                    gameStage = "GAME";
-                }
-                else if (click(event, window, menuBtn.settings)) {
-                    gameStage = "SETTINGS";
-                }
-                else if (click(event, window, menuBtn.exit)) {
-                    window.close();
-                }
 
                 if (mouseIn(window, menuBtn.start)) {
                     menuT.startGame.setFillColor(color2);
@@ -600,6 +597,53 @@ int main() {
                     menuT.leaderboard.setFillColor(color1);
                     menuT.exit.setFillColor(color1);
                     anyButtonHovered = false;
+                }
+
+                if (click(event, window, menuBtn.start)) {
+                    gameStage = "GAME";
+                }
+                else if (click(event, window, menuBtn.settings)) {
+                    gameStage = "SETTINGS";
+                }
+                else if (click(event, window, menuBtn.exit)) {
+                    // Сброс полей ввода
+                    loginInput = "";
+                    passwordInput = "";
+                    authT.password.setString("");
+                    authT.login.setString("");
+
+                    // Загрузка текущих настроек
+                    ifstream settingsFile("jsons/settings.json");
+                    json currentSettings = json::parse(settingsFile);
+                    settingsFile.close();
+
+                    // Загрузка пользователей
+                    ifstream usersFile("users.json");
+                    json users = json::parse(usersFile);
+                    usersFile.close();
+
+                    // Поиск и обновление данных текущего пользователя
+                    for (auto& user : users["users"]) {
+                        if (user["login"] == currentSettings["login"]) {
+                            cout << user["login"];
+                            cout << currentSettings["login"];
+                            // Обновляем только изменяемые параметры
+                            user["best_score"] = currentSettings["best_score"];
+                            user["difficulty"] = currentSettings["difficulty"];
+                            user["music1"] = currentSettings["music1"];
+                            user["music2"] = currentSettings["music2"];
+                            user["round_time"] = currentSettings["round_time"];
+                            user["theme_number"] = currentSettings["theme_number"];
+                            break;
+                        }
+                    }
+
+                    // Сохранение обновленных данных пользователей
+                    ofstream outputUsersFile("users.json");
+                    outputUsersFile << users.dump(4);
+                    outputUsersFile.close();
+
+                    gameStage = "AUTH_REG";
                 }
             }
 
@@ -691,6 +735,8 @@ int main() {
                     settings["theme_number"] = themeToRound[themeIndex];
                     settings["music1"] = music1ToRound[music1Index];
                     settings["music2"] = music2ToRound[music2Index];
+                    settings["login"] = userLogin;
+                    settings["password"] = userPassword;
                     roundTime = settings["round_time"];
                     difficulty = settings["difficulty"];
                     themeNumber = settings["theme_number"];

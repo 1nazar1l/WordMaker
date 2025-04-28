@@ -9,6 +9,16 @@
             "password": "",
             "round_time": 30,
             "theme_number": 1
+        },
+        {
+            "best_score": 0,
+            "difficulty": "easy",
+            "login": "admin",
+            "music1": 1,
+            "music2": 1,
+            "password": "11",
+            "round_time": 30,
+            "theme_number": 1
         }
     ]
 }
