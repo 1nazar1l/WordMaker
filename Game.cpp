@@ -375,6 +375,8 @@ int main() {
     string userLogin;
     string userPassword;
 
+    int bestScore;
+
     while (window.isOpen()) {
         if (gameStage == "AUTH_REG") {
             musicManager.stop();
@@ -484,6 +486,7 @@ int main() {
                                     {"theme_number", user["theme_number"]}
 
                                 };
+                                bestScore = user["best_score"];
                                 userLogin = user["login"];
                                 userPassword = user["password"];
                                 ofstream outputFile("jsons/settings.json");
@@ -671,8 +674,6 @@ int main() {
                     // Поиск и обновление данных текущего пользователя
                     for (auto& user : users["users"]) {
                         if (user["login"] == currentSettings["login"]) {
-                            cout << user["login"];
-                            cout << currentSettings["login"];
                             // Обновляем только изменяемые параметры
                             user["best_score"] = currentSettings["best_score"];
                             user["difficulty"] = currentSettings["difficulty"];
@@ -1038,6 +1039,16 @@ int main() {
                 }
             }
             endgameT.score.setString("Your score: " + to_string(counter));
+
+            if (counter > bestScore) {
+                bestScore = counter;
+                settings["best_score"] = bestScore;
+                std::ofstream out("jsons/settings.json");
+                out << settings.dump(4);
+
+                window.draw(endgameT.isrecord);
+
+            }
             
             window.clear();
             window.draw(endgameBg.sprite);
@@ -1045,7 +1056,6 @@ int main() {
             window.draw(endgameT.restart);
             window.draw(endgameT.exit);
             window.draw(endgameT.score);
-            window.draw(endgameT.isrecord);
 
             window.draw(endgameBtn.restart);
             window.draw(endgameBtn.exit);

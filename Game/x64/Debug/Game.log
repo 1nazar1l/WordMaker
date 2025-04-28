@@ -56,12 +56,13 @@ C:\Users\Professional\Desktop\WordMaker\Game.cpp(360,66): warning C4305: арг�
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(366,55): warning C4305: аргумент: усечение из "double" в "float"
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(367,58): warning C4305: аргумент: усечение из "double" в "float"
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(368,56): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(872,78): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(873,105): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(874,82): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(902,97): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(905,94): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(960,62): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(873,78): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(874,105): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(875,82): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(903,97): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(906,94): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(961,62): warning C4267: +=: преобразование из "size_t" в "unsigned int"; возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1043,25): warning C4018: >: несоответствие типов со знаком и без знака
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(72,1): warning C4715: getCurrentIndex: значение возвращается не при всех путях выполнения
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(81,1): warning C4715: getCurrentIndexStr: значение возвращается не при всех путях выполнения
   Game.vcxproj -> C:\Users\Professional\Desktop\WordMaker\x64\Debug\Game.exe
