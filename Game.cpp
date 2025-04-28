@@ -464,12 +464,32 @@ int main() {
                         for (const auto& user : users["users"]) {
                             if (user["login"] == loginInput && user["password"] == passwordInput) {
                                 authSuccess = true;
+                                ifstream inputFile("jsons/settings.json");
+                                json playerSettings = json::parse(inputFile);
+                                inputFile.close();
+                                cout << playerSettings["difficulty"];
+                                playerSettings = {
+                                    {"login", user["login"]},
+                                    {"password", user["password"]},
+                                    {"best_score", user["best_score"]},
+                                    {"difficulty", user["difficulty"]},
+                                    {"music1", user["music1"]},
+                                    {"music2", user["music2"]},
+                                    {"round_time", user["round_time"]},
+                                    {"theme_number", user["theme_number"]}
+
+                                };
+                                ofstream outputFile("jsons/settings.json");
+                                outputFile << playerSettings.dump(4);
+                                outputFile.close();
                                 break;
                             }
                         }
 
                         if (authSuccess) {
                             cout << "Вы вошли в аккаунт" << endl;
+                            
+                            gameStage = "MENU";
                         }
                         else {
                             cout << "Логин или пароль не подходит" << endl;
@@ -492,8 +512,13 @@ int main() {
                             users["users"].push_back({
                                 {"login", loginInput},
                                 {"password", passwordInput},
-                                {"best_score", 0}  // Добавляем поле с начальным значением 0
-                                });
+                                {"best_score", 0},
+                                {"difficulty", "easy"},
+                                {"music1", 1},
+                                {"music2", 1},
+                                {"round_time", 30},
+                                {"theme_number", 1}
+                            });
 
                             ofstream outputFile("users.json");
                             outputFile << users.dump(4);

@@ -2,8 +2,13 @@
     "users": [
         {
             "best_score": 0,
-            "login": "qwerty",
-            "password": "1234"
+            "difficulty": "easy",
+            "login": "",
+            "music1": 1,
+            "music2": 1,
+            "password": "",
+            "round_time": 30,
+            "theme_number": 1
         }
     ]
 }
