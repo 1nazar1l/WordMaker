@@ -1,10 +1,10 @@
 {
     "best_score": 12,
     "difficulty": "easy",
-    "login": "",
-    "music1": 2,
-    "music2": 2,
-    "password": "",
-    "round_time": 30,
-    "theme_number": 2
+    "login": "12",
+    "music1": 1,
+    "music2": 1,
+    "password": "12",
+    "round_time": 90,
+    "theme_number": 1
 }

@@ -323,6 +323,51 @@ int main() {
         musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
     }
 
+    //LEADERBOARD
+
+    struct LeaderBoardTexts {
+        Text exit;
+        Text numberTitle;
+        Text userTitle;
+        Text scoreTitle;
+        Text number[10];
+        Text user[10];
+        Text score[10];
+    };
+
+    struct LeaderBoardBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct LeaderBoardButtons {
+        RectangleShape exit;
+    };
+
+    LeaderBoardTexts leaderboardT;
+    LeaderBoardBg leaderboardBg;
+    LeaderBoardButtons leaderboardBtn;
+
+    string leaderboardFilename = "backgrounds/leaderboard" + to_string(themeNumber) + ".png";
+    updateBackground(window, leaderboardBg.texture, leaderboardBg.sprite, leaderboardFilename);
+
+    addInfoToWindow(leaderboardT.exit, font, "Exit", 50, color1, 5, 5.5);
+    createButtonHitBox(leaderboardBtn.exit, 200, 100, 2.93, 2.5);
+
+    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 35, 6.4);
+    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 40, 6.4);
+    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 57, 6.4);
+
+    topMargin = 15;
+    marginStep = 8.33;
+
+    for (int i = 1; i < 11; i++) {
+        addInfoToWindow(leaderboardT.number[i - 1], font, to_string(i), 23, Color::White, 35, topMargin);
+        addInfoToWindow(leaderboardT.user[i - 1], font, "bot" + to_string(1000 * i + i*i - 3 + i), 23, Color::White, 40.2, topMargin);
+        addInfoToWindow(leaderboardT.score[i - 1], font, to_string(200 - 4 * i), 23, Color::White, 58.8, topMargin);
+        topMargin += marginStep;
+    }
+
     //AUTH
 
     Font font1;
@@ -474,7 +519,6 @@ int main() {
                                 ifstream inputFile("jsons/settings.json");
                                 json playerSettings = json::parse(inputFile);
                                 inputFile.close();
-                                cout << playerSettings["difficulty"];
                                 playerSettings = {
                                     {"login", user["login"]},
                                     {"password", user["password"]},
@@ -497,7 +541,6 @@ int main() {
                         }
 
                         if (authSuccess) {
-                            cout << "Вы вошли в аккаунт" << endl;
                             ifstream inputFile("jsons/settings.json");
                             json playerSettings = json::parse(inputFile);
                             inputFile.close();
@@ -511,11 +554,13 @@ int main() {
                             gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
                             endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
                             settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
+                            leaderboardFilename = "backgrounds/leaderboard" + to_string(themeNumber) + ".png";
 
                             updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
                             updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
                             updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
                             updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
+                            updateBackground(window, leaderboardBg.texture, leaderboardBg.sprite, leaderboardFilename);
 
                             ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
                             json theme = json::parse(themeJson);
@@ -543,6 +588,10 @@ int main() {
                             addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 58, 26);
                             addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
                             addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
+
+                            addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 35, 6.4);
+                            addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 40, 6.4);
+                            addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 57, 6.4);
 
                             musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
                             gameStage = "MENU";
@@ -608,6 +657,48 @@ int main() {
 
             window.display();
         }
+        else if (gameStage == "LEADERBOARD") {
+            window.setMouseCursorVisible(false);
+
+            Event event;
+            while (window.pollEvent(event)) {
+                closeEvents(event, window);
+
+                if (mouseIn(window, leaderboardBtn.exit)) {
+                    leaderboardT.exit.setFillColor(color2);
+                    anyButtonHovered = true;
+                }
+                else {
+                    leaderboardT.exit.setFillColor(color1);
+                    anyButtonHovered = false;
+                }
+
+                if (click(event, window, leaderboardBtn.exit)) {
+                    gameStage = "MENU";
+                }
+            }
+
+            window.clear();
+            window.draw(leaderboardBg.sprite);
+
+            window.draw(leaderboardBtn.exit);
+
+            window.draw(leaderboardT.exit);
+
+            window.draw(leaderboardT.numberTitle);
+            window.draw(leaderboardT.userTitle);
+            window.draw(leaderboardT.scoreTitle);
+
+            for (int i = 0;i < 10;i++) {
+                window.draw(leaderboardT.number[i]);
+                window.draw(leaderboardT.user[i]);
+                window.draw(leaderboardT.score[i]);
+            }
+
+            drawCursor(window, cursorManager, anyButtonHovered);
+
+            window.display();
+        }
         else if (gameStage == "MENU") {
             roundTime = settings["round_time"];
             difficulty = settings["difficulty"];
@@ -653,6 +744,9 @@ int main() {
                 }
                 else if (click(event, window, menuBtn.settings)) {
                     gameStage = "SETTINGS";
+                }
+                else if (click(event, window, menuBtn.leaderBoard)) {
+                    gameStage = "LEADERBOARD";
                 }
                 else if (click(event, window, menuBtn.exit)) {
                     // Сброс полей ввода
@@ -796,11 +890,13 @@ int main() {
                     gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
                     endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
                     settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
+                    leaderboardFilename = "backgrounds/leaderboard" + to_string(themeNumber) + ".png";
 
                     updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
                     updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
                     updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
                     updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
+                    updateBackground(window, leaderboardBg.texture, leaderboardBg.sprite, leaderboardFilename);
                     
                     ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
                     json theme = json::parse(themeJson);
@@ -816,6 +912,10 @@ int main() {
                     settingsT.music1Param.setFillColor(color2);
                     settingsT.music2Param.setFillColor(color2);
                     settingsT.themeParam.setFillColor(color2);
+
+                    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 35, 6.4);
+                    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 40, 6.4);
+                    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 57, 6.4);
 
                     musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
 

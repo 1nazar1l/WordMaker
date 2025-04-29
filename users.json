@@ -8,7 +8,7 @@
             "music2": 2,
             "password": "",
             "round_time": 30,
-            "theme_number": 2
+            "theme_number": 1
         },
         {
             "best_score": 5,
@@ -21,14 +21,14 @@
             "theme_number": 1
         },
         {
-            "best_score": 0,
-            "difficulty": "hard",
+            "best_score": 12,
+            "difficulty": "easy",
             "login": "12",
-            "music1": 2,
-            "music2": 2,
+            "music1": 1,
+            "music2": 1,
             "password": "12",
-            "round_time": 120,
-            "theme_number": 2
+            "round_time": 90,
+            "theme_number": 1
         }
     ]
 }
