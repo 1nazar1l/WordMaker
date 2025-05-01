@@ -2,13 +2,13 @@
     "users": [
         {
             "best_score": 12,
-            "difficulty": "easy",
+            "difficulty": "normal",
             "login": "",
-            "music1": 2,
-            "music2": 2,
+            "music1": 3,
+            "music2": 3,
             "password": "",
-            "round_time": 30,
-            "theme_number": 1
+            "round_time": 90,
+            "theme_number": 4
         },
         {
             "best_score": 5,

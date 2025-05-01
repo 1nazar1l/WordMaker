@@ -278,14 +278,14 @@ int main() {
 
     const int timesCount = 4;
     const int difCount = 3;
-    const int music1Count = 4;
-    const int music2Count = 4;
+    const int music1Count = 3;
+    const int music2Count = 3;
     const int themeCount = 4;
 
     int timesToRound[timesCount]{30,60,90,120};
     string difToRound[difCount]{"easy","normal","hard"};
-    int music1ToRound[music1Count]{ 1,2,3,4 };
-    int music2ToRound[music2Count]{ 1,2,3,4 };
+    int music1ToRound[music1Count]{ 1,2,3 };
+    int music2ToRound[music2Count]{ 1,2,3 };
     int themeToRound[themeCount]{ 1,2,3,4 };
 
     int timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
@@ -1103,6 +1103,7 @@ int main() {
             }
         }
         else if (gameStage == "ENDGAME") {
+            musicManager.stop();
             Event event;
             window.setMouseCursorVisible(false);
 
