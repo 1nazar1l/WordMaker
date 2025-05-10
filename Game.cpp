@@ -1169,8 +1169,6 @@ int main() {
                 }
             }
             endgameT.score.setString("Your score: " + to_string(counter));
-            bestScore = 0;
-            counter = 100;
             if (counter > bestScore) {
                 bestScore = counter;
                 settings["best_score"] = bestScore;
