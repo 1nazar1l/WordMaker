@@ -360,11 +360,8 @@ int main() {
 
     topMargin = 15;
     marginStep = 8.33;
-
-    for (int i = 1; i < 11; i++) {
-        addInfoToWindow(leaderboardT.number[i - 1], font, to_string(i), 23, Color::White, 35, topMargin);
-        addInfoToWindow(leaderboardT.user[i - 1], font, "bot" + to_string(1000 * i + i*i - 3 + i), 23, Color::White, 40.2, topMargin);
-        addInfoToWindow(leaderboardT.score[i - 1], font, to_string(200 - 4 * i), 23, Color::White, 58.8, topMargin);
+    for (int i = 0; i < 11; i++) {
+        addInfoToWindow(leaderboardT.number[i], font, to_string(i + 1), 23, Color::White, 35, topMargin);
         topMargin += marginStep;
     }
 
@@ -710,8 +707,9 @@ int main() {
             gameT.input.setString("Your input: ");
 
             musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
-            //while (gameStage == "MENU" && window.isOpen()) {}
             Event event;
+            Vector2i mousePos = Mouse::getPosition(window);
+
             while (window.pollEvent(event)) {
                 closeEvents(event, window);
 
@@ -746,29 +744,61 @@ int main() {
                     gameStage = "SETTINGS";
                 }
                 else if (click(event, window, menuBtn.leaderBoard)) {
+                    ifstream inputFile("users.json");
+                    json usersData = json::parse(inputFile);
+                    inputFile.close();
+
+                    array<pair<string, int>, 10> leaderboard = {};
+                    int count = 0;
+
+                    for (const auto& user : usersData["users"]) {
+                        if (user["login"] != "" && user["best_score"] > 0 && count < 10) {
+                            leaderboard[count++] = { user["login"], user["best_score"] };
+                        }
+                    }
+
+                    sort(leaderboard.begin(), leaderboard.begin() + count,
+                        [](const auto& a, const auto& b) {
+                            return a.second > b.second;
+                        });
+
+                    json topUsers = json::array();
+                    for (int i = 0; i < count; ++i) {
+                        topUsers.push_back({
+                            {"login", leaderboard[i].first},
+                            {"best_score", leaderboard[i].second}
+                            });
+                    }
+
+                    topMargin = 15;
+                    marginStep = 8.33;
+                    int topUsersCount = 0;
+                    for (const auto& user : topUsers) {
+                        addInfoToWindow(leaderboardT.user[topUsersCount], font, to_string(user["login"]), 23, Color::White, 40.2, topMargin);
+                        addInfoToWindow(leaderboardT.score[topUsersCount], font, to_string(user["best_score"]), 23, Color::White, 58.8, topMargin);
+                        topMargin += marginStep;
+                        topUsersCount += 1;
+                    }
+
                     gameStage = "LEADERBOARD";
                 }
                 else if (click(event, window, menuBtn.exit)) {
-                    // Сброс полей ввода
                     loginInput = "";
                     passwordInput = "";
                     authT.password.setString("");
                     authT.login.setString("");
 
-                    // Загрузка текущих настроек
                     ifstream settingsFile("jsons/settings.json");
                     json currentSettings = json::parse(settingsFile);
                     settingsFile.close();
 
-                    // Загрузка пользователей
                     ifstream usersFile("users.json");
                     json users = json::parse(usersFile);
                     usersFile.close();
 
-                    // Поиск и обновление данных текущего пользователя
                     for (auto& user : users["users"]) {
                         if (user["login"] == currentSettings["login"]) {
-                            // Обновляем только изменяемые параметры
+
                             user["best_score"] = currentSettings["best_score"];
                             user["difficulty"] = currentSettings["difficulty"];
                             user["music1"] = currentSettings["music1"];
@@ -779,7 +809,6 @@ int main() {
                         }
                     }
 
-                    // Сохранение обновленных данных пользователей
                     ofstream outputUsersFile("users.json");
                     outputUsersFile << users.dump(4);
                     outputUsersFile.close();
