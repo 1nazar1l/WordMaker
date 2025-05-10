@@ -148,15 +148,15 @@ int main() {
     updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
 
 
-    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 39.2, 14.7);
-    addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 41.8, 36.4);
-    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 39.2, 58.7);
-    addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 46.2, 79.7);
+    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 50, 14.7);
+    addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 50, 36.4);
+    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 50, 58.7);
+    addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 50, 79.7);
 
-    createButtonHitBox(menuBtn.start, 343, 120, 37.46, 9.78);
-    createButtonHitBox(menuBtn.settings, 343, 120, 37.46, 31.42);
-    createButtonHitBox(menuBtn.leaderBoard, 343, 120, 37.46, 53.06);
-    createButtonHitBox(menuBtn.exit, 343, 120, 37.46, 74.71);
+    createButtonHitBox(menuBtn.start, 343, 120, 50, 9.78);
+    createButtonHitBox(menuBtn.settings, 343, 120, 50, 31.42);
+    createButtonHitBox(menuBtn.leaderBoard, 343, 120, 50, 53.06);
+    createButtonHitBox(menuBtn.exit, 343, 120, 50, 74.71);
 
     // Game text
     struct GameTexts {
@@ -198,7 +198,7 @@ int main() {
     int guessedCount = 0;
     int timeRemaining = roundTime;
 
-    createButtonHitBox(gameBtn.pause, 262, 100, 2.93, 2.61);
+    createButtonHitBox(gameBtn.pause, 262, 100, 13, 2.61);
 
     //Endgame
     struct EndgameTexts {
@@ -228,14 +228,14 @@ int main() {
     updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
 
 
-    addInfoToWindow(endgameT.restart, font, "Restart", 50, color1, 39.3, 62.5);
-    addInfoToWindow(endgameT.exit, font, "Exit", 50, color1, 45, 82.5);
+    addInfoToWindow(endgameT.restart, font, "Restart", 50, color1, 50, 62.5);
+    addInfoToWindow(endgameT.exit, font, "Exit", 50, color1, 50, 82.5);
 
-    addInfoToWindow(endgameT.score, font, "Your score: ", 30, color1, 35, 10);
-    addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 35, 15);
+    addInfoToWindow(endgameT.score, font, "Your score: ", 30, color1, 50, 10);
+    addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 50, 15);
 
-    createButtonHitBox(endgameBtn.restart, 496, 120, 31.89, 58.8);
-    createButtonHitBox(endgameBtn.exit, 496, 120, 31.89, 78.49);
+    createButtonHitBox(endgameBtn.restart, 496, 120, 50, 58.8);
+    createButtonHitBox(endgameBtn.exit, 496, 120, 50, 78.49);
 
 
     //Settings
@@ -268,13 +268,13 @@ int main() {
     string settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
     updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
 
-    addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, color1, 5, 6);
-    addInfoToWindow(settingsT.timerParam, font, "Timer", 30, color2, 35, 6.8);
-    addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, color2, 35, 16.3);
-    addInfoToWindow(settingsT.music1Param, font, "Main song", 30, color2, 35, 25.8);
-    addInfoToWindow(settingsT.music2Param, font, "Game song", 30, color2, 35, 35.3);
-    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 35, 44.8);
-    addInfoToWindow(settingsT.save, font, "Save", 50, color1, 44, 85);
+    addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, color1, 10, 6);
+    addInfoToWindow(settingsT.timerParam, font, "Timer", 30, color2, 42, 6.8);
+    addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, color2, 42, 16.3);
+    addInfoToWindow(settingsT.music1Param, font, "Main song", 30, color2, 42, 25.8);
+    addInfoToWindow(settingsT.music2Param, font, "Game song", 30, color2, 42, 35.3);
+    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 42, 44.8);
+    addInfoToWindow(settingsT.save, font, "Save", 50, color1, 50, 85);
 
     const int timesCount = 4;
     const int difCount = 3;
@@ -300,17 +300,17 @@ int main() {
     Text music2Option;
     Text themeOption;
 
-    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 57, 7);
-    addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
-    addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 58, 26);
-    addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
-    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
+    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 59, 7);
+    addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 59, 16.5);
+    addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 59, 26);
+    addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 59, 35.5);
+    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 59, 45);
 
-    createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 2.93, 3.13);
-    createButtonHitBox(settingsBtn.save, 443, 100, 33.87, 82.53);
+    createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 10, 3.13);
+    createButtonHitBox(settingsBtn.save, 443, 100, 50, 82.53);
 
-    float leftMargin1 = 51.17;
-    float leftMargin2 = 64.15;
+    float leftMargin1 = 52;
+    float leftMargin2 = 65;
     float topMargin = 6.78;
     float marginStep = 9.52;
 
@@ -351,17 +351,17 @@ int main() {
     string leaderboardFilename = "backgrounds/leaderboard" + to_string(themeNumber) + ".png";
     updateBackground(window, leaderboardBg.texture, leaderboardBg.sprite, leaderboardFilename);
 
-    addInfoToWindow(leaderboardT.exit, font, "Exit", 50, color1, 5, 5.5);
-    createButtonHitBox(leaderboardBtn.exit, 200, 100, 2.93, 2.5);
+    addInfoToWindow(leaderboardT.exit, font, "Exit", 50, color1, 10, 5.5);
+    createButtonHitBox(leaderboardBtn.exit, 200, 100, 10, 2.5);
 
-    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 35, 6.4);
-    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 40, 6.4);
-    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 57, 6.4);
+    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
+    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
+    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
 
     topMargin = 15;
     marginStep = 8.33;
-    for (int i = 0; i < 11; i++) {
-        addInfoToWindow(leaderboardT.number[i], font, to_string(i + 1), 23, Color::White, 35, topMargin);
+    for (int i = 0; i < 10; i++) {
+        addInfoToWindow(leaderboardT.number[i], font, to_string(i + 1), 23, Color::White, 36, topMargin);
         topMargin += marginStep;
     }
 
@@ -405,10 +405,10 @@ int main() {
     updateBackground(window, authBg.texture, authBg.sprite, auth_regFilename);
 
 
-    createButtonHitBox(authBtn.login, 481, 64, 32.4f, 29.73);
-    createButtonHitBox(authBtn.password, 481, 64, 32.4f, 45.89);
-    createButtonHitBox(authBtn.ready, 481, 64, 32.40f, 57.70);
-    createButtonHitBox(authBtn.toReg, 173, 50, 43.70f, 85);
+    createButtonHitBox(authBtn.login, 481, 64, 50, 29.73);
+    createButtonHitBox(authBtn.password, 481, 64, 50, 45.89);
+    createButtonHitBox(authBtn.ready, 481, 64, 50, 57.70);
+    createButtonHitBox(authBtn.toReg, 173, 50, 50, 85);
 
     bool loginInputActive = false;
     bool passwordInputActive = false;
@@ -580,15 +580,15 @@ int main() {
                             music1Index = getCurrentIndex(music1Count, music1ToRound, music1Number);
                             music2Index = getCurrentIndex(music2Count, music2ToRound, music2Number);
 
-                            addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 57, 7);
-                            addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
-                            addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 58, 26);
-                            addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
-                            addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
+                            addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 59, 7);
+                            addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 59, 16.5);
+                            addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 59, 26);
+                            addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 59, 35.5);
+                            addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 59, 45);
 
-                            addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 35, 6.4);
-                            addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 40, 6.4);
-                            addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 57, 6.4);
+                            addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
+                            addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
+                            addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
 
                             musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
                             gameStage = "MENU";
@@ -774,8 +774,8 @@ int main() {
                     marginStep = 8.33;
                     int topUsersCount = 0;
                     for (const auto& user : topUsers) {
-                        addInfoToWindow(leaderboardT.user[topUsersCount], font, to_string(user["login"]), 23, Color::White, 40.2, topMargin);
-                        addInfoToWindow(leaderboardT.score[topUsersCount], font, to_string(user["best_score"]), 23, Color::White, 58.8, topMargin);
+                        addInfoToWindow(leaderboardT.user[topUsersCount], font, to_string(user["login"]), 19, Color::White, 49, topMargin);
+                        addInfoToWindow(leaderboardT.score[topUsersCount], font, to_string(user["best_score"]), 23, Color::White, 61, topMargin);
                         topMargin += marginStep;
                         topUsersCount += 1;
                     }
@@ -872,23 +872,23 @@ int main() {
                             switch (i) {
                             case 0:
                                 timeIndex = updateIndex(timeIndex, timesCount, plusOrMinus);
-                                addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 57, 7);
+                                addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 59, 7);
                                 break;
                             case 1:
                                 difIndex = updateIndex(difIndex, difCount, plusOrMinus);
-                                addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 55.5, 16.5);
+                                addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 59, 16.5);
                                 break;
                             case 2:
                                 music1Index = updateIndex(music1Index, music1Count, plusOrMinus);
-                                addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 58, 26);
+                                addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 59, 26);
                                 break;
                             case 3:
                                 music2Index = updateIndex(music2Index, music2Count, plusOrMinus);
-                                addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 58, 35.5);
+                                addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 59, 35.5);
                                 break;
                             case 4:
                                 themeIndex = updateIndex(themeIndex, themeCount, plusOrMinus);
-                                addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 58, 45);
+                                addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 59, 45);
                                 break;
                             }
                         }
@@ -942,9 +942,9 @@ int main() {
                     settingsT.music2Param.setFillColor(color2);
                     settingsT.themeParam.setFillColor(color2);
 
-                    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 35, 6.4);
-                    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 40, 6.4);
-                    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 57, 6.4);
+                    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
+                    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
+                    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
 
                     musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
 
@@ -999,12 +999,12 @@ int main() {
             availableLetters = createLetterMap(targetWord);
             currentLetters = availableLetters;
 
-            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 6, 5.7);
-            addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 50, 5.7);
-            addInfoToWindow(gameT.timer, font, "Timer:  ", 40, Color::White, 76, 5.7);
-            addInfoToWindow(gameT.target, font, "Random word is: " + targetWord, 36, Color::White, 20, 26);
-            addInfoToWindow(gameT.input, font, "Your input:   ", 40, Color::White, 20, 55);
-            addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 75, 90);
+            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 13, 5.7);
+            addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
+            addInfoToWindow(gameT.timer, font, "Timer:  ", 40, Color::White, 83, 5.7);
+            addInfoToWindow(gameT.target, font, "Random word is: " + targetWord, 36, Color::White, 50, 26);
+            addInfoToWindow(gameT.input, font, "Your input:   ", 40, Color::White, 33, 55);
+            addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
 
             gameClock.restart(); // Сброс таймера
 
@@ -1029,10 +1029,10 @@ int main() {
                     else if (click(event, window, gameBtn.pause)) {
                         isPaused = !isPaused;
                         if (isPaused) {
-                            addInfoToWindow(gameT.pause, font, "Resume", 40, Color::White, 4.5, 5.7);
+                            addInfoToWindow(gameT.pause, font, "Resume", 40, Color::White, 13, 5.7);
                         }
                         else {
-                            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 6, 5.7);
+                            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 13, 5.7);
                             gameClock.restart();
                         }
                     }
@@ -1112,11 +1112,11 @@ int main() {
                 window.draw(gameT.pause);
 
                 if (!isPaused) {
-                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 75, 90);
+                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
                     window.draw(gameT.endGame);
                 }
                 else {
-                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 110, 110);
+                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 150, 110);
                     window.draw(gameT.endGame);
                 }
 
@@ -1169,7 +1169,8 @@ int main() {
                 }
             }
             endgameT.score.setString("Your score: " + to_string(counter));
-
+            bestScore = 0;
+            counter = 100;
             if (counter > bestScore) {
                 bestScore = counter;
                 settings["best_score"] = bestScore;
