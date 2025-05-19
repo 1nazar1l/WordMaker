@@ -3,52 +3,32 @@
         {
             "best_score": 0,
             "difficulty": "easy",
-            "login": "",
-            "music1": 1,
+            "login": "user123",
+            "music1": 3,
             "music2": 1,
-            "password": "",
+            "password": "191F542DC0923F15",
             "round_time": 30,
             "theme_number": 4
         },
         {
-            "best_score": 5,
+            "best_score": 0,
             "difficulty": "easy",
             "login": "admin",
             "music1": 1,
             "music2": 1,
-            "password": "11",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 12,
-            "difficulty": "easy",
-            "login": "12",
-            "music1": 1,
-            "music2": 1,
-            "password": "12",
-            "round_time": 90,
-            "theme_number": 1
-        },
-        {
-            "best_score": 6,
-            "difficulty": "easy",
-            "login": "wwwwwwwwwwwwwwwwwwww",
-            "music1": 1,
-            "music2": 1,
-            "password": "",
+            "password": "D40E8320B9E78A9F",
             "round_time": 30,
             "theme_number": 1
         },
         {
             "best_score": 0,
             "difficulty": "easy",
-            "login": "12345",
+            "login": "q",
             "music1": 1,
             "music2": 1,
-            "password": "12345",
+            "password": "3CFF4246DD75E19B",
             "round_time": 30,
-            "theme_number": 2
+            "theme_number": 1
         }
     ]
 }

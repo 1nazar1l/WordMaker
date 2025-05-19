@@ -3,6 +3,9 @@
 #include <sstream>
 #include <string>
 #include <SFML/Audio.hpp>
+#include <functional>
+#include <unordered_map>
+#include <algorithm>
 
 #include "MainHeader.h"
 #include "RandomWord.h"
@@ -10,14 +13,28 @@
 #include "CursorManager.h"
 #include "Music.h"
 
-#include <unordered_map>
-#include <algorithm>
 
 #include "json.hpp"
 
 using json = nlohmann::json;
 using namespace std;
 using namespace sf;
+
+std::string hashPassword(const std::string& password) {
+    size_t hash = std::hash<std::string>{}(password);
+
+    hash = (hash << 5) + hash;
+    const char* hexDigits = "0123456789ABCDEF";
+    std::string hashedPassword;
+
+    for (size_t i = 0; i < sizeof(size_t); ++i) {
+        unsigned char byte = (hash >> (8 * i)) & 0xFF;
+        hashedPassword += hexDigits[(byte >> 4) & 0xF];
+        hashedPassword += hexDigits[byte & 0xF];
+    }
+
+    return hashedPassword;
+}
 
 unordered_map<char, int> createLetterMap(const string& word) {
     unordered_map<char, int> letters;
@@ -376,6 +393,7 @@ int main() {
     struct AuthTexts {
         Text login;
         Text password;
+        Text warning;
     };
 
     struct AuthBg {
@@ -400,6 +418,7 @@ int main() {
 
     addInfoToWindow(authT.login, font1, "", 30, Color::Black, 33.4, 30.8);
     addInfoToWindow(authT.password, font1, "", 30, Color::Black, 33.4, 46.8);
+    addInfoToWindow(authT.warning, font1, "", 40, Color::Black, 50, 70);
 
     string auth_regFilename = "reg_auth/auth.png";
     updateBackground(window, authBg.texture, authBg.sprite, auth_regFilename);
@@ -441,8 +460,7 @@ int main() {
                     passwordInput = "";
                     authT.password.setString("");
                     authT.login.setString("");
-
-
+                    addInfoToWindow(authT.warning, font1, "", 40, Color::Black, 50, 70);
                 }
                 else if (click(event, window, authBtn.toReg) && !isAuthWindow) {
                     isAuthWindow = true;
@@ -450,6 +468,7 @@ int main() {
                     passwordInput = "";
                     authT.password.setString("");
                     authT.login.setString("");
+                    addInfoToWindow(authT.warning, font1, "", 40, Color::Black, 50, 70);
                 }
 
                 if (event.type == Event::TextEntered && loginInputActive) {
@@ -511,7 +530,7 @@ int main() {
                         // Логика авторизации (остаётся без изменений)
                         bool authSuccess = false;
                         for (const auto& user : users["users"]) {
-                            if (user["login"] == loginInput && user["password"] == passwordInput) {
+                            if (user["login"] == loginInput && user["password"] == hashPassword(passwordInput)) {
                                 authSuccess = true;
                                 ifstream inputFile("jsons/settings.json");
                                 json playerSettings = json::parse(inputFile);
@@ -594,7 +613,7 @@ int main() {
                             gameStage = "MENU";
                         }
                         else {
-                            cout << "Логин или пароль не подходит" << endl;
+                            addInfoToWindow(authT.warning, font1, "Login or password is incorrect!!!", 35, Color::Red, 50, 70);
                         }
                     }
                     else {
@@ -608,25 +627,30 @@ int main() {
                         }
 
                         if (userExists) {
-                            cout << "Такой пользователь уже есть" << endl;
+                            addInfoToWindow(authT.warning, font1, "There is already such a user", 40, Color::Red, 50, 70);
                         }
                         else {
-                            users["users"].push_back({
-                                {"login", loginInput},
-                                {"password", passwordInput},
-                                {"best_score", 0},
-                                {"difficulty", "easy"},
-                                {"music1", 1},
-                                {"music2", 1},
-                                {"round_time", 30},
-                                {"theme_number", 1}
-                            });
+                            if (loginInput != "" && passwordInput != "") {
+                                users["users"].push_back({
+                                    {"login", loginInput},
+                                    {"password", hashPassword(passwordInput)},
+                                    {"best_score", 0},
+                                    {"difficulty", "easy"},
+                                    {"music1", 1},
+                                    {"music2", 1},
+                                    {"round_time", 30},
+                                    {"theme_number", 1}
+                                });
 
-                            ofstream outputFile("users.json");
-                            outputFile << users.dump(4);
-                            outputFile.close();
+                                ofstream outputFile("users.json");
+                                outputFile << users.dump(4);
+                                outputFile.close();
 
-                            cout << "Аккаунт создан. Начальный рекорд: 0" << endl;
+                                addInfoToWindow(authT.warning, font1, "Account created.", 40, Color::Green, 50, 70);
+                            }
+                            else {
+                                addInfoToWindow(authT.warning, font1, "Login or password is incorrect!!!", 35, Color::Red, 50, 70);
+                            }
                         }
                     }
                 }
@@ -650,6 +674,7 @@ int main() {
 
             window.draw(authT.login);
             window.draw(authT.password);
+            window.draw(authT.warning);
 
 
             window.display();
