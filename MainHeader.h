@@ -18,12 +18,12 @@ float percentageY(float percentage) {
     return (percentage / 100.0f) * static_cast<float>(desktop.height);
 }
 
-void addInfoToWindow(Text& text, Font& font, const string& str, int fontSize, Color color, float xPercentage, float yPercentage, int paddingW = 0, int paddingH = 0) {
+void addInfoToWindow(Text& text, Font& font, const string& str, int fontSize, Color color, float xPercentage, float yPercentage) {
     text.setFont(font);
     text.setString(str);
     text.setCharacterSize(fontSize);
     text.setFillColor(color);
-    text.setPosition(percentageX(xPercentage) - text.getLocalBounds().width / 2, percentageY(yPercentage) - paddingH);
+    text.setPosition(percentageX(xPercentage) - text.getLocalBounds().width / 2, percentageY(yPercentage));
 }
 
 void closeEvents(Event& event, RenderWindow& window) {
@@ -35,11 +35,11 @@ void closeEvents(Event& event, RenderWindow& window) {
     }
 }
 
-void createButtonHitBox(RectangleShape& rectangle, int width, int height, float xPercentage, float yPercentage) {
-    rectangle.setSize(Vector2f(width, height));
+void createButtonHitBox(RectangleShape& rectangle, float width, float height, float xPercentage, float yPercentage) {
+    rectangle.setSize(Vector2f(percentageX(width), percentageY(height)));
     rectangle.setFillColor(Color(0, 0, 0, 0));
     rectangle.setOutlineColor(Color::Black);
-    //rectangle.setOutlineThickness(2.f);
+    rectangle.setOutlineThickness(2.f);
     rectangle.setPosition(percentageX(xPercentage) - rectangle.getLocalBounds().width / 2, percentageY(yPercentage));
 }
 

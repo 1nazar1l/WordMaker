@@ -153,10 +153,10 @@ int main() {
     addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 50, 58.7);
     addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 50, 79.7);
 
-    createButtonHitBox(menuBtn.start, 343, 120, 50, 9.78);
-    createButtonHitBox(menuBtn.settings, 343, 120, 50, 31.42);
-    createButtonHitBox(menuBtn.leaderBoard, 343, 120, 50, 53.06);
-    createButtonHitBox(menuBtn.exit, 343, 120, 50, 74.71);
+    createButtonHitBox(menuBtn.start, 25, 15.6, 50, 9.78);
+    createButtonHitBox(menuBtn.settings, 25, 15.6, 50, 31.42);
+    createButtonHitBox(menuBtn.leaderBoard, 25, 15.6, 50, 53.06);
+    createButtonHitBox(menuBtn.exit, 25, 15.6, 50, 74.71);
 
     // Game text
     struct GameTexts {
@@ -198,7 +198,7 @@ int main() {
     int guessedCount = 0;
     int timeRemaining = roundTime;
 
-    createButtonHitBox(gameBtn.pause, 262, 100, 13, 2.61);
+    createButtonHitBox(gameBtn.pause, 19.2, 13, 13, 2.61);
 
     //Endgame
     struct EndgameTexts {
@@ -234,8 +234,8 @@ int main() {
     addInfoToWindow(endgameT.score, font, "Your score: ", 30, color1, 50, 10);
     addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 50, 15);
 
-    createButtonHitBox(endgameBtn.restart, 496, 120, 50, 58.8);
-    createButtonHitBox(endgameBtn.exit, 496, 120, 50, 78.49);
+    createButtonHitBox(endgameBtn.restart, 36.3, 15.6, 50, 58.8);
+    createButtonHitBox(endgameBtn.exit, 36.3, 15.6, 50, 78.49);
 
 
     //Settings
@@ -306,8 +306,8 @@ int main() {
     addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 59, 35.5);
     addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 59, 45);
 
-    createButtonHitBox(settingsBtn.exitToMenu, 200, 100, 10, 3.13);
-    createButtonHitBox(settingsBtn.save, 443, 100, 50, 82.53);
+    createButtonHitBox(settingsBtn.exitToMenu, 14.6, 13.6, 10, 3.13);
+    createButtonHitBox(settingsBtn.save, 32.4, 13.6, 50, 82.53);
 
     float leftMargin1 = 52;
     float leftMargin2 = 65;
@@ -315,8 +315,8 @@ int main() {
     float marginStep = 9.52;
 
     for (int i = 0; i < 5; i++) {
-        createButtonHitBox(settingsBtn.leftStrokes[i], 18, 33, leftMargin1, topMargin);
-        createButtonHitBox(settingsBtn.rightStrokes[i], 18, 33, leftMargin2, topMargin);
+        createButtonHitBox(settingsBtn.leftStrokes[i], 1.31, 4.3, leftMargin1, topMargin);
+        createButtonHitBox(settingsBtn.rightStrokes[i], 1.31, 4.3, leftMargin2, topMargin);
         topMargin += marginStep;
     }
     if (gameStage != "AUTH_REG") {
@@ -352,7 +352,7 @@ int main() {
     updateBackground(window, leaderboardBg.texture, leaderboardBg.sprite, leaderboardFilename);
 
     addInfoToWindow(leaderboardT.exit, font, "Exit", 50, color1, 10, 5.5);
-    createButtonHitBox(leaderboardBtn.exit, 200, 100, 10, 2.5);
+    createButtonHitBox(leaderboardBtn.exit, 14.6, 13, 10, 2.5);
 
     addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
     addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
@@ -405,10 +405,10 @@ int main() {
     updateBackground(window, authBg.texture, authBg.sprite, auth_regFilename);
 
 
-    createButtonHitBox(authBtn.login, 481, 64, 50, 29.73);
-    createButtonHitBox(authBtn.password, 481, 64, 50, 45.89);
-    createButtonHitBox(authBtn.ready, 481, 64, 50, 57.70);
-    createButtonHitBox(authBtn.toReg, 173, 50, 50, 85);
+    createButtonHitBox(authBtn.login, 35.2, 8.4, 50, 29.73);
+    createButtonHitBox(authBtn.password, 35.2, 8.4, 50, 45.89);
+    createButtonHitBox(authBtn.ready, 35.2, 8.4, 50, 57.70);
+    createButtonHitBox(authBtn.toReg, 12.6, 6.5, 50, 85);
 
     bool loginInputActive = false;
     bool passwordInputActive = false;
@@ -942,6 +942,12 @@ int main() {
                     settingsT.music2Param.setFillColor(color2);
                     settingsT.themeParam.setFillColor(color2);
 
+                    timerOption.setFillColor(color1);
+                    difOption.setFillColor(color1);
+                    music1Option.setFillColor(color1);
+                    music2Option.setFillColor(color1);
+                    themeOption.setFillColor(color1);
+
                     addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
                     addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
                     addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
@@ -999,7 +1005,7 @@ int main() {
             availableLetters = createLetterMap(targetWord);
             currentLetters = availableLetters;
 
-            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 13, 5.7);
+            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 12.5, 5.7);
             addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
             addInfoToWindow(gameT.timer, font, "Timer:  ", 40, Color::White, 83, 5.7);
             addInfoToWindow(gameT.target, font, "Random word is: " + targetWord, 36, Color::White, 50, 26);
@@ -1032,7 +1038,7 @@ int main() {
                             addInfoToWindow(gameT.pause, font, "Resume", 40, Color::White, 13, 5.7);
                         }
                         else {
-                            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 13, 5.7);
+                            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 12.5, 5.7);
                             gameClock.restart();
                         }
                     }
