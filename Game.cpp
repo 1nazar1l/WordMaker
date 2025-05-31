@@ -6,13 +6,13 @@
 #include <functional>
 #include <unordered_map>
 #include <algorithm>
+#include <iomanip>
 
 #include "MainHeader.h"
 #include "RandomWord.h"
 #include "ValidWord.h"
 #include "CursorManager.h"
 #include "Music.h"
-
 
 #include "json.hpp"
 
@@ -45,7 +45,7 @@ unordered_map<char, int> createLetterMap(const string& word) {
 }
 
 void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused) {
-    if (isPaused) return; // Не обновляем таймер на паузе
+    if (isPaused) return;
 
     Time elapsed = gameClock.getElapsedTime();
     if (elapsed.asSeconds() >= 1.0f && timeRemaining > 0) {
@@ -97,12 +97,47 @@ int getCurrentIndexStr(const int& length, string massiv[], string selectedParame
     }
 }
 
+std::string formatFloat(float num) {
+    std::stringstream ss;
+    ss << num;
+    std::string s = ss.str();
+
+    size_t dotPos = s.find('.');
+    if (dotPos != std::string::npos) {
+        s.erase(s.find_last_not_of('0') + 1, std::string::npos);
+        if (s.back() == '.') {
+            s.pop_back();
+        }
+    }
+    return s;
+}
+
 int main() {
+    const int timesCount = 4;
+    const int difCount = 3;
+    const int music1Count = 3;
+    const int music2Count = 3;
+    const int themeCount = 4;
+
+    int timesToRound[timesCount]{ 5,60,90,120 };
+    string difToRound[difCount]{ "easy","normal","hard" };
+    int music1ToRound[music1Count]{ 1,2,3 };
+    int music2ToRound[music2Count]{ 1,2,3 };
+    int themeToRound[themeCount]{ 1,2,3,4 };
+
+    float topMargin = 6.78;
+    float marginStep = 9.52;
+
+    float calculatedResult = 0;
+
+    string settingsFilepath = "jsons/settings.json";
+
     setlocale(LC_ALL, "");
     MusicManager musicManager;
+    CursorManager cursorManager;
 
     Color color1, color2;
-    ifstream setJson("jsons/settings.json");
+    ifstream setJson(settingsFilepath);
     json settings = json::parse(setJson);
 
     int themeNumber = settings["theme_number"];
@@ -127,7 +162,6 @@ int main() {
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
     Font font;
-    CursorManager cursorManager;
 
     if (!font.loadFromFile("fonts/font1.ttf")) {
         return EXIT_FAILURE;
@@ -135,251 +169,6 @@ int main() {
 
     if (!cursorManager.loadTextures("cursors/defaultcursor.png", "cursors/hovercursor.png")) {
         return EXIT_FAILURE;
-    }
-
-    // Menu text
-    struct MenuTexts {
-        Text startGame;
-        Text settings;
-        Text leaderboard;
-        Text exit;
-    };
-
-    struct MenuBg {
-        Texture texture;
-        Sprite sprite;
-    };
-
-    struct MenuButtons {
-        RectangleShape start;
-        RectangleShape settings;
-        RectangleShape leaderBoard;
-        RectangleShape exit;
-    };
-
-    MenuTexts menuT;
-    MenuBg menuBg;
-    MenuButtons menuBtn;
-
-    string menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
-    updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
-
-
-    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 50, 14.7);
-    addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 50, 36.4);
-    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 50, 58.7);
-    addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 50, 79.7);
-
-    createButtonHitBox(menuBtn.start, 25, 15.6, 50, 9.78);
-    createButtonHitBox(menuBtn.settings, 25, 15.6, 50, 31.42);
-    createButtonHitBox(menuBtn.leaderBoard, 25, 15.6, 50, 53.06);
-    createButtonHitBox(menuBtn.exit, 25, 15.6, 50, 74.71);
-
-    // Game text
-    struct GameTexts {
-        Text counter;
-        Text target;
-        Text input;
-        Text letters;
-        Text endGame;
-        Text timer;
-        Text pause;
-    };
-
-    struct GameBg {
-        Texture texture;
-        Sprite sprite;
-    };
-
-    struct GameButtons {
-        RectangleShape pause;
-    };
-
-    GameTexts gameT;
-    GameBg gameBg;
-    GameButtons gameBtn;
-
-    string gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
-    updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
-
-    ValidWord validator("validWords.txt");
-    validator.loadWords();
-
-    Clock gameClock;
-    unordered_map<char, int> availableLetters;
-    unordered_map<char, int> currentLetters;
-    string targetWord;
-    string playerInput;
-    string guessedWords[100];
-    unsigned int counter = 0;
-    int guessedCount = 0;
-    int timeRemaining = roundTime;
-
-    createButtonHitBox(gameBtn.pause, 19.2, 13, 13, 2.61);
-
-    //Endgame
-    struct EndgameTexts {
-        Text restart;
-        Text exit;
-        Text score;
-        Text isrecord;
-
-    };
-
-    struct EndgameBg {
-        Texture texture;
-        Sprite sprite;
-    };
-
-    struct EndgameButtons {
-        RectangleShape restart;
-        RectangleShape exit;
-    };
-
-    EndgameTexts endgameT;
-    EndgameBg endgameBg;
-    EndgameButtons endgameBtn;
-
-
-    string endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
-    updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
-
-
-    addInfoToWindow(endgameT.restart, font, "Restart", 50, color1, 50, 62.5);
-    addInfoToWindow(endgameT.exit, font, "Exit", 50, color1, 50, 82.5);
-
-    addInfoToWindow(endgameT.score, font, "Your score: ", 30, color1, 50, 10);
-    addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 50, 15);
-
-    createButtonHitBox(endgameBtn.restart, 36.3, 15.6, 50, 58.8);
-    createButtonHitBox(endgameBtn.exit, 36.3, 15.6, 50, 78.49);
-
-
-    //Settings
-    struct SettingsTexts {
-        Text exitToMenu;
-        Text save;
-        Text timerParam;
-        Text difficultyParam;
-        Text music1Param;
-        Text music2Param;
-        Text themeParam;
-    };
-
-    struct SettingsBg {
-        Texture texture;
-        Sprite sprite;
-    };
-
-    struct SettingsButtons {
-        RectangleShape exitToMenu;
-        RectangleShape save;
-        RectangleShape leftStrokes[5];
-        RectangleShape rightStrokes[5];
-    };
-
-    SettingsTexts settingsT;
-    SettingsBg settingsBg;
-    SettingsButtons settingsBtn;
-
-    string settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
-    updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
-
-    addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, color1, 10, 6);
-    addInfoToWindow(settingsT.timerParam, font, "Timer", 30, color2, 42, 6.8);
-    addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, color2, 42, 16.3);
-    addInfoToWindow(settingsT.music1Param, font, "Main song", 30, color2, 42, 25.8);
-    addInfoToWindow(settingsT.music2Param, font, "Game song", 30, color2, 42, 35.3);
-    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 42, 44.8);
-    addInfoToWindow(settingsT.save, font, "Save", 50, color1, 50, 85);
-
-    const int timesCount = 4;
-    const int difCount = 3;
-    const int music1Count = 3;
-    const int music2Count = 3;
-    const int themeCount = 4;
-
-    int timesToRound[timesCount]{30,60,90,120};
-    string difToRound[difCount]{"easy","normal","hard"};
-    int music1ToRound[music1Count]{ 1,2,3 };
-    int music2ToRound[music2Count]{ 1,2,3 };
-    int themeToRound[themeCount]{ 1,2,3,4 };
-
-    int timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
-    int difIndex = getCurrentIndexStr(difCount, difToRound, difficulty);
-    int themeIndex = getCurrentIndex(themeCount, themeToRound, themeNumber);
-    int music1Index = getCurrentIndex(music1Count, music1ToRound, music1Number);
-    int music2Index = getCurrentIndex(music2Count, music2ToRound, music2Number);
-
-    Text timerOption;
-    Text difOption;
-    Text music1Option;
-    Text music2Option;
-    Text themeOption;
-
-    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 59, 7);
-    addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 59, 16.5);
-    addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 59, 26);
-    addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 59, 35.5);
-    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 59, 45);
-
-    createButtonHitBox(settingsBtn.exitToMenu, 14.6, 13.6, 10, 3.13);
-    createButtonHitBox(settingsBtn.save, 32.4, 13.6, 50, 82.53);
-
-    float leftMargin1 = 52;
-    float leftMargin2 = 65;
-    float topMargin = 6.78;
-    float marginStep = 9.52;
-
-    for (int i = 0; i < 5; i++) {
-        createButtonHitBox(settingsBtn.leftStrokes[i], 1.31, 4.3, leftMargin1, topMargin);
-        createButtonHitBox(settingsBtn.rightStrokes[i], 1.31, 4.3, leftMargin2, topMargin);
-        topMargin += marginStep;
-    }
-    if (gameStage != "AUTH_REG") {
-        musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
-    }
-
-    //LEADERBOARD
-
-    struct LeaderBoardTexts {
-        Text exit;
-        Text numberTitle;
-        Text userTitle;
-        Text scoreTitle;
-        Text number[10];
-        Text user[10];
-        Text score[10];
-    };
-
-    struct LeaderBoardBg {
-        Texture texture;
-        Sprite sprite;
-    };
-
-    struct LeaderBoardButtons {
-        RectangleShape exit;
-    };
-
-    LeaderBoardTexts leaderboardT;
-    LeaderBoardBg leaderboardBg;
-    LeaderBoardButtons leaderboardBtn;
-
-    string leaderboardFilename = "backgrounds/leaderboard" + to_string(themeNumber) + ".png";
-    updateBackground(window, leaderboardBg.texture, leaderboardBg.sprite, leaderboardFilename);
-
-    addInfoToWindow(leaderboardT.exit, font, "Exit", 50, color1, 10, 5.5);
-    createButtonHitBox(leaderboardBtn.exit, 14.6, 13, 10, 2.5);
-
-    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
-    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
-    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
-
-    topMargin = 15;
-    marginStep = 8.33;
-    for (int i = 0; i < 10; i++) {
-        addInfoToWindow(leaderboardT.number[i], font, to_string(i + 1), 23, Color::White, 36, topMargin);
-        topMargin += marginStep;
     }
 
     //AUTH
@@ -437,6 +226,235 @@ int main() {
     string userPassword;
 
     int bestScore;
+
+    // Menu
+    struct MenuTexts {
+        Text startGame;
+        Text settings;
+        Text leaderboard;
+        Text exit;
+    };
+
+    struct MenuBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct MenuButtons {
+        RectangleShape start;
+        RectangleShape settings;
+        RectangleShape leaderBoard;
+        RectangleShape exit;
+    };
+
+    MenuTexts menuT;
+    MenuBg menuBg;
+    MenuButtons menuBtn;
+
+    string menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
+    updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
+
+
+    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 50, 14.7);
+    addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 50, 36.4);
+    addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 50, 58.7);
+    addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 50, 79.7);
+
+    createButtonHitBox(menuBtn.start, 25, 15.6, 50, 9.78);
+    createButtonHitBox(menuBtn.settings, 25, 15.6, 50, 31.42);
+    createButtonHitBox(menuBtn.leaderBoard, 25, 15.6, 50, 53.06);
+    createButtonHitBox(menuBtn.exit, 25, 15.6, 50, 74.71);
+
+    // Game
+    struct GameTexts {
+        Text counter;
+        Text target;
+        Text input;
+        Text letters;
+        Text endGame;
+        Text timer;
+        Text pause;
+    };
+
+    struct GameBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct GameButtons {
+        RectangleShape pause;
+    };
+
+    GameTexts gameT;
+    GameBg gameBg;
+    GameButtons gameBtn;
+
+    string gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
+    updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
+
+    ValidWord validator("validWords.txt");
+    validator.loadWords();
+
+    Clock gameClock;
+    unordered_map<char, int> availableLetters;
+    unordered_map<char, int> currentLetters;
+    string targetWord;
+    string playerInput;
+    string guessedWords[100];
+    int counter = 0;
+    int guessedCount = 0;
+    int timeRemaining = roundTime;
+
+    createButtonHitBox(gameBtn.pause, 19.2, 13, 13, 2.61);
+
+    //Endgame
+    struct EndgameTexts {
+        Text restart;
+        Text exit;
+        Text score;
+        Text isrecord;
+        Text difficultyBonus;
+        Text timeBonus;
+        Text totalScore;
+    };
+
+    struct EndgameBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct EndgameButtons {
+        RectangleShape restart;
+        RectangleShape exit;
+    };
+
+    EndgameTexts endgameT;
+    EndgameBg endgameBg;
+    EndgameButtons endgameBtn;
+
+
+    string endgameFilename = "backgrounds/endgame" + to_string(themeNumber) + ".png";
+    updateBackground(window, endgameBg.texture, endgameBg.sprite, endgameFilename);
+
+
+    addInfoToWindow(endgameT.restart, font, "Restart", 50, color1, 50, 62.5);
+    addInfoToWindow(endgameT.exit, font, "Exit", 50, color1, 50, 82.5);
+
+
+    createButtonHitBox(endgameBtn.restart, 36.3, 15.6, 50, 58.8);
+    createButtonHitBox(endgameBtn.exit, 36.3, 15.6, 50, 78.49);
+
+
+    //Settings
+    struct SettingsTexts {
+        Text exitToMenu;
+        Text save;
+        Text timerParam;
+        Text difficultyParam;
+        Text music1Param;
+        Text music2Param;
+        Text themeParam;
+    };
+
+    struct SettingsBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct SettingsButtons {
+        RectangleShape exitToMenu;
+        RectangleShape save;
+        RectangleShape leftStrokes[5];
+        RectangleShape rightStrokes[5];
+    };
+
+    SettingsTexts settingsT;
+    SettingsBg settingsBg;
+    SettingsButtons settingsBtn;
+
+    string settingsFilename = "backgrounds/settings" + to_string(themeNumber) + ".png";
+    updateBackground(window, settingsBg.texture, settingsBg.sprite, settingsFilename);
+
+    addInfoToWindow(settingsT.exitToMenu, font, "Exit", 50, color1, 10, 6);
+    addInfoToWindow(settingsT.timerParam, font, "Timer", 30, color2, 42, 6.8);
+    addInfoToWindow(settingsT.difficultyParam, font, "Difficulty", 28, color2, 42, 16.3);
+    addInfoToWindow(settingsT.music1Param, font, "Main song", 30, color2, 42, 25.8);
+    addInfoToWindow(settingsT.music2Param, font, "Game song", 30, color2, 42, 35.3);
+    addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 42, 44.8);
+    addInfoToWindow(settingsT.save, font, "Save", 50, color1, 50, 85);
+
+
+    int timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
+    int difIndex = getCurrentIndexStr(difCount, difToRound, difficulty);
+    int themeIndex = getCurrentIndex(themeCount, themeToRound, themeNumber);
+    int music1Index = getCurrentIndex(music1Count, music1ToRound, music1Number);
+    int music2Index = getCurrentIndex(music2Count, music2ToRound, music2Number);
+
+    Text timerOption;
+    Text difOption;
+    Text music1Option;
+    Text music2Option;
+    Text themeOption;
+
+    addInfoToWindow(timerOption, font, to_string(timesToRound[timeIndex]), 25, color1, 59, 7);
+    addInfoToWindow(difOption, font, difToRound[difIndex], 25, color1, 59, 16.5);
+    addInfoToWindow(music1Option, font, to_string(music1ToRound[music1Index]), 25, color1, 59, 26);
+    addInfoToWindow(music2Option, font, to_string(music2ToRound[music2Index]), 25, color1, 59, 35.5);
+    addInfoToWindow(themeOption, font, to_string(themeToRound[themeIndex]), 25, color1, 59, 45);
+
+    createButtonHitBox(settingsBtn.exitToMenu, 14.6, 13.6, 10, 3.13);
+    createButtonHitBox(settingsBtn.save, 32.4, 13.6, 50, 82.53);
+
+    for (int i = 0; i < 5; i++) {
+        createButtonHitBox(settingsBtn.leftStrokes[i], 1.31, 4.3, 52, topMargin);
+        createButtonHitBox(settingsBtn.rightStrokes[i], 1.31, 4.3, 65, topMargin);
+        topMargin += marginStep;
+    }
+    if (gameStage != "AUTH_REG") {
+        musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+    }
+
+    //LEADERBOARD
+
+    struct LeaderBoardTexts {
+        Text exit;
+        Text numberTitle;
+        Text userTitle;
+        Text scoreTitle;
+        Text number[10];
+        Text user[10];
+        Text score[10];
+    };
+
+    struct LeaderBoardBg {
+        Texture texture;
+        Sprite sprite;
+    };
+
+    struct LeaderBoardButtons {
+        RectangleShape exit;
+    };
+
+    LeaderBoardTexts leaderboardT;
+    LeaderBoardBg leaderboardBg;
+    LeaderBoardButtons leaderboardBtn;
+
+    string leaderboardFilename = "backgrounds/leaderboard" + to_string(themeNumber) + ".png";
+    updateBackground(window, leaderboardBg.texture, leaderboardBg.sprite, leaderboardFilename);
+
+    addInfoToWindow(leaderboardT.exit, font, "Exit", 50, color1, 10, 5.5);
+    createButtonHitBox(leaderboardBtn.exit, 14.6, 13, 10, 2.5);
+
+    addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
+    addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
+    addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
+
+    topMargin = 15;
+    marginStep = 8.33;
+    for (int i = 0; i < 10; i++) {
+        addInfoToWindow(leaderboardT.number[i], font, to_string(i + 1), 23, Color::White, 36, topMargin);
+        topMargin += marginStep;
+    }
 
     while (window.isOpen()) {
         if (gameStage == "AUTH_REG") {
@@ -527,12 +545,11 @@ int main() {
                     }
 
                     if (isAuthWindow) {
-                        // Логика авторизации (остаётся без изменений)
                         bool authSuccess = false;
                         for (const auto& user : users["users"]) {
                             if (user["login"] == loginInput && user["password"] == hashPassword(passwordInput)) {
                                 authSuccess = true;
-                                ifstream inputFile("jsons/settings.json");
+                                ifstream inputFile(settingsFilepath);
                                 json playerSettings = json::parse(inputFile);
                                 inputFile.close();
                                 playerSettings = {
@@ -549,7 +566,7 @@ int main() {
                                 bestScore = user["best_score"];
                                 userLogin = user["login"];
                                 userPassword = user["password"];
-                                ofstream outputFile("jsons/settings.json");
+                                ofstream outputFile(settingsFilepath);
                                 outputFile << playerSettings.dump(4);
                                 outputFile.close();
                                 break;
@@ -557,7 +574,7 @@ int main() {
                         }
 
                         if (authSuccess) {
-                            ifstream inputFile("jsons/settings.json");
+                            ifstream inputFile(settingsFilepath);
                             json playerSettings = json::parse(inputFile);
                             inputFile.close();
                             roundTime = playerSettings["round_time"];
@@ -617,7 +634,6 @@ int main() {
                         }
                     }
                     else {
-                        // Логика регистрации с добавлением best_score
                         bool userExists = false;
                         for (const auto& user : users["users"]) {
                             if (user["login"] == loginInput) {
@@ -774,21 +790,23 @@ int main() {
                     inputFile.close();
 
                     array<pair<string, int>, 10> leaderboard = {};
-                    int count = 0;
 
                     for (const auto& user : usersData["users"]) {
-                        if (user["login"] != "" && user["best_score"] > 0 && count < 10) {
-                            leaderboard[count++] = { user["login"], user["best_score"] };
+                        if (user["login"] != "" && user["best_score"] > 0) {
+                            for (int i = 0; i < 10; ++i) {
+                                if (leaderboard[i].second < user["best_score"]) {
+                                    for (int j = 9; j > i; --j) {
+                                        leaderboard[j] = leaderboard[j - 1];
+                                    }
+                                    leaderboard[i] = { user["login"], user["best_score"] };
+                                    break;
+                                }
+                            }
                         }
                     }
 
-                    sort(leaderboard.begin(), leaderboard.begin() + count,
-                        [](const auto& a, const auto& b) {
-                            return a.second > b.second;
-                        });
-
                     json topUsers = json::array();
-                    for (int i = 0; i < count; ++i) {
+                    for (int i = 0; i < 10 && leaderboard[i].second > 0; ++i) {
                         topUsers.push_back({
                             {"login", leaderboard[i].first},
                             {"best_score", leaderboard[i].second}
@@ -813,7 +831,7 @@ int main() {
                     authT.password.setString("");
                     authT.login.setString("");
 
-                    ifstream settingsFile("jsons/settings.json");
+                    ifstream settingsFile(settingsFilepath);
                     json currentSettings = json::parse(settingsFile);
                     settingsFile.close();
 
@@ -924,7 +942,6 @@ int main() {
                     gameStage = "MENU";
                 }
                 else if (click(event, window, settingsBtn.save)) {
-                    // Сохранение
                     settings["round_time"] = timesToRound[timeIndex];
                     settings["difficulty"] = difToRound[difIndex];
                     settings["theme_number"] = themeToRound[themeIndex];
@@ -937,7 +954,7 @@ int main() {
                     themeNumber = settings["theme_number"];
                     music1Number = settings["music1"];
                     music2Number = settings["music2"];
-                    std::ofstream out("jsons/settings.json");
+                    std::ofstream out(settingsFilepath);
                     out << settings.dump(4);
 
                     menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
@@ -1013,7 +1030,6 @@ int main() {
         else if (gameStage == "GAME") {
             anyButtonHovered = false;
             window.setMouseCursorVisible(false);
-            // Генерация нового слова при переходе в игровой режим
             targetWord = getRandomWord(difficulty + "RandomWords.txt");
             if (targetWord.empty()) {
                 cerr << "No words available!" << endl;
@@ -1021,12 +1037,10 @@ int main() {
                 continue;
             }
 
-            // Сброс игровых переменных
             counter = 0;
             playerInput.clear();
             guessedCount = 0;
 
-            // Обновление доступных букв
             availableLetters = createLetterMap(targetWord);
             currentLetters = availableLetters;
 
@@ -1037,19 +1051,17 @@ int main() {
             addInfoToWindow(gameT.input, font, "Your input:   ", 40, Color::White, 33, 55);
             addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
 
-            gameClock.restart(); // Сброс таймера
-
+            gameClock.restart();
             musicManager.play("songs/game" + to_string(music2ToRound[music2Index]) + ".ogg");
 
-            // Основной игровой цикл
             while (gameStage == "GAME" && window.isOpen()) {
                 Event event;
                 updateTimer(gameClock, timeRemaining, gameT.timer, isPaused);
                 if (isPaused) {
-                    gameT.input.setFillColor(Color(150, 150, 150)); // Серый цвет при паузе
+                    gameT.input.setFillColor(Color(150, 150, 150)); 
                 }
                 else {
-                    gameT.input.setFillColor(Color::White); // Белый цвет при активной игре
+                    gameT.input.setFillColor(Color::White);
                 }
                 while (window.pollEvent(event)) {
                     closeEvents(event, window);
@@ -1083,17 +1095,14 @@ int main() {
                     }
                     
 
-                    // Обработка ввода
-                    if (event.type == Event::TextEntered && !isPaused) {  // Добавляем условие !isPaused
-                        // Обработка backspace
+                    if (event.type == Event::TextEntered && !isPaused) {
                         if (event.text.unicode == '\b') {
                             if (!playerInput.empty()) {
                                 char lastChar = playerInput.back();
-                                currentLetters[lastChar]++;  // Возвращаем букву в доступные
+                                currentLetters[lastChar]++;
                                 playerInput.pop_back();
                             }
                         }
-                        // Обработка обычных символов
                         else if (isalpha(static_cast<char>(event.text.unicode))) {
                             char c = tolower(static_cast<char>(event.text.unicode));
                             if (currentLetters[c] > 0) {
@@ -1101,11 +1110,9 @@ int main() {
                                 currentLetters[c]--;
                             }
                         }
-                        // Всегда обновляем текст, даже если просто backspace нажали
                         gameT.input.setString("Your input:   " + playerInput);
                     }
 
-                    // Обработка подтверждения слова по Enter
                     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter && !playerInput.empty() && !isPaused) {
                         if (validator.isValid(playerInput)) {
                             bool alreadyGuessed = false;
@@ -1123,7 +1130,6 @@ int main() {
                             }
                         }
 
-                        // Сброс после подтверждения слова
                         currentLetters = availableLetters;
                         playerInput.clear();
                         gameT.input.setString("Your input: ");
@@ -1199,23 +1205,64 @@ int main() {
                     gameStage = "MENU";
                 }
             }
-            endgameT.score.setString("Your score: " + to_string(counter));
-            if (counter > bestScore) {
-                bestScore = counter;
+
+            addInfoToWindow(endgameT.score, font, "Your score: " + to_string(counter), 30, color1, 50, 10);
+
+            switch (difIndex) {
+            case 0:
+                calculatedResult = counter + counter * 0.1;
+                addInfoToWindow(endgameT.difficultyBonus, font, "Difficulty bonus(easy)  x0.1: " + formatFloat(counter * 0.1), 20, color1, 50, 15);
+                break;
+            case 1:
+                calculatedResult = counter + counter * 0.3;
+                addInfoToWindow(endgameT.difficultyBonus, font, "Bonus(normal)  x0.3: " + formatFloat(counter * 0.3), 20, color1, 50, 15);
+                break;
+            case 2:
+                calculatedResult = counter + counter * 0.6;
+                addInfoToWindow(endgameT.difficultyBonus, font, "Bonus(normal)  x0.6: " + formatFloat(counter * 0.6), 20, color1, 50, 15);
+                break;
+            }
+            switch (timeIndex) {
+            case 0:
+                calculatedResult = calculatedResult + counter * 0.7;
+                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(30s)  x0.7: " + formatFloat(counter * 0.7), 20, color1, 50, 20);
+                break;
+            case 1:
+                calculatedResult = calculatedResult + counter * 0.5;
+                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(60s)  x0.5: " + formatFloat(counter * 0.5), 20, color1, 50, 20);
+                break;
+            case 2:
+                calculatedResult = calculatedResult + counter * 0.3;
+                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(90s)  x0.3: " + formatFloat(counter * 0.3), 20, color1, 50, 20);
+                break;
+            case 3:
+                calculatedResult = calculatedResult + counter * 0.1;
+                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(120s)  x0.1:" + formatFloat(counter * 0.1), 20, color1, 50, 20);
+                break;
+            }
+
+            if (calculatedResult > bestScore) {
+                bestScore = floor(calculatedResult);
                 settings["best_score"] = bestScore;
-                std::ofstream out("jsons/settings.json");
+                std::ofstream out(settingsFilepath);
                 out << settings.dump(4);
 
-                window.draw(endgameT.isrecord);
-
+                addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 50, 40);
             }
-            
+
+            addInfoToWindow(endgameT.totalScore, font, "Total score: " + formatFloat(floor(calculatedResult)), 30, color1, 50, 35);
+
+
             window.clear();
             window.draw(endgameBg.sprite);
 
             window.draw(endgameT.restart);
             window.draw(endgameT.exit);
             window.draw(endgameT.score);
+            window.draw(endgameT.isrecord);
+            window.draw(endgameT.difficultyBonus);
+            window.draw(endgameT.timeBonus);
+            window.draw(endgameT.totalScore);
 
             window.draw(endgameBtn.restart);
             window.draw(endgameBtn.exit);

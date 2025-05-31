@@ -19,6 +19,38 @@ float percentageY(float percentage) {
 }
 
 void addInfoToWindow(Text& text, Font& font, const string& str, int fontSize, Color color, float xPercentage, float yPercentage) {
+    VideoMode desktop = VideoMode::getDesktopMode();
+    int width = static_cast<float>(desktop.width);
+    if (width < 1300) {
+        fontSize = fontSize - (fontSize * 0.2);
+    }
+    else if (width >= 1300 && width < 1400) {
+        fontSize = fontSize;
+    }
+    else if (width >= 1400 && width < 1500) {
+        fontSize = fontSize + (fontSize * 0.2);
+    }
+    else if (width >= 1500 && width < 1600) {
+        fontSize = fontSize + (fontSize * 0.3);
+    }
+    else if (width >= 1600 && width < 1700) {
+        fontSize = fontSize + (fontSize * 0.4);
+    }
+    else if (width >= 1700 && width < 1800) {
+        fontSize = fontSize + (fontSize * 0.5);
+    }
+    else if (width >= 1800 && width < 1900) {
+        fontSize = fontSize + (fontSize * 0.6);
+    }
+    else if (width >= 1900 && width < 2000) {
+        fontSize = fontSize + (fontSize * 0.7);
+    }
+    else if (width >= 2000 && width < 2100) {
+        fontSize = fontSize + (fontSize * 0.8);
+    }
+    else if (width >= 2100 && width < 2200) {
+        fontSize = fontSize + (fontSize * 0.9);
+    }
     text.setFont(font);
     text.setString(str);
     text.setCharacterSize(fontSize);
