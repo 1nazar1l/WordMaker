@@ -71,7 +71,7 @@ void createButtonHitBox(RectangleShape& rectangle, float width, float height, fl
     rectangle.setSize(Vector2f(percentageX(width), percentageY(height)));
     rectangle.setFillColor(Color(0, 0, 0, 0));
     rectangle.setOutlineColor(Color::Black);
-    rectangle.setOutlineThickness(2.f);
+    //rectangle.setOutlineThickness(2.f);
     rectangle.setPosition(percentageX(xPercentage) - rectangle.getLocalBounds().width / 2, percentageY(yPercentage));
 }
 

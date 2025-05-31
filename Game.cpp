@@ -13,6 +13,7 @@
 #include "ValidWord.h"
 #include "CursorManager.h"
 #include "Music.h"
+#include "Sound.h"
 
 #include "json.hpp"
 
@@ -119,7 +120,7 @@ int main() {
     const int music2Count = 3;
     const int themeCount = 4;
 
-    int timesToRound[timesCount]{ 5,60,90,120 };
+    int timesToRound[timesCount]{ 30,60,90,120 };
     string difToRound[difCount]{ "easy","normal","hard" };
     int music1ToRound[music1Count]{ 1,2,3 };
     int music2ToRound[music2Count]{ 1,2,3 };
@@ -135,6 +136,7 @@ int main() {
     setlocale(LC_ALL, "");
     MusicManager musicManager;
     CursorManager cursorManager;
+    SoundManager sfx;
 
     Color color1, color2;
     ifstream setJson(settingsFilepath);
@@ -411,7 +413,7 @@ int main() {
         topMargin += marginStep;
     }
     if (gameStage != "AUTH_REG") {
-        musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+        musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
     }
 
     //LEADERBOARD
@@ -626,7 +628,7 @@ int main() {
                             addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
                             addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
 
-                            musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+                            musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
                             gameStage = "MENU";
                         }
                         else {
@@ -712,6 +714,7 @@ int main() {
                 }
 
                 if (click(event, window, leaderboardBtn.exit)) {
+                    sfx.play("sounds/btn.wav");
                     gameStage = "MENU";
                 }
             }
@@ -747,7 +750,7 @@ int main() {
             gameT.timer.setString("Timer:  ");
             gameT.input.setString("Your input: ");
 
-            musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+            musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
             Event event;
             Vector2i mousePos = Mouse::getPosition(window);
 
@@ -779,9 +782,11 @@ int main() {
                 }
 
                 if (click(event, window, menuBtn.start)) {
+                    sfx.play("sounds/btn.wav");
                     gameStage = "GAME";
                 }
                 else if (click(event, window, menuBtn.settings)) {
+                    sfx.play("sounds/btn.wav");
                     gameStage = "SETTINGS";
                 }
                 else if (click(event, window, menuBtn.leaderBoard)) {
@@ -823,6 +828,7 @@ int main() {
                         topUsersCount += 1;
                     }
 
+                    sfx.play("sounds/btn.wav");
                     gameStage = "LEADERBOARD";
                 }
                 else if (click(event, window, menuBtn.exit)) {
@@ -856,6 +862,7 @@ int main() {
                     outputUsersFile << users.dump(4);
                     outputUsersFile.close();
 
+                    sfx.play("sounds/btn.wav");
                     gameStage = "AUTH_REG";
                 }
             }
@@ -908,6 +915,8 @@ int main() {
 
                 for (int i = 0;i < 5;i++) {
                     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                        sfx.play("sounds/btn.wav");
+
                         bool isLeft = mouseIn(window, settingsBtn.leftStrokes[i]);
                         bool isRight = mouseIn(window, settingsBtn.rightStrokes[i]);
                         string plusOrMinus = isLeft ? "-": "+";
@@ -939,9 +948,12 @@ int main() {
                 }
 
                 if (click(event, window, settingsBtn.exitToMenu)) {
+                    sfx.play("sounds/btn.wav");
                     gameStage = "MENU";
                 }
                 else if (click(event, window, settingsBtn.save)) {
+                    sfx.play("sounds/btn.wav");
+
                     settings["round_time"] = timesToRound[timeIndex];
                     settings["difficulty"] = difToRound[difIndex];
                     settings["theme_number"] = themeToRound[themeIndex];
@@ -994,7 +1006,7 @@ int main() {
                     addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
                     addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
 
-                    musicManager.play("songs/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+                    musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
 
                 }
 
@@ -1052,7 +1064,7 @@ int main() {
             addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
 
             gameClock.restart();
-            musicManager.play("songs/game" + to_string(music2ToRound[music2Index]) + ".ogg");
+            musicManager.play("musics/game" + to_string(music2ToRound[music2Index]) + ".ogg");
 
             while (gameStage == "GAME" && window.isOpen()) {
                 Event event;
@@ -1067,9 +1079,12 @@ int main() {
                     closeEvents(event, window);
                     Vector2i mousePos = Mouse::getPosition(window);
                     if (click(event, window, gameT.endGame)) {
+                        sfx.play("sounds/btn.wav");
                         gameStage = "MENU";
                     }
                     else if (click(event, window, gameBtn.pause)) {
+                        sfx.play("sounds/btn.wav");
+
                         isPaused = !isPaused;
                         if (isPaused) {
                             addInfoToWindow(gameT.pause, font, "Resume", 40, Color::White, 13, 5.7);
@@ -1173,39 +1188,6 @@ int main() {
             Event event;
             window.setMouseCursorVisible(false);
 
-            while (window.pollEvent(event)) {
-                closeEvents(event, window);
-
-                if (mouseIn(window, endgameBtn.restart)) {
-                    endgameT.restart.setFillColor(color2);
-                    anyButtonHovered = true;
-                }
-                else if (mouseIn(window, endgameBtn.exit)) {
-                    endgameT.exit.setFillColor(color2);
-                    anyButtonHovered = true;
-                }
-                else {
-                    endgameT.restart.setFillColor(color1);
-                    endgameT.exit.setFillColor(color1);
-                    anyButtonHovered = false;
-                }
-
-                if (click(event, window, endgameBtn.restart)) {
-                    timeRemaining = roundTime;
-                    gameT.timer.setString("Timer:  ");
-                    gameT.input.setString("Your input: ");
-                    window.setMouseCursorVisible(true);
-                    endgameT.restart.setFillColor(color1);
-
-                    musicManager.stop();
-                    gameStage = "GAME";
-                }
-                else if (click(event, window, endgameBtn.exit)) {
-                    endgameT.exit.setFillColor(color1);
-                    gameStage = "MENU";
-                }
-            }
-
             addInfoToWindow(endgameT.score, font, "Your score: " + to_string(counter), 30, color1, 50, 10);
 
             switch (difIndex) {
@@ -1252,6 +1234,61 @@ int main() {
 
             addInfoToWindow(endgameT.totalScore, font, "Total score: " + formatFloat(floor(calculatedResult)), 30, color1, 50, 35);
 
+            while (window.pollEvent(event)) {
+                closeEvents(event, window);
+
+                if (mouseIn(window, endgameBtn.restart)) {
+                    endgameT.restart.setFillColor(color2);
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, endgameBtn.exit)) {
+                    endgameT.exit.setFillColor(color2);
+                    anyButtonHovered = true;
+                }
+                else {
+                    endgameT.restart.setFillColor(color1);
+                    endgameT.exit.setFillColor(color1);
+                    anyButtonHovered = false;
+                }
+
+                if (click(event, window, endgameBtn.restart)) {
+                    timeRemaining = roundTime;
+                    gameT.timer.setString("Timer:  ");
+                    gameT.input.setString("Your input: ");
+                    window.setMouseCursorVisible(true);
+                    endgameT.restart.setFillColor(color1);
+
+                    musicManager.stop();
+                    sfx.play("sounds/btn.wav");
+
+                    gameStage = "GAME";
+                }
+                else if (click(event, window, endgameBtn.exit)) {
+                    endgameT.exit.setFillColor(color1);
+                    sfx.play("sounds/btn.wav");
+
+                    ifstream settingsFile(settingsFilepath);
+                    json currentSettings = json::parse(settingsFile);
+                    settingsFile.close();
+
+                    ifstream usersFile("users.json");
+                    json users = json::parse(usersFile);
+                    usersFile.close();
+
+                    for (auto& user : users["users"]) {
+                        if (user["login"] == currentSettings["login"]) {
+                            user["best_score"] = currentSettings["best_score"];
+                            break;
+                        }
+                    }
+
+                    ofstream outputUsersFile("users.json");
+                    outputUsersFile << users.dump(4);
+                    outputUsersFile.close();
+
+                    gameStage = "MENU";
+                }
+            }
 
             window.clear();
             window.draw(endgameBg.sprite);

@@ -41,11 +41,11 @@
     <ClInclude Include="Music.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ww.txt">
-      <Filter>Файлы заголовков</Filter>
-    </Text>
     <Text Include="validWords.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
