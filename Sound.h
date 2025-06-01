@@ -8,9 +8,15 @@ private:
     sf::Sound sounds[MAX_CHANNELS];
     sf::SoundBuffer buffers[MAX_CHANNELS];
     bool channelInUse[MAX_CHANNELS] = { false };
+    std::string soundFile;
+    float soundVolume;
 
 public:
-    void play(const std::string& filename, float volume = 40.f, bool loop = false) {
+    SoundManager(const std::string& filename, float volume = 40.f)
+        : soundFile(filename), soundVolume(volume) {
+    }
+
+    void play(bool loop = false) {
         int freeChannel = -1;
         for (int i = 0; i < MAX_CHANNELS; ++i) {
             if (!channelInUse[i] || sounds[i].getStatus() == sf::Sound::Stopped) {
@@ -21,9 +27,9 @@ public:
 
         if (freeChannel == -1) return;
 
-        if (buffers[freeChannel].loadFromFile(filename)) {
+        if (buffers[freeChannel].loadFromFile(soundFile)) {
             sounds[freeChannel].setBuffer(buffers[freeChannel]);
-            sounds[freeChannel].setVolume(volume);
+            sounds[freeChannel].setVolume(soundVolume);
             sounds[freeChannel].setLoop(loop);
             sounds[freeChannel].play();
             channelInUse[freeChannel] = true;
@@ -38,8 +44,11 @@ public:
     }
 
     void setVolume(float volume) {
+        soundVolume = volume;
         for (int i = 0; i < MAX_CHANNELS; ++i) {
-            sounds[i].setVolume(volume);
+            if (channelInUse[i]) {
+                sounds[i].setVolume(volume);
+            }
         }
     }
 };

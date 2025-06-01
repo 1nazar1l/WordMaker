@@ -99,12 +99,21 @@ bool mouseIn(RenderWindow& window, RectangleShape& btn) {
     return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
 }
 
+bool mouseIn(RenderWindow& window, CircleShape& btn) {
+    Vector2i mousePos = Mouse::getPosition(window);
+    return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+}
+
 bool mouseIn(RenderWindow& window, Text& btn) {
     Vector2i mousePos = Mouse::getPosition(window);
     return btn.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
 }
 
 bool click(Event& event, RenderWindow& window, RectangleShape& btn) {
+    return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
+}
+
+bool click(Event& event, RenderWindow& window, CircleShape& btn) {
     return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && mouseIn(window, btn);
 }
 
@@ -118,4 +127,33 @@ bool notclick(Event& event, RenderWindow& window, Text& btn) {
 
 bool notclick(Event& event, RenderWindow& window, RectangleShape& btn) {
     return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && !mouseIn(window, btn);
+}
+
+int getVolumeValue(RenderWindow& window, bool& isDragging, RectangleShape& track, CircleShape& thumb) {
+
+    if (isDragging) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        float newX = mousePos.x - thumb.getRadius();
+
+        float minX = track.getPosition().x - thumb.getRadius();
+        float maxX = track.getPosition().x + track.getSize().x - thumb.getRadius();
+        newX = std::max(minX, std::min(newX, maxX));
+
+        thumb.setPosition(newX, thumb.getPosition().y);
+
+        float sliderWidth = track.getSize().x;
+        float relativePos = (newX - minX) / sliderWidth;
+        int value = static_cast<int>(relativePos * 100);
+
+        static int lastValue = -1;
+        if (value != lastValue) {
+            lastValue = value;
+            return lastValue;
+        }
+    }
+}
+
+void createThumb(RectangleShape& track, CircleShape& thumb, Color& color, float xPosition, float yPosition) {
+    thumb.setFillColor(color);
+    thumb.setPosition(percentageX(xPosition) - track.getLocalBounds().width / 2, percentageY(yPosition) - track.getLocalBounds().height / 2);
 }

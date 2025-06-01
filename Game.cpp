@@ -136,7 +136,7 @@ int main() {
     setlocale(LC_ALL, "");
     MusicManager musicManager;
     CursorManager cursorManager;
-    SoundManager sfx;
+    SoundManager sfx("sounds/btn.wav", 40.f);
 
     Color color1, color2;
     ifstream setJson(settingsFilepath);
@@ -159,7 +159,7 @@ int main() {
     bool isPaused = false;
     bool anyButtonHovered = false;
 
-    string gameStage = "AUTH_REG";
+    string gameStage = "SETTINGS";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -356,6 +356,9 @@ int main() {
         Text music1Param;
         Text music2Param;
         Text themeParam;
+        Text sfxVolumeParam;
+        Text gameVolumeParam;
+        Text mainVolumeParam;
     };
 
     struct SettingsBg {
@@ -368,6 +371,9 @@ int main() {
         RectangleShape save;
         RectangleShape leftStrokes[5];
         RectangleShape rightStrokes[5];
+        RectangleShape sfx;
+        RectangleShape game;
+        RectangleShape main;
     };
 
     SettingsTexts settingsT;
@@ -383,6 +389,10 @@ int main() {
     addInfoToWindow(settingsT.music1Param, font, "Main song", 30, color2, 42, 25.8);
     addInfoToWindow(settingsT.music2Param, font, "Game song", 30, color2, 42, 35.3);
     addInfoToWindow(settingsT.themeParam, font, "Theme", 30, color2, 42, 44.8);
+    addInfoToWindow(settingsT.sfxVolumeParam, font, "Sfx", 30, color2, 42, 54.3);
+    addInfoToWindow(settingsT.gameVolumeParam, font, "Game", 30, color2, 42, 63.8);
+    addInfoToWindow(settingsT.mainVolumeParam, font, "Main", 30, color2, 42, 73.3);
+
     addInfoToWindow(settingsT.save, font, "Save", 50, color1, 50, 85);
 
 
@@ -412,9 +422,37 @@ int main() {
         createButtonHitBox(settingsBtn.rightStrokes[i], 1.31, 4.3, 65, topMargin);
         topMargin += marginStep;
     }
+
+    createButtonHitBox(settingsBtn.sfx, 13, 2, 58.5, 55.7);
+    settingsBtn.sfx.setFillColor(Color(192, 192, 192));
+    createButtonHitBox(settingsBtn.game, 13, 2, 58.5, 65.2);
+    settingsBtn.game.setFillColor(Color(192, 192, 192));
+    createButtonHitBox(settingsBtn.main, 13, 2, 58.5, 74.7);
+    settingsBtn.main.setFillColor(Color(192, 192, 192));
+
+    Color thumbsColor;
+    thumbsColor = Color(128, 128, 128);
+    auto thumbsRadius = percentageY(2.1);
+
+
+    CircleShape sfxThumb(thumbsRadius);
+    createThumb(settingsBtn.sfx, sfxThumb, thumbsColor, 58, 55.7);
+    bool sfxThumbIsDragging = false;
+
+    CircleShape gameThumb(thumbsRadius);
+    createThumb(settingsBtn.game, gameThumb, thumbsColor, 58, 65.2);
+    bool gameThumbIsDragging = false;
+
+    CircleShape mainThumb(thumbsRadius);
+    createThumb(settingsBtn.main, mainThumb, thumbsColor, 58, 74.7);
+    bool mainThumbIsDragging = false;
+
+
     if (gameStage != "AUTH_REG") {
         musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
     }
+
+
 
     //LEADERBOARD
 
@@ -599,11 +637,11 @@ int main() {
 
                             ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
                             json theme = json::parse(themeJson);
-                            colorFirst = theme["color1"];
-                            colorSecond = theme["color2"];
+                            auto temporaryColorFirst = theme["color1"];
+                            auto temporaryColorSecond = theme["color2"];
 
-                            color1 = Color(colorFirst[0], colorFirst[1], colorFirst[2]);
-                            color2 = Color(colorSecond[0], colorSecond[1], colorSecond[2]);
+                            color1 = Color(temporaryColorFirst[0], temporaryColorFirst[1], temporaryColorFirst[2]);
+                            color2 = Color(temporaryColorSecond[0], temporaryColorSecond[1], temporaryColorSecond[2]);
 
 
                             settingsT.timerParam.setFillColor(color2);
@@ -611,6 +649,9 @@ int main() {
                             settingsT.music1Param.setFillColor(color2);
                             settingsT.music2Param.setFillColor(color2);
                             settingsT.themeParam.setFillColor(color2);
+                            settingsT.sfxVolumeParam.setFillColor(color2);
+                            settingsT.gameVolumeParam.setFillColor(color2);
+                            settingsT.mainVolumeParam.setFillColor(color2);
 
                             timeIndex = getCurrentIndex(timesCount, timesToRound, roundTime);
                             difIndex = getCurrentIndexStr(difCount, difToRound, difficulty);
@@ -714,7 +755,7 @@ int main() {
                 }
 
                 if (click(event, window, leaderboardBtn.exit)) {
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
                     gameStage = "MENU";
                 }
             }
@@ -782,11 +823,11 @@ int main() {
                 }
 
                 if (click(event, window, menuBtn.start)) {
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
                     gameStage = "GAME";
                 }
                 else if (click(event, window, menuBtn.settings)) {
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
                     gameStage = "SETTINGS";
                 }
                 else if (click(event, window, menuBtn.leaderBoard)) {
@@ -828,7 +869,7 @@ int main() {
                         topUsersCount += 1;
                     }
 
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
                     gameStage = "LEADERBOARD";
                 }
                 else if (click(event, window, menuBtn.exit)) {
@@ -862,7 +903,7 @@ int main() {
                     outputUsersFile << users.dump(4);
                     outputUsersFile.close();
 
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
                     gameStage = "AUTH_REG";
                 }
             }
@@ -915,12 +956,13 @@ int main() {
 
                 for (int i = 0;i < 5;i++) {
                     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-                        sfx.play("sounds/btn.wav");
 
                         bool isLeft = mouseIn(window, settingsBtn.leftStrokes[i]);
                         bool isRight = mouseIn(window, settingsBtn.rightStrokes[i]);
                         string plusOrMinus = isLeft ? "-": "+";
                         if (isLeft || isRight) {
+                            sfx.play();
+
                             switch (i) {
                             case 0:
                                 timeIndex = updateIndex(timeIndex, timesCount, plusOrMinus);
@@ -948,11 +990,11 @@ int main() {
                 }
 
                 if (click(event, window, settingsBtn.exitToMenu)) {
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
                     gameStage = "MENU";
                 }
                 else if (click(event, window, settingsBtn.save)) {
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
 
                     settings["round_time"] = timesToRound[timeIndex];
                     settings["difficulty"] = difToRound[difIndex];
@@ -995,6 +1037,10 @@ int main() {
                     settingsT.music1Param.setFillColor(color2);
                     settingsT.music2Param.setFillColor(color2);
                     settingsT.themeParam.setFillColor(color2);
+                    settingsT.sfxVolumeParam.setFillColor(color2);
+                    settingsT.gameVolumeParam.setFillColor(color2);
+                    settingsT.mainVolumeParam.setFillColor(color2);
+
 
                     timerOption.setFillColor(color1);
                     difOption.setFillColor(color1);
@@ -1010,7 +1056,40 @@ int main() {
 
                 }
 
+
+                if (event.type == sf::Event::Closed)
+                    window.close();
+
+                if (click(event, window, sfxThumb)) {
+                    sfxThumbIsDragging = true;
+                }
+                else if (click(event, window, gameThumb)) {
+                    gameThumbIsDragging = true;
+                }
+                else if (click(event, window, gameThumb)) {
+                    mainThumbIsDragging = true;
+                }
+
+
+                // Отпускание кружка
+                if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                    sfxThumbIsDragging = false;
+                    gameThumbIsDragging = false;
+                    mainThumbIsDragging = false;
+                }
+
             }
+
+            int sfxVolume = getVolumeValue(window, sfxThumbIsDragging, settingsBtn.sfx, sfxThumb);
+            int gameVolume = getVolumeValue(window, gameThumbIsDragging, settingsBtn.game, gameThumb);
+            int mainVolume = getVolumeValue(window, mainThumbIsDragging, settingsBtn.main, mainThumb);
+            cout << "sfx" << sfxVolume;
+            cout << "game" << gameVolume;
+            cout << "main" << mainVolume;
+
+
+
+
             window.clear();
             window.draw(settingsBg.sprite);
 
@@ -1023,6 +1102,9 @@ int main() {
             window.draw(settingsT.music1Param);
             window.draw(settingsT.music2Param);
             window.draw(settingsT.themeParam);
+            window.draw(settingsT.sfxVolumeParam);
+            window.draw(settingsT.gameVolumeParam);
+            window.draw(settingsT.mainVolumeParam);
             window.draw(settingsT.save);
 
             window.draw(timerOption);
@@ -1031,12 +1113,21 @@ int main() {
             window.draw(music2Option);
             window.draw(themeOption);
 
-            drawCursor(window, cursorManager, anyButtonHovered);
 
             for (int i = 0;i < 5;i++) {
                 window.draw(settingsBtn.leftStrokes[i]);
                 window.draw(settingsBtn.rightStrokes[i]);
             }
+
+            window.draw(settingsBtn.sfx);
+            window.draw(settingsBtn.game);
+            window.draw(settingsBtn.main);
+
+            window.draw(sfxThumb);
+            window.draw(gameThumb);
+            window.draw(mainThumb);
+
+            drawCursor(window, cursorManager, anyButtonHovered);
             window.display();
         }
         else if (gameStage == "GAME") {
@@ -1079,11 +1170,11 @@ int main() {
                     closeEvents(event, window);
                     Vector2i mousePos = Mouse::getPosition(window);
                     if (click(event, window, gameT.endGame)) {
-                        sfx.play("sounds/btn.wav");
+                        sfx.play();
                         gameStage = "MENU";
                     }
                     else if (click(event, window, gameBtn.pause)) {
-                        sfx.play("sounds/btn.wav");
+                        sfx.play();
 
                         isPaused = !isPaused;
                         if (isPaused) {
@@ -1259,13 +1350,13 @@ int main() {
                     endgameT.restart.setFillColor(color1);
 
                     musicManager.stop();
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
 
                     gameStage = "GAME";
                 }
                 else if (click(event, window, endgameBtn.exit)) {
                     endgameT.exit.setFillColor(color1);
-                    sfx.play("sounds/btn.wav");
+                    sfx.play();
 
                     ifstream settingsFile(settingsFilepath);
                     json currentSettings = json::parse(settingsFile);
