@@ -21,6 +21,15 @@ using json = nlohmann::json;
 using namespace std;
 using namespace sf;
 
+void setThumbPosition(RenderWindow& window, RectangleShape& track, CircleShape& thumb, int& volume) {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    //float newX = mousePos.x - thumb.getRadius();
+    float minX = track.getPosition().x - thumb.getRadius();
+    float sliderWidth = track.getSize().x;
+
+    thumb.setPosition(minX + (sliderWidth * volume / 100.f), thumb.getPosition().y);
+}
+
 int main() {
     const int timesCount = 4;
     const int difCount = 3;
@@ -358,6 +367,10 @@ int main() {
     createThumb(settingsBtn.main, mainThumb, thumbsColor, 58, 74.7);
     bool mainThumbIsDragging = false;
 
+    setThumbPosition(window, settingsBtn.sfx, sfxThumb, sfxVolume);
+    setThumbPosition(window, settingsBtn.game, gameThumb, gameVolume);
+    setThumbPosition(window, settingsBtn.main, mainThumb, mainVolume);
+
     //LEADERBOARD
 
     struct LeaderBoardTexts {
@@ -577,6 +590,10 @@ int main() {
                             addInfoToWindow(leaderboardT.numberTitle, font, "No", 25, color2, 36, 6.4);
                             addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
                             addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
+
+                            setThumbPosition(window, settingsBtn.sfx, sfxThumb, sfxVolume);
+                            setThumbPosition(window, settingsBtn.game, gameThumb, gameVolume);
+                            setThumbPosition(window, settingsBtn.main, mainThumb, mainVolume);
 
                             musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg", mainVolume);
                             gameStage = "MENU";

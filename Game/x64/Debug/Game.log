@@ -29,105 +29,105 @@ C:\Users\Professional\Desktop\WordMaker\MainHeader.h(143,29): warning C4244: =: 
 C:\Users\Professional\Desktop\WordMaker\MainHeader.h(146,29): warning C4244: =: преобразование "double" в "int", возможна потеря данных
   (компиляция исходного файла "Game.cpp")
   
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(37,21): warning C4305: инициализация: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(38,22): warning C4305: инициализация: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(121,69): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(121,63): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(122,72): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(122,66): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(129,54): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(129,45): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(129,39): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(130,57): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(130,48): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(130,42): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(131,54): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(131,45): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(131,39): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(132,39): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(171,74): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(172,71): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(173,77): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(174,63): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(176,53): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(176,43): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(177,56): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(177,46): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(178,59): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(178,49): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(179,52): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(179,42): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(221,53): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(221,39): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(257,60): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(257,50): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(257,44): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(258,57): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(258,47): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(258,41): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(298,74): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(299,84): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(300,79): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(301,79): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(302,74): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(303,76): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(304,78): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(305,78): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(328,64): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(328,54): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(328,48): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(329,58): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(329,48): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(329,42): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(332,62): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(332,56): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(333,63): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(333,57): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(46,21): warning C4305: инициализация: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(47,22): warning C4305: инициализация: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(130,69): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(130,63): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(131,72): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(131,66): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(138,54): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(138,45): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(138,39): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(139,57): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(139,48): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(139,42): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(140,54): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(140,45): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(140,39): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(141,39): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(180,74): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(181,71): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(182,77): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(183,63): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(185,53): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(185,43): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(186,56): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(186,46): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(187,59): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(187,49): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(188,52): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(188,42): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(230,53): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(230,39): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(266,60): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(266,50): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(266,44): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(267,57): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(267,47): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(267,41): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(307,74): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(308,84): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(309,79): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(310,79): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(311,74): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(312,76): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(313,78): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(314,78): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(337,64): warning C4305: аргумент: усечение из "double" в "float"
 C:\Users\Professional\Desktop\WordMaker\Game.cpp(337,54): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(339,55): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(341,55): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(346,37): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(350,61): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(354,63): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(358,63): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(390,45): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(392,75): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(393,75): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(394,77): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(397,18): warning C4305: =: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(577,99): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(578,99): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(579,101): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(581,111): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(706,95): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(776,34): warning C4305: =: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(975,91): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(976,91): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(977,93): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(980,44): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(982,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1057,95): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1076,81): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1077,105): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1078,82): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1106,96): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1109,97): warning C4305: аргумент: усечение из "double" в "float"
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1159,62): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1212,44): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1213,120): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1216,44): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1217,111): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1220,44): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1221,111): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1226,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1227,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1230,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1231,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1234,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1235,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1238,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1239,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-C:\Users\Professional\Desktop\WordMaker\Game.cpp(1244,34): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(337,48): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(338,58): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(338,48): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(338,42): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(341,62): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(341,56): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(342,63): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(342,57): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(346,54): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(348,55): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(350,55): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(355,37): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(359,61): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(363,63): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(367,63): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(403,45): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(405,75): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(406,75): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(407,77): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(410,18): warning C4305: =: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(590,99): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(591,99): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(592,101): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(598,111): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(723,95): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(793,34): warning C4305: =: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(992,91): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(993,91): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(994,93): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(997,44): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(999,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1074,95): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1093,81): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1094,105): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1095,82): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1123,96): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1126,97): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1176,62): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1229,44): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1230,120): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1233,44): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1234,111): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1237,44): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1238,111): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1243,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1244,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1247,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1248,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1251,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1252,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1255,53): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1256,107): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\Professional\Desktop\WordMaker\Game.cpp(1261,34): warning C4244: =: преобразование "float" в "int", возможна потеря данных
 C:\Users\Professional\Desktop\WordMaker\MainHeader.h(79,1): warning C4715: getCurrentIndex: значение возвращается не при всех путях выполнения
 C:\Users\Professional\Desktop\WordMaker\MainHeader.h(88,1): warning C4715: getCurrentIndexStr: значение возвращается не при всех путях выполнения
 C:\Users\Professional\Desktop\WordMaker\MainHeader.h(245,1): warning C4715: getVolumeValue: значение возвращается не при всех путях выполнения
