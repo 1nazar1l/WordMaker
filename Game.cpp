@@ -1063,7 +1063,6 @@ int main() {
         else if (gameStage == "GAME") {
             musicManager.stop();
             musicManager.play("musics/game" + to_string(music2ToRound[music2Index]) + ".ogg", gameVolume);
-            //musicManager.setVolume(gameVolume);
 
             anyButtonHovered = false;
             window.setMouseCursorVisible(false);
