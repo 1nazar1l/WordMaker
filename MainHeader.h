@@ -248,3 +248,11 @@ void createThumb(RectangleShape& track, CircleShape& thumb, Color& color, float 
     thumb.setFillColor(color);
     thumb.setPosition(percentageX(xPosition) - track.getLocalBounds().width / 2, percentageY(yPosition) - track.getLocalBounds().height / 2);
 }
+
+void setThumbPosition(RenderWindow& window, RectangleShape& track, CircleShape& thumb, int& volume) {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    float minX = track.getPosition().x - thumb.getRadius();
+    float sliderWidth = track.getSize().x;
+
+    thumb.setPosition(minX + (sliderWidth * volume / 100.f), thumb.getPosition().y);
+}

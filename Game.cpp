@@ -21,15 +21,6 @@ using json = nlohmann::json;
 using namespace std;
 using namespace sf;
 
-void setThumbPosition(RenderWindow& window, RectangleShape& track, CircleShape& thumb, int& volume) {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    //float newX = mousePos.x - thumb.getRadius();
-    float minX = track.getPosition().x - thumb.getRadius();
-    float sliderWidth = track.getSize().x;
-
-    thumb.setPosition(minX + (sliderWidth * volume / 100.f), thumb.getPosition().y);
-}
-
 int main() {
     const int timesCount = 4;
     const int difCount = 3;
