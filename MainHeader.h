@@ -112,44 +112,51 @@ float percentageY(float percentage) {
     return (percentage / 100.0f) * static_cast<float>(desktop.height);
 }
 
-void addInfoToWindow(Text& text, Font& font, const string& str, int fontSize, Color color, float xPercentage, float yPercentage) {
+void addInfoToWindow(Text& text, Font& font, const string& str, int fontSize, Color color,
+    float xPercentage, float yPercentage) {
     VideoMode desktop = VideoMode::getDesktopMode();
-    int width = static_cast<float>(desktop.width);
-    if (width < 1300) {
-        fontSize = fontSize - (fontSize * 0.2);
+
+    int currentWidth = desktop.width;
+    const int baseWidth = 1366;
+    float scaleFactor = 1.0f;
+
+    if (currentWidth > baseWidth) {
+        const int maxWidth = 2550;
+        const float maxScale = 1.95f;
+
+        if (currentWidth <= maxWidth) {
+            scaleFactor = 1.0f + (maxScale - 1.0f) *
+                (static_cast<float>(currentWidth - baseWidth) /
+                    (maxWidth - baseWidth));
+        }
+        else {
+            scaleFactor = maxScale;
+        }
     }
-    else if (width >= 1300 && width < 1400) {
-        fontSize = fontSize;
+    else if (currentWidth < baseWidth) {
+        const int minWidth = 800;
+        const float minScale = 0.7f;
+
+        if (currentWidth >= minWidth) {
+            scaleFactor = 1.0f - (1.0f - minScale) *
+                (static_cast<float>(baseWidth - currentWidth) /
+                    (baseWidth - minWidth));
+        }
+        else {
+            scaleFactor = minScale;
+        }
     }
-    else if (width >= 1400 && width < 1500) {
-        fontSize = fontSize + (fontSize * 0.2);
-    }
-    else if (width >= 1500 && width < 1600) {
-        fontSize = fontSize + (fontSize * 0.3);
-    }
-    else if (width >= 1600 && width < 1700) {
-        fontSize = fontSize + (fontSize * 0.4);
-    }
-    else if (width >= 1700 && width < 1800) {
-        fontSize = fontSize + (fontSize * 0.5);
-    }
-    else if (width >= 1800 && width < 1900) {
-        fontSize = fontSize + (fontSize * 0.6);
-    }
-    else if (width >= 1900 && width < 2000) {
-        fontSize = fontSize + (fontSize * 0.7);
-    }
-    else if (width >= 2000 && width < 2100) {
-        fontSize = fontSize + (fontSize * 0.8);
-    }
-    else if (width >= 2100 && width < 2200) {
-        fontSize = fontSize + (fontSize * 0.9);
-    }
+
+    int scaledFontSize = static_cast<int>(fontSize * scaleFactor);
+
     text.setFont(font);
     text.setString(str);
-    text.setCharacterSize(fontSize);
+    text.setCharacterSize(scaledFontSize);
     text.setFillColor(color);
-    text.setPosition(percentageX(xPercentage) - text.getLocalBounds().width / 2, percentageY(yPercentage));
+
+    float posX = percentageX(xPercentage) - text.getLocalBounds().width / 2;
+    float posY = percentageY(yPercentage);
+    text.setPosition(posX, posY);
 }
 
 void closeEvents(Event& event, RenderWindow& window) {
