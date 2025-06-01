@@ -21,98 +21,6 @@ using json = nlohmann::json;
 using namespace std;
 using namespace sf;
 
-std::string hashPassword(const std::string& password) {
-    size_t hash = std::hash<std::string>{}(password);
-
-    hash = (hash << 5) + hash;
-    const char* hexDigits = "0123456789ABCDEF";
-    std::string hashedPassword;
-
-    for (size_t i = 0; i < sizeof(size_t); ++i) {
-        unsigned char byte = (hash >> (8 * i)) & 0xFF;
-        hashedPassword += hexDigits[(byte >> 4) & 0xF];
-        hashedPassword += hexDigits[byte & 0xF];
-    }
-
-    return hashedPassword;
-}
-
-unordered_map<char, int> createLetterMap(const string& word) {
-    unordered_map<char, int> letters;
-    for (char c : word) {
-        letters[tolower(c)]++;
-    }
-    return letters;
-}
-
-void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused) {
-    if (isPaused) return;
-
-    Time elapsed = gameClock.getElapsedTime();
-    if (elapsed.asSeconds() >= 1.0f && timeRemaining > 0) {
-        timeRemaining--;
-        gameClock.restart();
-        stringstream ss;
-        ss << "Timer:  " << timeRemaining;
-        timerText.setString(ss.str());
-    }
-}
-
-string getRandomWord(string randomWordsFile) {
-    RandomWord randomWord(randomWordsFile);
-    randomWord.loadWords();
-    return randomWord.getRandomWord();
-}
-
-int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
-    if (minusOrPlus == "-") {
-        index -= 1;
-        if (index < 0) {
-            index = maxIndex - 1;
-        }
-    }
-    else if (minusOrPlus == "+") {
-        index += 1;
-        if (index >= maxIndex) {
-            index = 0;
-        }
-    }
-    return index;
-}
-
-int getCurrentIndex(const int& length, int massiv[], int selectedParametr) {
-    for (int i = 0; i < length;i++) {
-        if (massiv[i] == selectedParametr) {
-            return i;
-            break;
-        }
-    }
-}
-
-int getCurrentIndexStr(const int& length, string massiv[], string selectedParametr) {
-    for (int i = 0; i < length;i++) {
-        if (massiv[i] == selectedParametr) {
-            return i;
-            break;
-        }
-    }
-}
-
-std::string formatFloat(float num) {
-    std::stringstream ss;
-    ss << num;
-    std::string s = ss.str();
-
-    size_t dotPos = s.find('.');
-    if (dotPos != std::string::npos) {
-        s.erase(s.find_last_not_of('0') + 1, std::string::npos);
-        if (s.back() == '.') {
-            s.pop_back();
-        }
-    }
-    return s;
-}
-
 int main() {
     const int timesCount = 4;
     const int difCount = 3;
@@ -147,6 +55,9 @@ int main() {
     int roundTime = settings["round_time"];
     int music1Number = settings["music1"];
     int music2Number = settings["music2"];
+    int sfxVolume = settings["sfx_volume"];
+    int gameVolume = settings["game_volume"];
+    int mainVolume = settings["main_volume"];
 
     ifstream themeJson("jsons/theme" + to_string(themeNumber) + ".json");
     json theme = json::parse(themeJson);
@@ -159,7 +70,7 @@ int main() {
     bool isPaused = false;
     bool anyButtonHovered = false;
 
-    string gameStage = "SETTINGS";
+    string gameStage = "AUTH_REG";
     VideoMode desktop = VideoMode::getDesktopMode();
     RenderWindow window(desktop, "Game", Style::Fullscreen);
 
@@ -447,13 +358,6 @@ int main() {
     createThumb(settingsBtn.main, mainThumb, thumbsColor, 58, 74.7);
     bool mainThumbIsDragging = false;
 
-
-    if (gameStage != "AUTH_REG") {
-        musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
-    }
-
-
-
     //LEADERBOARD
 
     struct LeaderBoardTexts {
@@ -600,8 +504,10 @@ int main() {
                                     {"music1", user["music1"]},
                                     {"music2", user["music2"]},
                                     {"round_time", user["round_time"]},
-                                    {"theme_number", user["theme_number"]}
-
+                                    {"theme_number", user["theme_number"]},
+                                    {"sfx_volume", user["sfx_volume"]},
+                                    {"game_volume", user["game_volume"]},
+                                    {"main_volume", user["main_volume"]}
                                 };
                                 bestScore = user["best_score"];
                                 userLogin = user["login"];
@@ -622,6 +528,9 @@ int main() {
                             themeNumber = playerSettings["theme_number"];
                             music1Number = playerSettings["music1"];
                             music2Number = playerSettings["music2"];
+                            sfxVolume = playerSettings["sfx_volume"];
+                            gameVolume = playerSettings["game_volume"];
+                            mainVolume = playerSettings["main_volume"];
 
                             menuFilename = "backgrounds/menu" + to_string(themeNumber) + ".png";
                             gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
@@ -669,7 +578,7 @@ int main() {
                             addInfoToWindow(leaderboardT.userTitle, font, "User", 25, color2, 49, 6.4);
                             addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
 
-                            musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+                            musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg", mainVolume);
                             gameStage = "MENU";
                         }
                         else {
@@ -698,7 +607,10 @@ int main() {
                                     {"music1", 1},
                                     {"music2", 1},
                                     {"round_time", 30},
-                                    {"theme_number", 1}
+                                    {"theme_number", 1},
+                                    {"sfx_volume", 50},
+                                    {"game_volume", 50},
+                                    {"main_volume", 50}
                                 });
 
                                 ofstream outputFile("users.json");
@@ -791,7 +703,8 @@ int main() {
             gameT.timer.setString("Timer:  ");
             gameT.input.setString("Your input: ");
 
-            musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+            musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg", mainVolume);
+
             Event event;
             Vector2i mousePos = Mouse::getPosition(window);
 
@@ -895,6 +808,9 @@ int main() {
                             user["music2"] = currentSettings["music2"];
                             user["round_time"] = currentSettings["round_time"];
                             user["theme_number"] = currentSettings["theme_number"];
+                            user["sfx_volume"] = currentSettings["sfx_volume"];
+                            user["game_volume"] = currentSettings["game_volume"];
+                            user["main_volume"] = currentSettings["main_volume"];
                             break;
                         }
                     }
@@ -1001,13 +917,21 @@ int main() {
                     settings["theme_number"] = themeToRound[themeIndex];
                     settings["music1"] = music1ToRound[music1Index];
                     settings["music2"] = music2ToRound[music2Index];
+                    settings["sfx_volume"] = sfxVolume;
+                    settings["game_volume"] = gameVolume;
+                    settings["main_volume"] = mainVolume;
                     settings["login"] = userLogin;
                     settings["password"] = userPassword;
+
                     roundTime = settings["round_time"];
                     difficulty = settings["difficulty"];
                     themeNumber = settings["theme_number"];
                     music1Number = settings["music1"];
                     music2Number = settings["music2"];
+                    sfxVolume = settings["sfx_volume"];
+                    gameVolume = settings["game_volume"];
+                    mainVolume = settings["main_volume"];
+
                     std::ofstream out(settingsFilepath);
                     out << settings.dump(4);
 
@@ -1053,12 +977,11 @@ int main() {
                     addInfoToWindow(leaderboardT.scoreTitle, font, "Score", 25, color2, 61, 6.4);
 
                     musicManager.play("musics/main" + to_string(music1ToRound[music1Index]) + ".ogg");
+                    musicManager.setVolume(mainVolume);
+
+                    sfx.setVolume(sfxVolume);
 
                 }
-
-
-                if (event.type == sf::Event::Closed)
-                    window.close();
 
                 if (click(event, window, sfxThumb)) {
                     sfxThumbIsDragging = true;
@@ -1066,29 +989,28 @@ int main() {
                 else if (click(event, window, gameThumb)) {
                     gameThumbIsDragging = true;
                 }
-                else if (click(event, window, gameThumb)) {
+                else if (click(event, window, mainThumb)) {
                     mainThumbIsDragging = true;
                 }
 
-
-                // Отпускание кружка
                 if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                     sfxThumbIsDragging = false;
                     gameThumbIsDragging = false;
                     mainThumbIsDragging = false;
                 }
 
+
             }
-
-            int sfxVolume = getVolumeValue(window, sfxThumbIsDragging, settingsBtn.sfx, sfxThumb);
-            int gameVolume = getVolumeValue(window, gameThumbIsDragging, settingsBtn.game, gameThumb);
-            int mainVolume = getVolumeValue(window, mainThumbIsDragging, settingsBtn.main, mainThumb);
-            cout << "sfx" << sfxVolume;
-            cout << "game" << gameVolume;
-            cout << "main" << mainVolume;
-
-
-
+            
+            if (sfxThumbIsDragging) {
+                sfxVolume = getVolumeValue(window, settingsBtn.sfx, sfxThumb);
+            }
+            else if (gameThumbIsDragging) {
+                gameVolume = getVolumeValue(window, settingsBtn.game, gameThumb);
+            }
+            else if (mainThumbIsDragging) {
+                mainVolume = getVolumeValue(window, settingsBtn.main, mainThumb);
+            }
 
             window.clear();
             window.draw(settingsBg.sprite);
@@ -1131,6 +1053,10 @@ int main() {
             window.display();
         }
         else if (gameStage == "GAME") {
+            musicManager.stop();
+            musicManager.play("musics/game" + to_string(music2ToRound[music2Index]) + ".ogg", gameVolume);
+            //musicManager.setVolume(gameVolume);
+
             anyButtonHovered = false;
             window.setMouseCursorVisible(false);
             targetWord = getRandomWord(difficulty + "RandomWords.txt");
@@ -1155,7 +1081,6 @@ int main() {
             addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
 
             gameClock.restart();
-            musicManager.play("musics/game" + to_string(music2ToRound[music2Index]) + ".ogg");
 
             while (gameStage == "GAME" && window.isOpen()) {
                 Event event;
@@ -1276,6 +1201,7 @@ int main() {
         }
         else if (gameStage == "ENDGAME") {
             musicManager.stop();
+
             Event event;
             window.setMouseCursorVisible(false);
 

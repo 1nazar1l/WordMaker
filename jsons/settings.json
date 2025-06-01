@@ -1,10 +1,13 @@
 {
-    "best_score": 34,
-    "difficulty": "hard",
-    "login": "",
+    "best_score": 0,
+    "difficulty": "easy",
+    "game_volume": 35,
+    "login": "z",
+    "main_volume": 30,
     "music1": 3,
-    "music2": 3,
-    "password": "",
-    "round_time": 90,
+    "music2": 1,
+    "password": "0D684546DDE0E29B",
+    "round_time": 30,
+    "sfx_volume": 49,
     "theme_number": 4
 }

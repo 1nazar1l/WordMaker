@@ -4,9 +4,103 @@
 #include <iostream>
 #include <cstdlib>
 #include "CursorManager.h"
+#include "RandomWord.h"
+
 
 using namespace std;
 using namespace sf;
+
+std::string hashPassword(const std::string& password) {
+    size_t hash = std::hash<std::string>{}(password);
+
+    hash = (hash << 5) + hash;
+    const char* hexDigits = "0123456789ABCDEF";
+    std::string hashedPassword;
+
+    for (size_t i = 0; i < sizeof(size_t); ++i) {
+        unsigned char byte = (hash >> (8 * i)) & 0xFF;
+        hashedPassword += hexDigits[(byte >> 4) & 0xF];
+        hashedPassword += hexDigits[byte & 0xF];
+    }
+
+    return hashedPassword;
+}
+
+unordered_map<char, int> createLetterMap(const string& word) {
+    unordered_map<char, int> letters;
+    for (char c : word) {
+        letters[tolower(c)]++;
+    }
+    return letters;
+}
+
+void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused) {
+    if (isPaused) return;
+
+    Time elapsed = gameClock.getElapsedTime();
+    if (elapsed.asSeconds() >= 1.0f && timeRemaining > 0) {
+        timeRemaining--;
+        gameClock.restart();
+        stringstream ss;
+        ss << "Timer:  " << timeRemaining;
+        timerText.setString(ss.str());
+    }
+}
+
+string getRandomWord(string randomWordsFile) {
+    RandomWord randomWord(randomWordsFile);
+    randomWord.loadWords();
+    return randomWord.getRandomWord();
+}
+
+int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
+    if (minusOrPlus == "-") {
+        index -= 1;
+        if (index < 0) {
+            index = maxIndex - 1;
+        }
+    }
+    else if (minusOrPlus == "+") {
+        index += 1;
+        if (index >= maxIndex) {
+            index = 0;
+        }
+    }
+    return index;
+}
+
+int getCurrentIndex(const int& length, int massiv[], int selectedParametr) {
+    for (int i = 0; i < length;i++) {
+        if (massiv[i] == selectedParametr) {
+            return i;
+            break;
+        }
+    }
+}
+
+int getCurrentIndexStr(const int& length, string massiv[], string selectedParametr) {
+    for (int i = 0; i < length;i++) {
+        if (massiv[i] == selectedParametr) {
+            return i;
+            break;
+        }
+    }
+}
+
+std::string formatFloat(float num) {
+    std::stringstream ss;
+    ss << num;
+    std::string s = ss.str();
+
+    size_t dotPos = s.find('.');
+    if (dotPos != std::string::npos) {
+        s.erase(s.find_last_not_of('0') + 1, std::string::npos);
+        if (s.back() == '.') {
+            s.pop_back();
+        }
+    }
+    return s;
+}
 
 float percentageX(float percentage) {
     VideoMode desktop = VideoMode::getDesktopMode();
@@ -129,27 +223,24 @@ bool notclick(Event& event, RenderWindow& window, RectangleShape& btn) {
     return (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) && !mouseIn(window, btn);
 }
 
-int getVolumeValue(RenderWindow& window, bool& isDragging, RectangleShape& track, CircleShape& thumb) {
+int getVolumeValue(RenderWindow& window, RectangleShape& track, CircleShape& thumb) {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    float newX = mousePos.x - thumb.getRadius();
 
-    if (isDragging) {
-        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-        float newX = mousePos.x - thumb.getRadius();
+    float minX = track.getPosition().x - thumb.getRadius();
+    float maxX = track.getPosition().x + track.getSize().x - thumb.getRadius();
+    newX = std::max(minX, std::min(newX, maxX));
 
-        float minX = track.getPosition().x - thumb.getRadius();
-        float maxX = track.getPosition().x + track.getSize().x - thumb.getRadius();
-        newX = std::max(minX, std::min(newX, maxX));
+    thumb.setPosition(newX, thumb.getPosition().y);
 
-        thumb.setPosition(newX, thumb.getPosition().y);
+    float sliderWidth = track.getSize().x;
+    float relativePos = (newX - minX) / sliderWidth;
+    int value = static_cast<int>(relativePos * 100);
 
-        float sliderWidth = track.getSize().x;
-        float relativePos = (newX - minX) / sliderWidth;
-        int value = static_cast<int>(relativePos * 100);
-
-        static int lastValue = -1;
-        if (value != lastValue) {
-            lastValue = value;
-            return lastValue;
-        }
+    static int lastValue = -1;
+    if (value != lastValue) {
+        lastValue = value;
+        return lastValue;
     }
 }
 

@@ -15,12 +15,12 @@ private:
     bool isPlaying = false;
 
 public:
-    void play(const std::string& filename, bool loop = true, float volume = 100.f) {
+    void play(const std::string& filename, float volume = 100.f) {
         if (currentTrack != filename) {
             music.stop();
             if (music.openFromFile(filename)) {
                 currentTrack = filename;
-                music.setLoop(loop);
+                music.setLoop(true);
                 music.setVolume(volume);
                 music.play();
                 isPlaying = true;

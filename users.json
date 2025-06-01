@@ -1,163 +1,16 @@
 {
     "users": [
         {
-            "best_score": 1,
-            "difficulty": "easy",
-            "login": "user123",
-            "music1": 3,
-            "music2": 1,
-            "password": "191F542DC0923F15",
-            "round_time": 30,
-            "theme_number": 4
-        },
-        {
-            "best_score": 2,
-            "difficulty": "easy",
-            "login": "admin",
-            "music1": 1,
-            "music2": 1,
-            "password": "D40E8320B9E78A9F",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 3,
-            "difficulty": "easy",
-            "login": "q",
-            "music1": 1,
-            "music2": 1,
-            "password": "3CFF4246DD75E19B",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 4,
-            "difficulty": "easy",
-            "login": "user1000",
-            "music1": 1,
-            "music2": 1,
-            "password": "3CFF4246DD75E19B",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 5,
-            "difficulty": "easy",
-            "login": "user800",
-            "music1": 1,
-            "music2": 1,
-            "password": "3CFF4246DD75E19B",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 56,
-            "difficulty": "hard",
-            "login": "p1",
-            "music1": 3,
-            "music2": 1,
-            "password": "7CFA3446DD35D99B",
-            "round_time": 60,
-            "theme_number": 4
-        },
-        {
-            "best_score": 7,
-            "difficulty": "easy",
-            "login": "p2",
-            "music1": 1,
-            "music2": 1,
-            "password": "B5A23546DD98D99B",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 8,
-            "difficulty": "easy",
-            "login": "p3",
-            "music1": 1,
-            "music2": 1,
-            "password": "A26A3546DD77D99B",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 9,
-            "difficulty": "easy",
-            "login": "p4",
-            "music1": 1,
-            "music2": 1,
-            "password": "43523446DDD2D89B",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
             "best_score": 10,
             "difficulty": "easy",
-            "login": "p5",
-            "music1": 1,
-            "music2": 1,
-            "password": "301A3446DDB1D89B",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 11,
-            "difficulty": "easy",
-            "login": "p9",
-            "music1": 1,
-            "music2": 1,
-            "password": "14BB3646DD3DDA9B",
-            "round_time": 60,
-            "theme_number": 1
-        },
-        {
-            "best_score": 12,
-            "difficulty": "easy",
-            "login": "p11",
-            "music1": 1,
-            "music2": 1,
-            "password": "3755FB4BFEF30A07",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 13,
-            "difficulty": "easy",
-            "login": "p12",
-            "music1": 1,
-            "music2": 1,
-            "password": "4A8DFB4BFE140B07",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 14,
-            "difficulty": "easy",
-            "login": "p13",
-            "music1": 1,
-            "music2": 1,
-            "password": "5DC5FB4BFE350B07",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 15,
-            "difficulty": "easy",
-            "login": "p14",
-            "music1": 1,
-            "music2": 1,
-            "password": "D83CFA4BFE4E0A07",
-            "round_time": 30,
-            "theme_number": 1
-        },
-        {
-            "best_score": 34,
-            "difficulty": "easy",
-            "login": "a",
+            "game_volume": 35,
+            "login": "z",
+            "main_volume": 30,
             "music1": 3,
-            "music2": 3,
-            "password": "0C7E3F46DD65DF9B",
+            "music2": 1,
+            "password": "0D684546DDE0E29B",
             "round_time": 30,
+            "sfx_volume": 49,
             "theme_number": 4
         }
     ]
