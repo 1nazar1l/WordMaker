@@ -21,6 +21,8 @@ using json = nlohmann::json;
 using namespace std;
 using namespace sf;
 
+
+
 int main() {
     const int timesCount = 4;
     const int difCount = 3;
@@ -84,6 +86,32 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    Image ruImg;
+    Texture ruTexture;
+    Sprite ruSprite;
+    string ruImgFilename = "imgs/ru.png";
+    createIconSprite(ruImg, ruTexture, ruSprite, ruImgFilename, 5, 0);
+
+    float ruW = ruSprite.getGlobalBounds().width;
+    float ruH = ruSprite.getGlobalBounds().height;
+
+    Image engImg;
+    Texture engTexture;
+    Sprite engSprite;
+    string engImgFilename = "imgs/eng.png";
+    createIconSprite(engImg, engTexture, engSprite, engImgFilename, 5, 5);
+
+    float engW = engSprite.getGlobalBounds().width;
+    float engH = engSprite.getGlobalBounds().height;
+
+    RectangleShape ruButton;
+    createIcon(ruButton, ruW, ruH, 0, 0);
+
+    RectangleShape engButton;
+    createIcon(engButton, engW, engH, 0, 0);
+    engButton.setPosition(percentageX(0), percentageX(5));
+
+
     //AUTH
 
     Font font1;
@@ -140,7 +168,7 @@ int main() {
 
     int bestScore;
 
-    // Menu
+    //MENU
     struct MenuTexts {
         Text startGame;
         Text settings;
@@ -168,7 +196,7 @@ int main() {
     updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
 
 
-    addInfoToWindow(menuT.startGame, font, "Start Game", 36, color1, 50, 14.7);
+    addInfoToWindow(menuT.startGame, font, "Начать игру", 36, color1, 50, 14.7);
     addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 50, 36.4);
     addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 50, 58.7);
     addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 50, 79.7);
@@ -178,7 +206,7 @@ int main() {
     createButtonHitBox(menuBtn.leaderBoard, 25, 15.6, 50, 53.06);
     createButtonHitBox(menuBtn.exit, 25, 15.6, 50, 74.71);
 
-    // Game
+    //GAME
     struct GameTexts {
         Text counter;
         Text target;
@@ -845,6 +873,11 @@ int main() {
             window.draw(menuT.leaderboard);
             window.draw(menuT.exit);
 
+            window.draw(ruSprite);
+            window.draw(engSprite);
+
+            window.draw(ruButton);
+            window.draw(engButton);
             drawCursor(window, cursorManager, anyButtonHovered);
 
             window.display();

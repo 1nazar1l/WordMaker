@@ -51,6 +51,19 @@
             "round_time": 30,
             "sfx_volume": 47,
             "theme_number": 1
+        },
+        {
+            "best_score": 7,
+            "difficulty": "easy",
+            "game_volume": 100,
+            "login": "w",
+            "main_volume": 100,
+            "music1": 3,
+            "music2": 2,
+            "password": "168F4246DD33E19B",
+            "round_time": 30,
+            "sfx_volume": 100,
+            "theme_number": 4
         }
     ]
 }
