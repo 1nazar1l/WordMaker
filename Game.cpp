@@ -230,7 +230,7 @@ int main() {
     string gameFilename = "backgrounds/game" + to_string(themeNumber) + ".png";
     updateBackground(window, gameBg.texture, gameBg.sprite, gameFilename);
 
-    ValidWord validator("validWords.txt");
+    ValidWord validator("eng_words/engValidWords.txt");
     validator.loadWords();
 
     Clock gameClock;

@@ -152,10 +152,10 @@
     <ClInclude Include="ValidWord.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="easyRandomWords.txt" />
-    <Text Include="hardRandomWords.txt" />
-    <Text Include="normalRandomWords.txt" />
-    <Text Include="validWords.txt" />
+    <Text Include="eng_words\easyENG.txt" />
+    <Text Include="eng_words\engValidWords.txt" />
+    <Text Include="eng_words\hardENG.txt" />
+    <Text Include="eng_words\normalENG.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

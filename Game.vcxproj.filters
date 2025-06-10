@@ -45,18 +45,4 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="validWords.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="easyRandomWords.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="hardRandomWords.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="normalRandomWords.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-  </ItemGroup>
 </Project>
