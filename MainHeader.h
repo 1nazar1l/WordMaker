@@ -34,7 +34,7 @@ unordered_map<char, int> createLetterMap(const string& word) {
     return letters;
 }
 
-void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused) {
+void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isPaused, string LANG) {
     if (isPaused) return;
 
     Time elapsed = gameClock.getElapsedTime();
@@ -42,7 +42,12 @@ void updateTimer(Clock& gameClock, int& timeRemaining, Text& timerText, bool isP
         timeRemaining--;
         gameClock.restart();
         stringstream ss;
-        ss << "Timer:  " << timeRemaining;
+        if (LANG == "RU") {
+            ss << "Время:  " << timeRemaining;
+        }
+        else if (LANG == "ENG") {
+            ss << "Timer:  " << timeRemaining;
+        }
         timerText.setString(ss.str());
     }
 }
@@ -172,7 +177,7 @@ void createButtonHitBox(RectangleShape& rectangle, float width, float height, fl
     rectangle.setSize(Vector2f(percentageX(width), percentageY(height)));
     rectangle.setFillColor(Color(0, 0, 0, 0));
     rectangle.setOutlineColor(Color::Black);
-    rectangle.setOutlineThickness(2.f);
+    //rectangle.setOutlineThickness(2.f);
     rectangle.setPosition(percentageX(xPercentage) - rectangle.getLocalBounds().width / 2, percentageY(yPercentage));
 }
 
@@ -268,7 +273,7 @@ void createIconSprite(Image& img, Texture& texture, Sprite& sprite, string& file
     img.loadFromFile(filename);
     texture.loadFromImage(img);
     sprite.setTexture(texture);
-    sprite.setPosition(0, percentageX(yPosition));
+    sprite.setPosition(0, percentageY(yPosition));
 
     float width = percentageX(5) / texture.getSize().x;
 
@@ -279,6 +284,12 @@ void createIcon(RectangleShape& rectangle, float width, float height, float xPer
     rectangle.setSize(Vector2f(width, height));
     rectangle.setFillColor(Color(0, 0, 0, 0));
     rectangle.setOutlineColor(Color::Black);
-    rectangle.setOutlineThickness(2.f);
+    //rectangle.setOutlineThickness(2.f);
     rectangle.setPosition(percentageX(xPercentage), percentageY(yPercentage));
+}
+
+void txt(Text& textField, string text, double pos) {
+    textField.setString(text);
+    Vector2f position = textField.getPosition();
+    textField.setPosition(percentageX(pos) - textField.getLocalBounds().width / 2, position.y);
 }

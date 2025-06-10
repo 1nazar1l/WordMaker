@@ -1,5 +1,7 @@
 dog
 cat
+era
+common
 cost
 cow
 pig

@@ -21,8 +21,6 @@ using json = nlohmann::json;
 using namespace std;
 using namespace sf;
 
-
-
 int main() {
     const int timesCount = 4;
     const int difCount = 3;
@@ -71,6 +69,7 @@ int main() {
 
     bool isPaused = false;
     bool anyButtonHovered = false;
+    string LANG = "ENG";
 
     string gameStage = "AUTH_REG";
     VideoMode desktop = VideoMode::getDesktopMode();
@@ -90,7 +89,7 @@ int main() {
     Texture ruTexture;
     Sprite ruSprite;
     string ruImgFilename = "imgs/ru.png";
-    createIconSprite(ruImg, ruTexture, ruSprite, ruImgFilename, 5, 0);
+    createIconSprite(ruImg, ruTexture, ruSprite, ruImgFilename, 5, 80);
 
     float ruW = ruSprite.getGlobalBounds().width;
     float ruH = ruSprite.getGlobalBounds().height;
@@ -99,18 +98,16 @@ int main() {
     Texture engTexture;
     Sprite engSprite;
     string engImgFilename = "imgs/eng.png";
-    createIconSprite(engImg, engTexture, engSprite, engImgFilename, 5, 5);
+    createIconSprite(engImg, engTexture, engSprite, engImgFilename, 5, 90);
 
     float engW = engSprite.getGlobalBounds().width;
     float engH = engSprite.getGlobalBounds().height;
 
-    RectangleShape ruButton;
-    createIcon(ruButton, ruW, ruH, 0, 0);
+    RectangleShape ruBtn;
+    createIcon(ruBtn, ruW, ruH, 0, 80);
 
-    RectangleShape engButton;
-    createIcon(engButton, engW, engH, 0, 0);
-    engButton.setPosition(percentageX(0), percentageX(5));
-
+    RectangleShape engBtn;
+    createIcon(engBtn, engW, engH, 0, 90);
 
     //AUTH
 
@@ -196,7 +193,7 @@ int main() {
     updateBackground(window, menuBg.texture, menuBg.sprite, menuFilename);
 
 
-    addInfoToWindow(menuT.startGame, font, "Начать игру", 36, color1, 50, 14.7);
+    addInfoToWindow(menuT.startGame, font, "Start", 36, color1, 50, 14.7);
     addInfoToWindow(menuT.settings, font, "Settings", 36, color1, 50, 36.4);
     addInfoToWindow(menuT.leaderboard, font, "LeaderBoard", 30, color1, 50, 58.7);
     addInfoToWindow(menuT.exit, font, "Exit", 36, color1, 50, 79.7);
@@ -256,6 +253,7 @@ int main() {
         Text isrecord;
         Text difficultyBonus;
         Text timeBonus;
+        Text langBonus;
         Text totalScore;
     };
 
@@ -431,6 +429,12 @@ int main() {
         addInfoToWindow(leaderboardT.number[i], font, to_string(i + 1), 23, Color::White, 36, topMargin);
         topMargin += marginStep;
     }
+
+    string plaingLang;
+    string langBonusText;
+    string difBonus;
+    string timeBonus;
+    float langBonus;
 
     while (window.isOpen()) {
         if (gameStage == "AUTH_REG") {
@@ -697,6 +701,12 @@ int main() {
                     leaderboardT.exit.setFillColor(color2);
                     anyButtonHovered = true;
                 }
+                else if (mouseIn(window, ruBtn)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, engBtn)) {
+                    anyButtonHovered = true;
+                }
                 else {
                     leaderboardT.exit.setFillColor(color1);
                     anyButtonHovered = false;
@@ -705,7 +715,39 @@ int main() {
                 if (click(event, window, leaderboardBtn.exit)) {
                     sfx.play();
                     gameStage = "MENU";
+
+                    if (LANG == "RU") {
+                        txt(menuT.startGame, "Начать игру", 50);
+                        txt(menuT.settings, "Настройки", 50);
+                        txt(menuT.leaderboard, "Лидеры", 50);
+                        txt(menuT.exit, "Выход", 50);
+                    }
+                    else if (LANG == "ENG") {
+                        txt(menuT.startGame, "Start", 50);
+                        txt(menuT.settings, "Settings", 50);
+                        txt(menuT.leaderboard, "LeaderBoard", 50);
+                        txt(menuT.exit, "Exit", 50);
+                    }
                 }
+                else if (click(event, window, ruBtn)) {
+                    sfx.play();
+
+                    LANG = "RU";
+                    txt(leaderboardT.numberTitle, "Но", 36);
+                    txt(leaderboardT.userTitle, "Никнейм", 49);
+                    txt(leaderboardT.scoreTitle, "Счёт", 61);
+                    txt(leaderboardT.exit, "Выход", 10);
+                }
+                else if (click(event, window, engBtn)) {
+                    sfx.play();
+
+                    LANG = "ENG";
+                    txt(leaderboardT.numberTitle, "No", 36);
+                    txt(leaderboardT.userTitle, "User", 49);
+                    txt(leaderboardT.scoreTitle, "Score", 61);
+                    txt(leaderboardT.exit, "Exit", 10);
+                }
+
             }
 
             window.clear();
@@ -724,6 +766,12 @@ int main() {
                 window.draw(leaderboardT.user[i]);
                 window.draw(leaderboardT.score[i]);
             }
+
+            window.draw(ruBtn);
+            window.draw(engBtn);
+
+            window.draw(ruSprite);
+            window.draw(engSprite);
 
             drawCursor(window, cursorManager, anyButtonHovered);
 
@@ -763,6 +811,12 @@ int main() {
                     menuT.exit.setFillColor(color2);
                     anyButtonHovered = true;
                 }
+                else if (mouseIn(window, ruBtn)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, engBtn)) {
+                    anyButtonHovered = true;
+                }
                 else {
                     menuT.startGame.setFillColor(color1);
                     menuT.settings.setFillColor(color1);
@@ -778,6 +832,31 @@ int main() {
                 else if (click(event, window, menuBtn.settings)) {
                     sfx.play();
                     gameStage = "SETTINGS";
+
+                    if (LANG == "RU") {
+                        txt(settingsT.exitToMenu, "Выход", 10);
+                        txt(settingsT.timerParam, "Время", 42);
+                        txt(settingsT.difficultyParam, "Сложность", 42);
+                        txt(settingsT.music1Param, "Фон. музыка", 42);
+                        txt(settingsT.music2Param, "Игр. музыка", 42);
+                        txt(settingsT.themeParam, "Тема фона", 42);
+                        txt(settingsT.sfxVolumeParam, "Звук. эф.", 42);
+                        txt(settingsT.gameVolumeParam, "Громк. игр.", 42);
+                        txt(settingsT.mainVolumeParam, "Громк. фон.", 42);
+                        txt(settingsT.save, "Сохранить", 50);
+                    }
+                    else if (LANG == "ENG") {
+                        txt(settingsT.exitToMenu, "Exit", 10);
+                        txt(settingsT.timerParam, "Timer", 42);
+                        txt(settingsT.difficultyParam, "Difficulty", 42);
+                        txt(settingsT.music1Param, "Main song", 42);
+                        txt(settingsT.music2Param, "Game song", 42);
+                        txt(settingsT.themeParam, "Theme", 42);
+                        txt(settingsT.sfxVolumeParam, "Sfx", 42);
+                        txt(settingsT.gameVolumeParam, "Game", 42);
+                        txt(settingsT.mainVolumeParam, "Main", 42);
+                        txt(settingsT.save, "Save", 50);
+                    }
                 }
                 else if (click(event, window, menuBtn.leaderBoard)) {
                     ifstream inputFile("users.json");
@@ -820,6 +899,19 @@ int main() {
 
                     sfx.play();
                     gameStage = "LEADERBOARD";
+
+                    if (LANG == "RU") {
+                        txt(leaderboardT.numberTitle, "Но", 36);
+                        txt(leaderboardT.userTitle, "Никнейм", 49);
+                        txt(leaderboardT.scoreTitle, "Счёт", 61);
+                        txt(leaderboardT.exit, "Выход", 10);
+                    }
+                    else if (LANG == "ENG") {
+                        txt(leaderboardT.numberTitle, "No", 36);
+                        txt(leaderboardT.userTitle, "User", 49);
+                        txt(leaderboardT.scoreTitle, "Score", 61);
+                        txt(leaderboardT.exit, "Exit", 10);
+                    }
                 }
                 else if (click(event, window, menuBtn.exit)) {
                     loginInput = "";
@@ -858,6 +950,24 @@ int main() {
                     sfx.play();
                     gameStage = "AUTH_REG";
                 }
+                else if (click(event, window, ruBtn)) {
+                    sfx.play();
+
+                    LANG = "RU";
+                    txt(menuT.startGame, "Начать игру", 50);
+                    txt(menuT.settings, "Настройки", 50);
+                    txt(menuT.leaderboard, "Лидеры", 50);
+                    txt(menuT.exit, "Выход", 50);
+                }
+                else if (click(event, window, engBtn)) {
+                    sfx.play();
+
+                    LANG = "ENG";
+                    txt(menuT.startGame, "Start", 50);
+                    txt(menuT.settings, "Settings", 50);
+                    txt(menuT.leaderboard, "LeaderBoard", 50);
+                    txt(menuT.exit, "Exit", 50);
+                }
             }
 
             window.clear();
@@ -873,11 +983,12 @@ int main() {
             window.draw(menuT.leaderboard);
             window.draw(menuT.exit);
 
+            window.draw(ruBtn);
+            window.draw(engBtn);
+
             window.draw(ruSprite);
             window.draw(engSprite);
 
-            window.draw(ruButton);
-            window.draw(engButton);
             drawCursor(window, cursorManager, anyButtonHovered);
 
             window.display();
@@ -896,6 +1007,12 @@ int main() {
                 }
                 else if (mouseIn(window, settingsBtn.save)) {
                     settingsT.save.setFillColor(color2);
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, ruBtn)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, engBtn)) {
                     anyButtonHovered = true;
                 }
                 else {
@@ -949,6 +1066,19 @@ int main() {
                 if (click(event, window, settingsBtn.exitToMenu)) {
                     sfx.play();
                     gameStage = "MENU";
+
+                    if (LANG == "RU") {
+                        txt(menuT.startGame, "Начать игру", 50);
+                        txt(menuT.settings, "Настройки", 50);
+                        txt(menuT.leaderboard, "Лидеры", 50);
+                        txt(menuT.exit, "Выход", 50);
+                    }
+                    else if (LANG == "ENG") {
+                        txt(menuT.startGame, "Start", 50);
+                        txt(menuT.settings, "Settings", 50);
+                        txt(menuT.leaderboard, "LeaderBoard", 50);
+                        txt(menuT.exit, "Exit", 50);
+                    }
                 }
                 else if (click(event, window, settingsBtn.save)) {
                     sfx.play();
@@ -1033,6 +1163,38 @@ int main() {
                 else if (click(event, window, mainThumb)) {
                     mainThumbIsDragging = true;
                 }
+                else if (click(event, window, ruBtn)) {
+                    sfx.play();
+
+                    LANG = "RU";
+
+                    txt(settingsT.exitToMenu, "Выход", 10);
+                    txt(settingsT.timerParam, "Время", 42);
+                    txt(settingsT.difficultyParam, "Сложность", 42);
+                    txt(settingsT.music1Param, "Фон. музыка", 42);
+                    txt(settingsT.music2Param, "Игр. музыка", 42);
+                    txt(settingsT.themeParam, "Тема фона", 42);
+                    txt(settingsT.sfxVolumeParam, "Звук. эф.", 42);
+                    txt(settingsT.gameVolumeParam, "Громк. игр.", 42);
+                    txt(settingsT.mainVolumeParam, "Громк. фон.", 42);
+                    txt(settingsT.save, "Сохранить", 50);
+                }
+                else if (click(event, window, engBtn)) {
+                    sfx.play();
+
+                    LANG = "ENG";
+
+                    txt(settingsT.exitToMenu, "Exit", 10);
+                    txt(settingsT.timerParam, "Timer", 42);
+                    txt(settingsT.difficultyParam, "Difficulty", 42);
+                    txt(settingsT.music1Param, "Main song", 42);
+                    txt(settingsT.music2Param, "Game song", 42);
+                    txt(settingsT.themeParam, "Theme", 42);
+                    txt(settingsT.sfxVolumeParam, "Sfx", 42);
+                    txt(settingsT.gameVolumeParam, "Game", 42);
+                    txt(settingsT.mainVolumeParam, "Main", 42);
+                    txt(settingsT.save, "Save", 50);
+                }
 
                 if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                     sfxThumbIsDragging = false;
@@ -1090,7 +1252,14 @@ int main() {
             window.draw(gameThumb);
             window.draw(mainThumb);
 
+            window.draw(ruBtn);
+            window.draw(engBtn);
+
+            window.draw(ruSprite);
+            window.draw(engSprite);
+
             drawCursor(window, cursorManager, anyButtonHovered);
+
             window.display();
         }
         else if (gameStage == "GAME") {
@@ -1112,19 +1281,28 @@ int main() {
 
             availableLetters = createLetterMap(targetWord);
             currentLetters = availableLetters;
-
-            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 12.5, 5.7);
-            addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
-            addInfoToWindow(gameT.timer, font, "Timer:  ", 40, Color::White, 83, 5.7);
-            addInfoToWindow(gameT.target, font, "Random word is: " + targetWord, 36, Color::White, 50, 26);
-            addInfoToWindow(gameT.input, font, "Your input:   ", 40, Color::White, 33, 55);
-            addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
+            if (LANG == "RU") {
+                addInfoToWindow(gameT.pause, font, "Пауза", 40, Color::White, 12.5, 5.7);
+                addInfoToWindow(gameT.counter, font, "Счёт:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                addInfoToWindow(gameT.timer, font, "Время:  ", 40, Color::White, 83, 5.7);
+                addInfoToWindow(gameT.target, font, "Случайное слово: " + targetWord, 36, Color::White, 50, 26);
+                addInfoToWindow(gameT.input, font, "Ты ввёл:        ", 40, Color::White, 33, 55);
+                addInfoToWindow(gameT.endGame, font, "Завершить игру", 40, Color::White, 88, 90);
+            }
+            else if (LANG == "ENG") {
+                addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 12.5, 5.7);
+                addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                addInfoToWindow(gameT.timer, font, "Timer:  ", 40, Color::White, 83, 5.7);
+                addInfoToWindow(gameT.target, font, "Random word is: " + targetWord, 36, Color::White, 50, 26);
+                addInfoToWindow(gameT.input, font, "Your input:   ", 40, Color::White, 33, 55);
+                addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
+            }
 
             gameClock.restart();
 
             while (gameStage == "GAME" && window.isOpen()) {
                 Event event;
-                updateTimer(gameClock, timeRemaining, gameT.timer, isPaused);
+                updateTimer(gameClock, timeRemaining, gameT.timer, isPaused, LANG);
                 if (isPaused) {
                     gameT.input.setFillColor(Color(150, 150, 150)); 
                 }
@@ -1143,10 +1321,20 @@ int main() {
 
                         isPaused = !isPaused;
                         if (isPaused) {
-                            addInfoToWindow(gameT.pause, font, "Resume", 40, Color::White, 13, 5.7);
+                            if (LANG == "RU") {
+                                addInfoToWindow(gameT.pause, font, "Продолжить", 40, Color::White, 13, 5.7);
+                            }
+                            else if (LANG == "ENG") {
+                                addInfoToWindow(gameT.pause, font, "Resume", 40, Color::White, 13, 5.7);
+                            }
                         }
                         else {
-                            addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 12.5, 5.7);
+                            if (LANG == "RU") {
+                                addInfoToWindow(gameT.pause, font, "Пауза", 40, Color::White, 12.5, 5.7);
+                            }
+                            else if (LANG == "ENG") {
+                                addInfoToWindow(gameT.pause, font, "Pause", 40, Color::White, 12.5, 5.7);
+                            }
                             gameClock.restart();
                         }
                     }
@@ -1181,7 +1369,12 @@ int main() {
                                 currentLetters[c]--;
                             }
                         }
-                        gameT.input.setString("Your input:   " + playerInput);
+                        if (LANG == "RU") {
+                            gameT.input.setString("Ты ввёл:        " + playerInput);
+                        }
+                        else if (LANG == "ENG") {
+                            gameT.input.setString("Your input:   " + playerInput);
+                        }
                     }
 
                     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter && !playerInput.empty() && !isPaused) {
@@ -1197,13 +1390,23 @@ int main() {
                             if (!alreadyGuessed && guessedCount < 100) {
                                 guessedWords[guessedCount++] = playerInput;
                                 counter += playerInput.length();
-                                gameT.counter.setString("Score:  " + to_string(counter));
+                                if (LANG == "RU") {
+                                    addInfoToWindow(gameT.counter, font, "Счёт:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                                }
+                                else if (LANG == "ENG") {
+                                    addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                                }
                             }
                         }
 
                         currentLetters = availableLetters;
                         playerInput.clear();
-                        gameT.input.setString("Your input: ");
+                        if (LANG == "RU") {
+                            gameT.input.setString("Ты ввёл:        " + playerInput);
+                        }
+                        else if (LANG == "ENG") {
+                            gameT.input.setString("Your input:   " + playerInput);
+                        }
                     }
                 }
 
@@ -1220,11 +1423,21 @@ int main() {
                 window.draw(gameT.pause);
 
                 if (!isPaused) {
-                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
+                    if (LANG == "RU") {
+                        addInfoToWindow(gameT.endGame, font, "Завершить игру", 40, Color::White, 80, 90);
+                    }
+                    else if (LANG == "ENG") {
+                        addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
+                    }
                     window.draw(gameT.endGame);
                 }
                 else {
-                    addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 150, 110);
+                    if (LANG == "RU") {
+                        addInfoToWindow(gameT.endGame, font, "Завершить игру", 40, Color::White, 150, 110);
+                    }
+                    else if (LANG == "ENG") {
+                        addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 150, 110);
+                    }
                     window.draw(gameT.endGame);
                 }
 
@@ -1236,6 +1449,19 @@ int main() {
 
                 if (timeRemaining <= 0) {
                     gameStage = "ENDGAME";
+
+                    plaingLang = LANG;
+                    langBonusText = plaingLang == "RU" ? "(ru)  x0.1: " : "(eng)  x0.5: ";
+                    langBonus = plaingLang == "RU" ? 0.1 : 0.5;
+
+                    if (LANG == "RU") {
+                        txt(endgameT.restart, "Заново", 50);
+                        txt(endgameT.exit, "Выход", 50);
+                    }
+                    else if (LANG == "ENG") {
+                        txt(endgameT.restart, "Restart", 50);
+                        txt(endgameT.exit, "Exit", 50);
+                    }
                 }
             }
         }
@@ -1244,40 +1470,58 @@ int main() {
 
             Event event;
             window.setMouseCursorVisible(false);
-
-            addInfoToWindow(endgameT.score, font, "Your score: " + to_string(counter), 30, color1, 50, 10);
+            if (LANG == "RU") {
+                addInfoToWindow(endgameT.score, font, "Твой результат: " + to_string(counter), 30, color1, 50, 10);
+            }
+            else if (LANG == "ENG") {
+                addInfoToWindow(endgameT.score, font, "Your score: " + to_string(counter), 30, color1, 50, 10);
+            }
 
             switch (difIndex) {
             case 0:
                 calculatedResult = counter + counter * 0.1;
-                addInfoToWindow(endgameT.difficultyBonus, font, "Difficulty bonus(easy)  x0.1: " + formatFloat(counter * 0.1), 20, color1, 50, 15);
+                difBonus = "(easy)  x0.1: " + formatFloat(counter * 0.1);
                 break;
             case 1:
                 calculatedResult = counter + counter * 0.3;
-                addInfoToWindow(endgameT.difficultyBonus, font, "Bonus(normal)  x0.3: " + formatFloat(counter * 0.3), 20, color1, 50, 15);
+                difBonus = "(normal)  x0.3: " + formatFloat(counter * 0.3);
                 break;
             case 2:
                 calculatedResult = counter + counter * 0.6;
-                addInfoToWindow(endgameT.difficultyBonus, font, "Bonus(normal)  x0.6: " + formatFloat(counter * 0.6), 20, color1, 50, 15);
+                difBonus = "(hard)  x0.6: " + formatFloat(counter * 0.6);
                 break;
             }
+
             switch (timeIndex) {
             case 0:
                 calculatedResult = calculatedResult + counter * 0.7;
-                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(30s)  x0.7: " + formatFloat(counter * 0.7), 20, color1, 50, 20);
+                timeBonus = "(30s)  x0.7: " + formatFloat(counter * 0.7);
                 break;
             case 1:
                 calculatedResult = calculatedResult + counter * 0.5;
-                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(60s)  x0.5: " + formatFloat(counter * 0.5), 20, color1, 50, 20);
+                timeBonus = "(60s)  x0.5: " + formatFloat(counter * 0.5);
                 break;
             case 2:
                 calculatedResult = calculatedResult + counter * 0.3;
-                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(90s)  x0.3: " + formatFloat(counter * 0.3), 20, color1, 50, 20);
+                timeBonus = "(90s)  x0.3: " + formatFloat(counter * 0.3);
                 break;
             case 3:
                 calculatedResult = calculatedResult + counter * 0.1;
-                addInfoToWindow(endgameT.timeBonus, font, "Time bonus(120s)  x0.1:" + formatFloat(counter * 0.1), 20, color1, 50, 20);
+                timeBonus = "(120s)  x0.1: " + formatFloat(counter * 0.1);
                 break;
+            }
+
+            if (LANG == "RU") {
+                calculatedResult = calculatedResult + counter * langBonus;
+                addInfoToWindow(endgameT.langBonus, font, "Яз. бонус" + langBonusText + formatFloat(counter * langBonus), 20, color1, 50, 25);
+                addInfoToWindow(endgameT.difficultyBonus, font, "Бонус сложности" + difBonus, 20, color1, 50, 15);
+                addInfoToWindow(endgameT.timeBonus, font, "Бонус за время" + timeBonus, 20, color1, 50, 20);
+            }
+            else if (LANG == "ENG") {
+                calculatedResult = calculatedResult + counter * langBonus;
+                addInfoToWindow(endgameT.langBonus, font, "Lang bonus" + langBonusText + formatFloat(counter * langBonus), 20, color1, 50, 25);
+                addInfoToWindow(endgameT.difficultyBonus, font, "Difficulty bonus" + difBonus, 20, color1, 50, 15);
+                addInfoToWindow(endgameT.timeBonus, font, "Time bonus" + timeBonus, 20, color1, 50, 20);
             }
 
             if (calculatedResult > bestScore) {
@@ -1285,11 +1529,20 @@ int main() {
                 settings["best_score"] = bestScore;
                 std::ofstream out(settingsFilepath);
                 out << settings.dump(4);
-
-                addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 50, 40);
+                if (LANG == "RU") {
+                    addInfoToWindow(endgameT.isrecord, font, "Новый рекорд!!!", 20, color1, 50, 40);
+                }
+                else if (LANG == "ENG") {
+                    addInfoToWindow(endgameT.isrecord, font, "New record!!!", 20, color1, 50, 40);
+                }
             }
 
-            addInfoToWindow(endgameT.totalScore, font, "Total score: " + formatFloat(floor(calculatedResult)), 30, color1, 50, 35);
+            if (LANG == "RU") {
+                addInfoToWindow(endgameT.totalScore, font, "Конечный результат: " + formatFloat(floor(calculatedResult)), 30, color1, 50, 35);
+            }
+            else if (LANG == "ENG") {
+                addInfoToWindow(endgameT.totalScore, font, "Total score: " + formatFloat(floor(calculatedResult)), 30, color1, 50, 35);
+            }
 
             while (window.pollEvent(event)) {
                 closeEvents(event, window);
@@ -1302,6 +1555,12 @@ int main() {
                     endgameT.exit.setFillColor(color2);
                     anyButtonHovered = true;
                 }
+                else if (mouseIn(window, ruBtn)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, engBtn)) {
+                    anyButtonHovered = true;
+                }
                 else {
                     endgameT.restart.setFillColor(color1);
                     endgameT.exit.setFillColor(color1);
@@ -1309,6 +1568,9 @@ int main() {
                 }
 
                 if (click(event, window, endgameBtn.restart)) {
+                    calculatedResult = 0;
+                    addInfoToWindow(endgameT.isrecord, font, "", 20, color1, 50, 40);
+
                     timeRemaining = roundTime;
                     gameT.timer.setString("Timer:  ");
                     gameT.input.setString("Your input: ");
@@ -1318,9 +1580,31 @@ int main() {
                     musicManager.stop();
                     sfx.play();
 
+                    ifstream settingsFile(settingsFilepath);
+                    json currentSettings = json::parse(settingsFile);
+                    settingsFile.close();
+
+                    ifstream usersFile("users.json");
+                    json users = json::parse(usersFile);
+                    usersFile.close();
+
+                    for (auto& user : users["users"]) {
+                        if (user["login"] == currentSettings["login"]) {
+                            user["best_score"] = currentSettings["best_score"];
+                            break;
+                        }
+                    }
+
+                    ofstream outputUsersFile("users.json");
+                    outputUsersFile << users.dump(4);
+                    outputUsersFile.close();
+
                     gameStage = "GAME";
                 }
                 else if (click(event, window, endgameBtn.exit)) {
+                    calculatedResult = 0;
+                    addInfoToWindow(endgameT.isrecord, font, "", 20, color1, 50, 40);
+
                     endgameT.exit.setFillColor(color1);
                     sfx.play();
 
@@ -1343,7 +1627,30 @@ int main() {
                     outputUsersFile << users.dump(4);
                     outputUsersFile.close();
 
+                    if (LANG == "RU") {
+                        txt(menuT.startGame, "Начать игру", 50);
+                        txt(menuT.settings, "Настройки", 50);
+                        txt(menuT.leaderboard, "Лидеры", 50);
+                        txt(menuT.exit, "Выход", 50);
+                    }
+                    else if (LANG == "ENG") {
+                        txt(menuT.startGame, "Start", 50);
+                        txt(menuT.settings, "Settings", 50);
+                        txt(menuT.leaderboard, "LeaderBoard", 50);
+                        txt(menuT.exit, "Exit", 50);
+                    }
+
                     gameStage = "MENU";
+                }
+                else if (click(event, window, ruBtn)) {
+                    LANG = "RU";
+                    txt(endgameT.restart, "Заново", 50);
+                    txt(endgameT.exit, "Выход", 50);
+                }
+                else if (click(event, window, engBtn)) {
+                    LANG = "ENG";
+                    txt(endgameT.restart, "Restart", 50);
+                    txt(endgameT.exit, "Exit", 50);
                 }
             }
 
@@ -1356,10 +1663,18 @@ int main() {
             window.draw(endgameT.isrecord);
             window.draw(endgameT.difficultyBonus);
             window.draw(endgameT.timeBonus);
+            window.draw(endgameT.langBonus);
+
             window.draw(endgameT.totalScore);
 
             window.draw(endgameBtn.restart);
             window.draw(endgameBtn.exit);
+
+            window.draw(ruBtn);
+            window.draw(engBtn);
+
+            window.draw(ruSprite);
+            window.draw(engSprite);
 
             drawCursor(window, cursorManager, anyButtonHovered);
 
