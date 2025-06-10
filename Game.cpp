@@ -21,6 +21,12 @@ using json = nlohmann::json;
 using namespace std;
 using namespace sf;
 
+void printLetterMap(const std::unordered_map<char, int>& letterMap) {
+    for (const auto& pair : letterMap) {
+        std::cout << "'" << pair.first << "': " << pair.second << std::endl;
+    }
+}
+
 int main() {
     const int timesCount = 4;
     const int difCount = 3;
@@ -1201,8 +1207,6 @@ int main() {
                     gameThumbIsDragging = false;
                     mainThumbIsDragging = false;
                 }
-
-
             }
             
             if (sfxThumbIsDragging) {
@@ -1268,7 +1272,19 @@ int main() {
 
             anyButtonHovered = false;
             window.setMouseCursorVisible(false);
-            targetWord = getRandomWord(difficulty + "RandomWords.txt");
+            string filepath;
+            if (LANG == "RU") {
+                filepath = "ru_words/" + difficulty + "RU.txt";
+                targetWord = getRandomWord(filepath);
+                cout << "name" << filepath << " targetWord" << targetWord << endl;
+            }
+            else if (LANG == "ENG") {
+                filepath = "eng_words/" + difficulty + "ENG.txt";
+                targetWord = getRandomWord("eng_words/" + difficulty + "ENG.txt");
+                cout << "name" << filepath << " targetWord" << targetWord << endl;
+
+            }
+
             if (targetWord.empty()) {
                 cerr << "No words available!" << endl;
                 return EXIT_FAILURE;
@@ -1280,6 +1296,8 @@ int main() {
             guessedCount = 0;
 
             availableLetters = createLetterMap(targetWord);
+            printLetterMap(availableLetters);
+
             currentLetters = availableLetters;
             if (LANG == "RU") {
                 addInfoToWindow(gameT.pause, font, "Пауза", 40, Color::White, 12.5, 5.7);

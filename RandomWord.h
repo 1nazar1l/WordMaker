@@ -34,7 +34,7 @@ public:
     }
 
 private:
-    static const int MAX_WORDS = 1000;
+    static const int MAX_WORDS = 10000;
     std::string words[MAX_WORDS];
     int wordCount = 0;
     std::string filename;
