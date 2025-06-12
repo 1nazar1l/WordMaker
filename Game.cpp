@@ -16,6 +16,7 @@
 
 #include "MainHeader.h"
 #include "RandomWord.h"
+#include "RuRandomWord.h"
 #include "ValidWord.h"
 #include "CursorManager.h"
 #include "Music.h"
@@ -33,45 +34,6 @@ void printLetterMap(const std::unordered_map<char, int>& letterMap) {
         std::cout << "'" << pair.first << "': " << pair.second << std::endl;
     }
 }
-
-class RuRandomWord {
-public:
-    RuRandomWord(const std::string& filename) : filename(filename) {
-        std::srand(static_cast<unsigned>(std::time(nullptr)));
-    }
-
-    void loadWords() {
-        std::wifstream inputFile(filename);
-        inputFile.imbue(std::locale(""));
-        wordCount = 0;
-
-        if (!inputFile) {
-            std::wcerr << L"Не удалось открыть файл: " << filename.c_str() << std::endl;
-            return;
-        }
-
-        std::wstring word;
-        while (wordCount < MAX_WORDS && std::getline(inputFile, word)) {
-            if (!word.empty()) {
-                words[wordCount++] = word;
-            }
-        }
-    }
-
-    std::wstring getRandomWord() {
-        if (wordCount == 0) {
-            std::wcerr << L"Слова не загружены!" << std::endl;
-            return L"";
-        }
-        return words[std::rand() % wordCount];
-    }
-
-private:
-    static const int MAX_WORDS = 10000;
-    std::wstring words[MAX_WORDS];
-    int wordCount = 0;
-    std::string filename;
-};
 
 class WordChecker {
 private:
@@ -117,7 +79,12 @@ std::wstring readWordFromFile(const std::string& filename) {
 }
 
 int main() {
-    std::wstring sourceWord = readWordFromFile("ww.txt");
+    //std::wstring sourceWord = readWordFromFile("ww.txt");
+    //std::wstring sourceWord = L"сллово";
+    RuRandomWord wordLoader("ru_words/easyRU.txt");
+    wordLoader.loadWords();
+    std::wstring sourceWord = wordLoader.getRandomWord();
+
     if (sourceWord.empty()) {
         std::wcout << L"Ошибка: файл ww.txt пуст или не найден!" << std::endl;
         return EXIT_FAILURE;
@@ -132,11 +99,6 @@ int main() {
         std::wcout << L"Ошибка: словарь не загружен или пуст!" << std::endl;
         return EXIT_FAILURE;
     }
-
-    const auto& dictionary = checker.getDictionary();
-    std::wstring dictionaryStr = L"Слова для проверки:\n";
-    const size_t maxWordsToShow = 20;
-    size_t wordsToShow = std::min(dictionary.size(), maxWordsToShow);
 
     std::wstring availableLettersR = sourceWord;
     std::wstring currentInputR;

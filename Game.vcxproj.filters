@@ -44,5 +44,14 @@
     <ClInclude Include="Sound.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="RuRandomWord.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="eng_words\easyENG.txt" />
+    <Text Include="eng_words\engValidWords.txt" />
+    <Text Include="eng_words\hardENG.txt" />
+    <Text Include="eng_words\normalENG.txt" />
   </ItemGroup>
 </Project>

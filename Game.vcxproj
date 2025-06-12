@@ -147,6 +147,7 @@
     <ClInclude Include="MainHeader.h" />
     <ClInclude Include="Music.h" />
     <ClInclude Include="RandomWord.h" />
+    <ClInclude Include="RuRandomWord.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StartMenu.h" />
     <ClInclude Include="ValidWord.h" />
