@@ -7,6 +7,12 @@
 #include <unordered_map>
 #include <algorithm>
 #include <iomanip>
+#include <locale>
+#include <cctype>
+#include <io.h>
+#include <fcntl.h>
+#include <fstream>
+#include <vector>
 
 #include "MainHeader.h"
 #include "RandomWord.h"
@@ -16,6 +22,7 @@
 #include "Sound.h"
 
 #include "json.hpp"
+
 
 using json = nlohmann::json;
 using namespace std;
@@ -27,12 +34,118 @@ void printLetterMap(const std::unordered_map<char, int>& letterMap) {
     }
 }
 
+class RuRandomWord {
+public:
+    RuRandomWord(const std::string& filename) : filename(filename) {
+        std::srand(static_cast<unsigned>(std::time(nullptr)));
+    }
+
+    void loadWords() {
+        std::wifstream inputFile(filename);
+        inputFile.imbue(std::locale(""));
+        wordCount = 0;
+
+        if (!inputFile) {
+            std::wcerr << L"Не удалось открыть файл: " << filename.c_str() << std::endl;
+            return;
+        }
+
+        std::wstring word;
+        while (wordCount < MAX_WORDS && std::getline(inputFile, word)) {
+            if (!word.empty()) {
+                words[wordCount++] = word;
+            }
+        }
+    }
+
+    std::wstring getRandomWord() {
+        if (wordCount == 0) {
+            std::wcerr << L"Слова не загружены!" << std::endl;
+            return L"";
+        }
+        return words[std::rand() % wordCount];
+    }
+
+private:
+    static const int MAX_WORDS = 10000;
+    std::wstring words[MAX_WORDS];
+    int wordCount = 0;
+    std::string filename;
+};
+
+class WordChecker {
+private:
+    std::vector<std::wstring> dictionary;
+
+public:
+    WordChecker(const std::string& dictionaryPath) {
+        loadDictionary(dictionaryPath);
+    }
+
+    bool checkWord(const std::wstring& word) {
+        return std::find(dictionary.begin(), dictionary.end(), word) != dictionary.end();
+    }
+
+    const std::vector<std::wstring>& getDictionary() const {
+        return dictionary;
+    }
+
+private:
+    void loadDictionary(const std::string& path) {
+        std::wifstream file(path);
+        file.imbue(std::locale(""));
+        std::wstring word;
+
+        while (std::getline(file, word)) {
+            if (!word.empty()) {
+                dictionary.push_back(word);
+            }
+        }
+    }
+};
+
+bool isRussianChar(wchar_t c) {
+    return (c >= L'а' && c <= L'я') || c == L'ё';
+}
+
+std::wstring readWordFromFile(const std::string& filename) {
+    std::wifstream file(filename);
+    file.imbue(std::locale(""));
+    std::wstring word;
+    std::getline(file, word);
+    return word;
+}
+
 int main() {
+    std::wstring sourceWord = readWordFromFile("ww.txt");
+    if (sourceWord.empty()) {
+        std::wcout << L"Ошибка: файл ww.txt пуст или не найден!" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    for (auto& c : sourceWord) {
+        c = std::tolower(c, std::locale());
+    }
+
+    WordChecker checker("ru_words/ruValidWords.txt");
+    if (checker.getDictionary().empty()) {
+        std::wcout << L"Ошибка: словарь не загружен или пуст!" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    const auto& dictionary = checker.getDictionary();
+    std::wstring dictionaryStr = L"Слова для проверки:\n";
+    const size_t maxWordsToShow = 20;
+    size_t wordsToShow = std::min(dictionary.size(), maxWordsToShow);
+
+    std::wstring availableLettersR = sourceWord;
+    std::wstring currentInputR;
+
     const int timesCount = 4;
     const int difCount = 3;
     const int music1Count = 3;
     const int music2Count = 3;
-    const int themeCount = 4;
+    const int themeCount = 4;    
 
     int timesToRound[timesCount]{ 30,60,90,120 };
     string difToRound[difCount]{ "easy","normal","hard" };
@@ -1316,6 +1429,19 @@ int main() {
                 addInfoToWindow(gameT.endGame, font, "End Game", 40, Color::White, 88, 90);
             }
 
+            sf::Text inputText;
+            inputText.setFont(font);
+            inputText.setCharacterSize(24);
+            inputText.setFillColor(sf::Color::White);
+            inputText.setPosition(50, 100);
+
+            sf::Text availableText;
+            availableText.setFont(font);
+            availableText.setCharacterSize(24);
+            availableText.setFillColor(sf::Color::Green);
+            availableText.setPosition(50, 150);
+            availableText.setString(L"Доступные буквы: " + sourceWord);
+
             gameClock.restart();
 
             while (gameStage == "GAME" && window.isOpen()) {
@@ -1371,59 +1497,104 @@ int main() {
                         anyButtonHovered = false;
                     }
                     
+                    if (LANG == "ENG") {
+                        if (event.type == Event::TextEntered && !isPaused) {
+                            if (event.text.unicode == '\b') {
+                                if (!playerInput.empty()) {
+                                    char lastChar = playerInput.back();
+                                    currentLetters[lastChar]++;
+                                    playerInput.pop_back();
+                                }
+                            }
+                            else if (isalpha(static_cast<char>(event.text.unicode))) {
+                                char c = tolower(static_cast<char>(event.text.unicode));
+                                if (currentLetters[c] > 0) {
+                                    playerInput += c;
+                                    currentLetters[c]--;
+                                }
+                            }
+                            if (LANG == "RU") {
+                                gameT.input.setString("Ты ввёл:        " + playerInput);
+                            }
+                            else if (LANG == "ENG") {
+                                gameT.input.setString("Your input:   " + playerInput);
+                            }
+                        }
 
-                    if (event.type == Event::TextEntered && !isPaused) {
-                        if (event.text.unicode == '\b') {
-                            if (!playerInput.empty()) {
-                                char lastChar = playerInput.back();
-                                currentLetters[lastChar]++;
-                                playerInput.pop_back();
+                        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter && !playerInput.empty() && !isPaused) {
+                            if (validator.isValid(playerInput)) {
+                                bool alreadyGuessed = false;
+                                for (int i = 0; i < guessedCount; ++i) {
+                                    if (guessedWords[i] == playerInput) {
+                                        alreadyGuessed = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!alreadyGuessed && guessedCount < 100) {
+                                    guessedWords[guessedCount++] = playerInput;
+                                    counter += playerInput.length();
+                                    if (LANG == "RU") {
+                                        addInfoToWindow(gameT.counter, font, "Счёт:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                                    }
+                                    else if (LANG == "ENG") {
+                                        addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                                    }
+                                }
                             }
-                        }
-                        else if (isalpha(static_cast<char>(event.text.unicode))) {
-                            char c = tolower(static_cast<char>(event.text.unicode));
-                            if (currentLetters[c] > 0) {
-                                playerInput += c;
-                                currentLetters[c]--;
+
+                            currentLetters = availableLetters;
+                            playerInput.clear();
+                            if (LANG == "RU") {
+                                gameT.input.setString("Ты ввёл:        " + playerInput);
                             }
-                        }
-                        if (LANG == "RU") {
-                            gameT.input.setString("Ты ввёл:        " + playerInput);
-                        }
-                        else if (LANG == "ENG") {
-                            gameT.input.setString("Your input:   " + playerInput);
+                            else if (LANG == "ENG") {
+                                gameT.input.setString("Your input:   " + playerInput);
+                            }
                         }
                     }
+                    else if (LANG == "RU") {
+                        if (event.type == sf::Event::TextEntered) {
+                            wchar_t enteredChar = static_cast<wchar_t>(event.text.unicode);
 
-                    if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter && !playerInput.empty() && !isPaused) {
-                        if (validator.isValid(playerInput)) {
-                            bool alreadyGuessed = false;
-                            for (int i = 0; i < guessedCount; ++i) {
-                                if (guessedWords[i] == playerInput) {
-                                    alreadyGuessed = true;
-                                    break;
+                            if (enteredChar == L'\b') { // Backspace
+                                if (!currentInputR.empty()) {
+                                    availableLettersR += currentInputR.back();
+                                    currentInputR.pop_back();
+                                }
+                            }
+                            else if (enteredChar == L'\r') { // Enter
+                                if (checker.checkWord(currentInputR)) {
+                                    counter += currentInputR.length();
+                                    if (LANG == "RU") {
+                                        addInfoToWindow(gameT.counter, font, "Счёт:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                                    }
+                                    else if (LANG == "ENG") {
+                                        addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
+                                    }
+                                }
+                                // Возвращаем все буквы обратно
+                                availableLettersR += currentInputR;
+                                currentInputR.clear();
+                            }
+                            else if (isRussianChar(enteredChar)) {
+                                wchar_t lowerChar = std::tolower(enteredChar, std::locale());
+                                size_t pos = availableLettersR.find(lowerChar);
+                                if (pos != std::wstring::npos) {
+                                    currentInputR += lowerChar;
+                                    availableLettersR.erase(pos, 1);
                                 }
                             }
 
-                            if (!alreadyGuessed && guessedCount < 100) {
-                                guessedWords[guessedCount++] = playerInput;
-                                counter += playerInput.length();
-                                if (LANG == "RU") {
-                                    addInfoToWindow(gameT.counter, font, "Счёт:  " + to_string(counter), 40, Color::White, 58, 5.7);
-                                }
-                                else if (LANG == "ENG") {
-                                    addInfoToWindow(gameT.counter, font, "Score:  " + to_string(counter), 40, Color::White, 58, 5.7);
-                                }
+                            if (LANG == "RU") {
+                                gameT.input.setString("Ты ввёл:        " + currentInputR);
                             }
-                        }
+                            else if (LANG == "ENG") {
+                                gameT.input.setString("Your input:   " + currentInputR);
+                            }
 
-                        currentLetters = availableLetters;
-                        playerInput.clear();
-                        if (LANG == "RU") {
-                            gameT.input.setString("Ты ввёл:        " + playerInput);
-                        }
-                        else if (LANG == "ENG") {
-                            gameT.input.setString("Your input:   " + playerInput);
+                            inputText.setString(L"Ввод: " + currentInputR);
+                            availableText.setString(L"Доступные буквы: " + availableLettersR);
                         }
                     }
                 }
@@ -1439,6 +1610,9 @@ int main() {
                 window.draw(gameT.input);
                 window.draw(gameT.timer);
                 window.draw(gameT.pause);
+
+                window.draw(inputText);
+                window.draw(availableText);
 
                 if (!isPaused) {
                     if (LANG == "RU") {
