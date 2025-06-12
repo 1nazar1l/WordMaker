@@ -79,30 +79,6 @@ std::wstring readWordFromFile(const std::string& filename) {
 }
 
 int main() {
-    //std::wstring sourceWord = readWordFromFile("ww.txt");
-    //std::wstring sourceWord = L"сллово";
-    RuRandomWord wordLoader("ru_words/easyRU.txt");
-    wordLoader.loadWords();
-    std::wstring sourceWord = wordLoader.getRandomWord();
-
-    if (sourceWord.empty()) {
-        std::wcout << L"Ошибка: файл ww.txt пуст или не найден!" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    for (auto& c : sourceWord) {
-        c = std::tolower(c, std::locale());
-    }
-
-    WordChecker checker("ru_words/ruValidWords.txt");
-    if (checker.getDictionary().empty()) {
-        std::wcout << L"Ошибка: словарь не загружен или пуст!" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    std::wstring availableLettersR = sourceWord;
-    std::wstring currentInputR;
-
     const int timesCount = 4;
     const int difCount = 3;
     const int music1Count = 3;
@@ -1348,23 +1324,41 @@ int main() {
             anyButtonHovered = false;
             window.setMouseCursorVisible(false);
             string filepath;
+
+            std::wstring sourceWord;
+
+            WordChecker checker("ru_words/ruValidWords.txt");
+            if (checker.getDictionary().empty()) {
+                std::wcout << L"Ошибка: словарь не загружен или пуст!" << std::endl;
+                return EXIT_FAILURE;
+            }
+
             if (LANG == "RU") {
                 filepath = "ru_words/" + difficulty + "RU.txt";
-                targetWord = getRandomWord(filepath);
-                cout << "name" << filepath << " targetWord" << targetWord << endl;
+                sourceWord = getRuRandomWord(filepath);
+
+                if (sourceWord.empty()) {
+                    std::wcout << L"Ошибка: файл ww.txt пуст или не найден!" << std::endl;
+                    return EXIT_FAILURE;
+                }
+
+                for (auto& c : sourceWord) {
+                    c = std::tolower(c, std::locale());
+                }
             }
             else if (LANG == "ENG") {
                 filepath = "eng_words/" + difficulty + "ENG.txt";
-                targetWord = getRandomWord("eng_words/" + difficulty + "ENG.txt");
-                cout << "name" << filepath << " targetWord" << targetWord << endl;
+                targetWord = getRandomWord(filepath);
 
+                if (targetWord.empty()) {
+                    cerr << "No words available!" << endl;
+                    return EXIT_FAILURE;
+                    continue;
+                }
             }
 
-            if (targetWord.empty()) {
-                cerr << "No words available!" << endl;
-                return EXIT_FAILURE;
-                continue;
-            }
+            std::wstring availableLettersR = sourceWord;
+            std::wstring currentInputR;
 
             counter = 0;
             playerInput.clear();
@@ -1378,7 +1372,13 @@ int main() {
                 addInfoToWindow(gameT.pause, font, "Пауза", 40, Color::White, 12.5, 5.7);
                 addInfoToWindow(gameT.counter, font, "Счёт:  " + to_string(counter), 40, Color::White, 58, 5.7);
                 addInfoToWindow(gameT.timer, font, "Время:  ", 40, Color::White, 83, 5.7);
-                addInfoToWindow(gameT.target, font, "Случайное слово: " + targetWord, 36, Color::White, 50, 26);
+
+                addInfoToWindow(gameT.target, font, "", 36, Color::White, 50, 26);
+                gameT.target.setString(L"Случайное слово: " + availableLettersR);
+                float targetPosX = percentageX(50) - gameT.target.getLocalBounds().width / 2;
+                float targetPosY = percentageY(26);
+                gameT.target.setPosition(targetPosX, targetPosY);
+
                 addInfoToWindow(gameT.input, font, "Ты ввёл:        ", 40, Color::White, 33, 55);
                 addInfoToWindow(gameT.endGame, font, "Завершить игру", 40, Color::White, 88, 90);
             }

@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "CursorManager.h"
 #include "RandomWord.h"
+#include "RURandomWord.h"
 
 
 using namespace std;
@@ -56,6 +57,12 @@ string getRandomWord(string randomWordsFile) {
     RandomWord randomWord(randomWordsFile);
     randomWord.loadWords();
     return randomWord.getRandomWord();
+}
+
+wstring getRuRandomWord(string randomWordsFile) {
+    RuRandomWord wordLoader(randomWordsFile);
+    wordLoader.loadWords();
+    return wordLoader.getRandomWord();
 }
 
 int updateIndex(int index, const int& maxIndex, string minusOrPlus) {
