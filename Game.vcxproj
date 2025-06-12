@@ -148,6 +148,7 @@
     <ClInclude Include="Music.h" />
     <ClInclude Include="RandomWord.h" />
     <ClInclude Include="RuRandomWord.h" />
+    <ClInclude Include="RuValidWord.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StartMenu.h" />
     <ClInclude Include="ValidWord.h" />
@@ -157,6 +158,7 @@
     <Text Include="eng_words\engValidWords.txt" />
     <Text Include="eng_words\hardENG.txt" />
     <Text Include="eng_words\normalENG.txt" />
+    <Text Include="ru_words\ruValidWords.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

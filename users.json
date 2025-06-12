@@ -1,16 +1,16 @@
 {
     "users": [
         {
-            "best_score": 34,
+            "best_score": 30,
             "difficulty": "easy",
-            "game_volume": 35,
+            "game_volume": 45,
             "login": "z",
-            "main_volume": 30,
+            "main_volume": 43,
             "music1": 3,
             "music2": 1,
             "password": "0D684546DDE0E29B",
             "round_time": 30,
-            "sfx_volume": 49,
+            "sfx_volume": 51,
             "theme_number": 4
         },
         {
@@ -103,6 +103,19 @@
             "round_time": 30,
             "sfx_volume": 50,
             "theme_number": 1
+        },
+        {
+            "best_score": 30,
+            "difficulty": "hard",
+            "game_volume": 100,
+            "login": "l",
+            "main_volume": 100,
+            "music1": 3,
+            "music2": 3,
+            "password": "6B964046DD0AE09B",
+            "round_time": 120,
+            "sfx_volume": 100,
+            "theme_number": 4
         }
     ]
 }

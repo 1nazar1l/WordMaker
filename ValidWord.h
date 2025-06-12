@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <iostream>
-#include <string>  // Добавляем для корректной работы string
+#include <string>  
 
 using namespace std;
 

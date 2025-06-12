@@ -300,3 +300,7 @@ void txt(Text& textField, string text, double pos) {
     Vector2f position = textField.getPosition();
     textField.setPosition(percentageX(pos) - textField.getLocalBounds().width / 2, position.y);
 }
+
+bool isRussianChar(wchar_t c) {
+    return (c >= L'à' && c <= L'ÿ') || c == L'¸';
+}
