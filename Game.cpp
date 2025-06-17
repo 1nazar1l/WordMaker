@@ -1457,7 +1457,7 @@ int main() {
                         }
                     }
                     else if (LANG == "RU") {
-                        if (event.type == sf::Event::TextEntered) {
+                        if (event.type == sf::Event::TextEntered && !isPaused) {
                             wchar_t enteredChar = static_cast<wchar_t>(event.text.unicode);
 
                             if (enteredChar == L'\b') { // Backspace
