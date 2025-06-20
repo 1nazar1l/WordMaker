@@ -171,15 +171,6 @@ void addInfoToWindow(Text& text, Font& font, const string& str, int fontSize, Co
     text.setPosition(posX, posY);
 }
 
-void closeEvents(Event& event, RenderWindow& window) {
-    if (event.type == Event::Closed) {
-        window.close();
-    }
-    if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
-        window.close();
-    }
-}
-
 void createButtonHitBox(RectangleShape& rectangle, float width, float height, float xPercentage, float yPercentage) {
     rectangle.setSize(Vector2f(percentageX(width), percentageY(height)));
     rectangle.setFillColor(Color(0, 0, 0, 0));

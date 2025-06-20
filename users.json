@@ -5,7 +5,7 @@
             "difficulty": "easy",
             "game_volume": 38,
             "login": "z",
-            "main_volume": 37,
+            "main_volume": 26,
             "music1": 3,
             "music2": 1,
             "password": "0D684546DDE0E29B",
@@ -116,6 +116,19 @@
             "round_time": 120,
             "sfx_volume": 100,
             "theme_number": 4
+        },
+        {
+            "best_score": 0,
+            "difficulty": "easy",
+            "game_volume": 50,
+            "login": "e",
+            "main_volume": 50,
+            "music1": 1,
+            "music2": 1,
+            "password": "C09D3E46DDE1DE9B",
+            "round_time": 30,
+            "sfx_volume": 50,
+            "theme_number": 1
         }
     ]
 }

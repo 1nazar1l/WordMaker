@@ -119,13 +119,6 @@ int main() {
     createIcon(engBtn, engW, engH, 0, 90);
 
     //AUTH
-
-    Font font1;
-
-    if (!font1.loadFromFile("reg_auth/OpenSans.ttf")) {
-        return EXIT_FAILURE;
-    }
-
     struct AuthTexts {
         Text login;
         Text password;
@@ -142,7 +135,7 @@ int main() {
         RectangleShape password;
         RectangleShape ready;
         RectangleShape toReg;
-
+        RectangleShape exit;
     };
 
     AuthTexts authT;
@@ -152,18 +145,18 @@ int main() {
     string loginInput;
     string passwordInput;
 
-    addInfoToWindow(authT.login, font1, "", 30, Color::Black, 33.4, 30.8);
-    addInfoToWindow(authT.password, font1, "", 30, Color::Black, 33.4, 46.8);
-    addInfoToWindow(authT.warning, font1, "", 40, Color::Black, 50, 70);
+    addInfoToWindow(authT.login, font, "", 30, Color::Black, 33.4, 30.8);
+    addInfoToWindow(authT.password, font, "", 30, Color::Black, 33.4, 46.8);
+    addInfoToWindow(authT.warning, font, "", 40, Color::Black, 50, 70);
 
     string auth_regFilename = "reg_auth/auth.png";
     updateBackground(window, authBg.texture, authBg.sprite, auth_regFilename);
-
 
     createButtonHitBox(authBtn.login, 35.2, 8.4, 50, 29.73);
     createButtonHitBox(authBtn.password, 35.2, 8.4, 50, 45.89);
     createButtonHitBox(authBtn.ready, 35.2, 8.4, 50, 57.70);
     createButtonHitBox(authBtn.toReg, 12.6, 6.5, 50, 85);
+    createButtonHitBox(authBtn.exit, 26, 8.5, 14.2, 3.5);
 
     bool loginInputActive = false;
     bool passwordInputActive = false;
@@ -455,8 +448,6 @@ int main() {
             Event event;
 
             while (window.pollEvent(event)) {
-                closeEvents(event, window);
-
                 if (click(event, window, authBtn.login)) {
                     loginInputActive = true;
                 }
@@ -470,7 +461,7 @@ int main() {
                     passwordInput = "";
                     authT.password.setString("");
                     authT.login.setString("");
-                    addInfoToWindow(authT.warning, font1, "", 40, Color::Black, 50, 70);
+                    addInfoToWindow(authT.warning, font, "", 40, Color::Black, 50, 70);
                 }
                 else if (click(event, window, authBtn.toReg) && !isAuthWindow) {
                     isAuthWindow = true;
@@ -478,7 +469,10 @@ int main() {
                     passwordInput = "";
                     authT.password.setString("");
                     authT.login.setString("");
-                    addInfoToWindow(authT.warning, font1, "", 40, Color::Black, 50, 70);
+                    addInfoToWindow(authT.warning, font, "", 40, Color::Black, 50, 70);
+                }
+                else if (click(event, window, authBtn.exit)) {
+                    window.close();
                 }
 
                 if (event.type == Event::TextEntered && loginInputActive) {
@@ -634,7 +628,7 @@ int main() {
                             gameStage = "MENU";
                         }
                         else {
-                            addInfoToWindow(authT.warning, font1, "Login or password is incorrect!!!", 35, Color::Red, 50, 70);
+                            addInfoToWindow(authT.warning, font, "Логин или пароль не подходит.", 20, Color::Red, 50, 70);
                         }
                     }
                     else {
@@ -647,7 +641,7 @@ int main() {
                         }
 
                         if (userExists) {
-                            addInfoToWindow(authT.warning, font1, "There is already such a user", 40, Color::Red, 50, 70);
+                            addInfoToWindow(authT.warning, font, "Такой пользователь уже существует.", 20, Color::Red, 50, 70);
                         }
                         else {
                             if (loginInput != "" && passwordInput != "") {
@@ -669,10 +663,10 @@ int main() {
                                 outputFile << users.dump(4);
                                 outputFile.close();
 
-                                addInfoToWindow(authT.warning, font1, "Account created.", 40, Color::Green, 50, 70);
+                                addInfoToWindow(authT.warning, font, "Аккаунт создан.", 30, Color::Green, 50, 70);
                             }
                             else {
-                                addInfoToWindow(authT.warning, font1, "Login or password is incorrect!!!", 35, Color::Red, 50, 70);
+                                addInfoToWindow(authT.warning, font, "Логин или пароль не подходит", 20, Color::Red, 50, 70);
                             }
                         }
                     }
@@ -694,6 +688,7 @@ int main() {
             window.draw(authBtn.password);
             window.draw(authBtn.ready);
             window.draw(authBtn.toReg);
+            window.draw(authBtn.exit);
 
             window.draw(authT.login);
             window.draw(authT.password);
@@ -707,8 +702,6 @@ int main() {
 
             Event event;
             while (window.pollEvent(event)) {
-                closeEvents(event, window);
-
                 if (mouseIn(window, leaderboardBtn.exit)) {
                     leaderboardT.exit.setFillColor(color2);
                     anyButtonHovered = true;
@@ -805,8 +798,6 @@ int main() {
             Vector2i mousePos = Mouse::getPosition(window);
 
             while (window.pollEvent(event)) {
-                closeEvents(event, window);
-
                 if (mouseIn(window, menuBtn.start)) {
                     menuT.startGame.setFillColor(color2);
                     anyButtonHovered = true;
@@ -1011,8 +1002,6 @@ int main() {
             Event event;
 
             while (window.pollEvent(event)) {
-                closeEvents(event, window);
-
                 if (mouseIn(window, settingsBtn.exitToMenu)) {
                     settingsT.exitToMenu.setFillColor(color2);
                     anyButtonHovered = true;
@@ -1357,8 +1346,6 @@ int main() {
                     gameT.input.setFillColor(Color::White);
                 }
                 while (window.pollEvent(event)) {
-                    closeEvents(event, window);
-                    Vector2i mousePos = Mouse::getPosition(window);
                     if (click(event, window, gameT.endGame)) {
                         sfx.play();
                         gameStage = "MENU";
@@ -1646,8 +1633,6 @@ int main() {
             }
 
             while (window.pollEvent(event)) {
-                closeEvents(event, window);
-
                 if (mouseIn(window, endgameBtn.restart)) {
                     endgameT.restart.setFillColor(color2);
                     anyButtonHovered = true;
@@ -1782,6 +1767,5 @@ int main() {
             window.display();
         }
     }
-
     return 0;
 }
