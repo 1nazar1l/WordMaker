@@ -443,11 +443,30 @@ int main() {
 
     while (window.isOpen()) {
         if (gameStage == "AUTH_REG") {
+            window.setMouseCursorVisible(false);
             musicManager.stop();
-            window.setMouseCursorVisible(true);
             Event event;
 
             while (window.pollEvent(event)) {
+                if (mouseIn(window, authBtn.exit)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, authBtn.login)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, authBtn.password)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, authBtn.toReg)) {
+                    anyButtonHovered = true;
+                }
+                else if (mouseIn(window, authBtn.ready)) {
+                    anyButtonHovered = true;
+                }
+                else {
+                    anyButtonHovered = false;
+                }
+
                 if (click(event, window, authBtn.login)) {
                     loginInputActive = true;
                 }
@@ -694,6 +713,7 @@ int main() {
             window.draw(authT.password);
             window.draw(authT.warning);
 
+            drawCursor(window, cursorManager, anyButtonHovered);
 
             window.display();
         }

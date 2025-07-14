@@ -129,6 +129,45 @@
             "round_time": 30,
             "sfx_volume": 50,
             "theme_number": 1
+        },
+        {
+            "best_score": 33,
+            "difficulty": "hard",
+            "game_volume": 87,
+            "login": "user1",
+            "main_volume": 60,
+            "music1": 3,
+            "music2": 3,
+            "password": "BDE5A865117C2315",
+            "round_time": 90,
+            "sfx_volume": 78,
+            "theme_number": 4
+        },
+        {
+            "best_score": 0,
+            "difficulty": "easy",
+            "game_volume": 50,
+            "login": "user2",
+            "main_volume": 50,
+            "music1": 1,
+            "music2": 1,
+            "password": "F8C800BE8FF93294",
+            "round_time": 30,
+            "sfx_volume": 50,
+            "theme_number": 1
+        },
+        {
+            "best_score": 33,
+            "difficulty": "hard",
+            "game_volume": 76,
+            "login": "user3",
+            "main_volume": 100,
+            "music1": 2,
+            "music2": 3,
+            "password": "191F542DC0923F15",
+            "round_time": 90,
+            "sfx_volume": 26,
+            "theme_number": 4
         }
     ]
 }
